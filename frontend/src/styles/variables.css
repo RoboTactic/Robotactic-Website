@@ -1,0 +1,14 @@
+:root {
+  --color-brand-primary: #16A66A;
+  --color-brand-dark: #0B3D2E;
+  --color-brand-accent: #B6F23A;
+  --color-bg-page: #0A2A1F;
+  --color-bg-surface: #0F3527;
+  --color-bg-raised: #16422F;
+  --color-bg-sunken: #101D2B;
+  --color-text-primary: #FFFFFF;
+  --color-text-secondary: #B0CDBF;
+  --color-text-muted: #7FA593;
+  --color-line: #1C5241;
+  --color-line-subtle: #113528;
+}
