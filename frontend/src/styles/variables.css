@@ -1,14 +1,60 @@
+/* Design tokens — mirrors the RoboTactic Figma variables exactly.
+   Names match the code syntax Figma Dev Mode shows (e.g. color/surface/page → --color-surface-page).
+   Figma is the source of truth: change values there first, then update this file. */
+
 :root {
-  --color-brand-primary: #16A66A;
-  --color-brand-dark: #0B3D2E;
-  --color-brand-accent: #B6F23A;
-  --color-bg-page: #0A2A1F;
-  --color-bg-surface: #0F3527;
-  --color-bg-raised: #16422F;
-  --color-bg-sunken: #101D2B;
-  --color-text-primary: #FFFFFF;
-  --color-text-secondary: #B0CDBF;
-  --color-text-muted: #7FA593;
-  --color-line: #1C5241;
-  --color-line-subtle: #113528;
+  /* ── Color · brand ── */
+  --color-brand-primary: #16A66A;   /* RoboTactic green — icons, rules, text on dark */
+  --color-brand-dark: #0B3D2E;      /* dark green */
+  --color-brand-accent: #B6F23A;    /* lime — CTAs, highlights, active states */
+  --color-brand-secondary: #101D2B; /* navy — secondary dark */
+
+  /* ── Color · surface ── */
+  --color-surface-page: #0A2A1F;       /* page background */
+  --color-surface-card: #0F3527;       /* cards and bands */
+  --color-surface-raised: #16422F;     /* raised elements on cards */
+  --color-surface-sunken: #101D2B;     /* inset panels — card meta, schedule slots */
+  --color-surface-brand-band: #0B3D2E; /* CTA band background */
+  --color-surface-footer: #061C15;     /* footer background */
+
+  /* ── Color · border ── */
+  --color-border-default: #1C5241; /* card and component borders */
+  --color-border-subtle: #113528;  /* dividers and quiet rules */
+  --color-border-brand: #16A66A;   /* notices, secondary button, outline chip */
+  --color-border-outline: #2E4A61; /* outline button, icon button, language switcher */
+  --color-border-focus: #B6F23A;   /* keyboard focus ring */
+
+  /* ── Color · text ── */
+  --color-text-primary: #FFFFFF;   /* headings and primary copy */
+  --color-text-secondary: #B0CDBF; /* body copy */
+  --color-text-muted: #7FA593;     /* labels, captions, meta keys */
+  --color-text-brand: #16A66A;     /* brand-green text */
+  --color-text-accent: #B6F23A;    /* overlines, active nav, emphasised values */
+  --color-text-on-accent: #101D2B; /* text on lime (primary button) */
+  --color-text-on-brand: #FFFFFF;  /* text on green */
+
+  /* ── Color · action & status ── */
+  --color-action-primary: #B6F23A;   /* primary button fill */
+  --color-action-secondary: #16A66A; /* secondary action fill */
+  --color-status-live: #FF5C5C;      /* live-now indicator */
+
+  /* ── Spacing ── */
+  --space-4: 4px;
+  --space-8: 8px;
+  --space-12: 12px;
+  --space-16: 16px;
+  --space-20: 20px;
+  --space-24: 24px;
+  --space-32: 32px;
+  --space-40: 40px;
+  --space-56: 56px;
+  --space-72: 72px;
+  --space-96: 96px;
+
+  /* ── Radius ── */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 999px;
 }
