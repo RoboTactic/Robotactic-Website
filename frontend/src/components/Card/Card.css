@@ -16,10 +16,11 @@
 .rt-card__meta-row {
   display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-block: 10px;
 }
-.rt-card__meta-row + .rt-card__meta-row { border-block-start: 1px solid var(--color-border-subtle); }
+.rt-card__meta-row:not(:last-child) { border-block-end: 1px solid var(--color-border-subtle); }
+.workshop-card .rt-card__meta-row { padding-block: 11px; }
 .rt-card__meta-key { color: var(--color-text-muted); display: inline-flex; align-items: center; gap: 8px; }
 .rt-card__meta-key svg { color: var(--color-text-brand); }
-.rt-card__meta-value { color: var(--color-text-primary); text-align: end; }
+.rt-card__meta-value { margin: 0; color: var(--color-text-primary); text-align: end; }
 .rt-card__footer { margin-block-start: auto; display: flex; flex-direction: column; align-items: center; gap: 8px; }
 .rt-card__note { color: var(--color-text-muted); text-align: center; }
 .workshop-card__description { color: var(--color-text-secondary); }

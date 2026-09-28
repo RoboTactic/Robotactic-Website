@@ -1,7 +1,7 @@
 .lang-switch {
-  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-  min-block-size: 44px; padding: 9px 16px; /* 44px touch target (AGENTS.md) */
-  border: 1.25px solid var(--color-border-outline); border-radius: var(--radius-full);
+  display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+  min-block-size: 46px; padding: 9px 14px; /* Figma 106×46 */
+  border: 1.5px solid var(--color-border-outline); border-radius: var(--radius-full);
   color: var(--color-text-secondary); direction: ltr;
 }
 .lang-switch--full { inline-size: 100%; }

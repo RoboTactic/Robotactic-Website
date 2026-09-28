@@ -6,6 +6,12 @@
 .circuit__node--hollow, .circuit__node--hub { fill: var(--color-surface-page); stroke: var(--color-brand-primary); stroke-width: 1.25; }
 .circuit__signal { display: none; }
 
+.circuit-frame { position: relative; direction: ltr; inline-size: 1440px; block-size: 420px; overflow: hidden; }
+.circuit__fade {
+  position: absolute; left: 720px; top: 0; width: 636px; height: 366px;
+  background: var(--color-surface-page); opacity: .86; filter: blur(24px); /* Figma blur 48 = CSS σ 24 */
+}
+
 /* CTA band motif: quieter, as in Figma (traces 50%, nodes 60%) */
 .circuit--band .circuit__trace { opacity: .5; }
 .circuit--band .circuit__node { opacity: .6; }

@@ -13,7 +13,7 @@ export default function LanguageSwitcher({ fullWidth = false, onClick }) {
       onClick={onClick}
       title="English version — coming soon"
     >
-      <Icon name="globe" size={17} strokeWidth={1.5} />
+      <Icon name="globe" size={24} strokeWidth={1.5} />
       <span>{languageSwitch.label}</span>
     </button>
   );

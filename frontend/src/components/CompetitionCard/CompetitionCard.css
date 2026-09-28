@@ -1,3 +1,7 @@
 .competition-card__head { display: flex; flex-direction: column; gap: 6px; }
+.competition-card__focus { display: flex; flex-wrap: wrap; column-gap: 6px; }
+/* Figma desktop: the three cards share one fixed height with space-between, which
+   leaves no gap between header, title group, meta and footer. Mobile keeps 16px. */
+@media (min-width: 1024px) { .competition-card { gap: 0; } }
 .competition-card__focus-label { color: var(--color-text-muted); }
 .competition-card__focus-value { color: var(--color-text-accent); }

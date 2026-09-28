@@ -1,11 +1,11 @@
-.logo { --logo-mark-h: 44px; --logo-mark-w: calc(var(--logo-mark-h) * 1.0730); display: inline-flex; align-items: center; direction: ltr; color: var(--color-text-primary); }
-.logo__mark { inline-size: var(--logo-mark-w); block-size: var(--logo-mark-h); object-fit: contain; flex: none; }
+.logo { --_h: var(--logo-mark-h, 44px); --_w: var(--logo-mark-w, calc(var(--_h) * 1.0730)); display: inline-flex; align-items: center; direction: ltr; color: var(--color-text-primary); }
+.logo__mark { inline-size: var(--_w); block-size: var(--_h); object-fit: contain; flex: none; }
 .logo__wordmark { font-family: var(--font-latin); font-weight: 700; letter-spacing: 0.158em; white-space: nowrap; }
 
 /* §0.1 horizontal: cap height ≈ 0.198 × mark height, gap ≈ 0.06 × mark height */
-.logo--horizontal { gap: max(4px, calc(var(--logo-mark-h) * 0.09)); }
-.logo--horizontal .logo__wordmark { font-size: calc(var(--logo-mark-h) * 0.273); line-height: 1.2; }
+.logo--horizontal { gap: max(4px, calc(var(--_h) * 0.09)); }
+.logo--horizontal .logo__wordmark { font-size: calc(var(--_h) * 0.273); line-height: 1.2; }
 
 /* §0.4 stacked: wordmark = 0.0864 × mark height, gap = 0.078 × mark height */
-.logo--stacked { flex-direction: column; gap: calc(var(--logo-mark-h) * 0.078); }
-.logo--stacked .logo__wordmark { font-size: calc(var(--logo-mark-h) * 0.0864); line-height: 1.2; }
+.logo--stacked { flex-direction: column; gap: calc(var(--_h) * 0.078); }
+.logo--stacked .logo__wordmark { font-size: calc(var(--_h) * 0.0864); line-height: 1.2; }

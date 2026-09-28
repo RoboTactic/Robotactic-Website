@@ -1,26 +1,27 @@
+/* Figma `Section — Footer`: mobile 375 = centred stack (32px padding, 18px rhythm);
+   desktop 1440 = brand | links row, then a bottom bar 24px below. */
 .footer { background: var(--color-surface-footer); border-block-start: 1px solid var(--color-border-subtle); }
 .footer__inner {
   display: grid; justify-items: center; gap: 18px; text-align: center;
   padding-block: 32px;
 }
-.footer__brand { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.footer__brand { display: flex; flex-direction: column; align-items: center; gap: 18px; }
+.footer__brand > a { display: inline-flex; }
 .footer__slogan { color: var(--color-text-muted); }
-.footer__links { display: flex; flex-wrap: wrap; justify-content: center; }
-.footer__link {
-  display: inline-flex; align-items: center; min-block-size: 44px; padding-inline: 8px; /* touch target */
-  color: var(--color-text-secondary);
-}
+.footer__links { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.footer__link { position: relative; color: var(--color-text-secondary); }
+/* Visual rows are 22px (Figma); the invisible hit area keeps a 44px touch target */
+.footer__link::after { content: ''; position: absolute; inset: -11px -4px; }
 @media (hover: hover) { .footer__link:hover { color: var(--color-text-primary); } }
-.footer__bottom { display: flex; flex-direction: column-reverse; align-items: center; gap: 14px; }
+.footer__bottom { display: flex; flex-direction: column-reverse; align-items: center; gap: 18px; }
 .footer__copyright { color: var(--color-text-muted); }
 
 @media (min-width: 1024px) {
   .footer__inner {
     grid-template-columns: auto 1fr; grid-template-areas: 'brand links' 'bottom bottom';
-    justify-items: stretch; align-items: center; text-align: start; padding-block: 48px 40px; row-gap: 24px;
+    justify-items: stretch; align-items: center; text-align: start; padding-block: 48px 40px; gap: 0;
   }
-  .footer__brand { grid-area: brand; align-items: flex-start; }
-  .footer__links { grid-area: links; justify-content: flex-end; gap: 6px; }
-  .footer__link { min-block-size: 32px; }
-  .footer__bottom { grid-area: bottom; flex-direction: row; justify-content: space-between; }
+  .footer__brand { grid-area: brand; align-items: flex-start; gap: 6px; }
+  .footer__links { grid-area: links; justify-content: flex-end; gap: 22px; }
+  .footer__bottom { grid-area: bottom; flex-direction: row; justify-content: space-between; padding-block-start: 24px; }
 }

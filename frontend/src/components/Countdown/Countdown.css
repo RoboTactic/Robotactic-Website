@@ -1,6 +1,6 @@
 .countdown { display: flex; flex-direction: column; align-items: center; gap: 16px; text-align: center; }
 .countdown__text { display: contents; }
-.countdown__heading { align-items: center; text-align: center; }
+.countdown__heading { align-items: center; text-align: center; gap: 4px; } /* Figma: overline ↔ title 4px */
 .countdown__heading .section-heading__overline { justify-content: center; }
 .countdown__heading .section-heading__tick { display: none; } /* Figma: centred overline without tick on mobile */
 .countdown__units { display: flex; gap: 10px; order: 2; max-inline-size: 100%; }

@@ -9,7 +9,7 @@ export default function WorkshopCard({ tag = 'ورشة', title, description, dat
   return (
     <article className="rt-card workshop-card">
       <div className="rt-card__header">
-        <span className="rt-card__badge"><Icon name="workshop" size={20} /></span>
+        <span className="rt-card__badge"><Icon name="workshop" /></span>
         <Chip tone="accent">{tag}</Chip>
       </div>
 

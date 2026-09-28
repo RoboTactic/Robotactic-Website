@@ -3,7 +3,7 @@
   background: var(--color-surface-page);
   border-block-end: 1px solid var(--color-border-subtle);
 }
-.navbar__inner { display: flex; align-items: center; justify-content: space-between; gap: 24px; min-block-size: 64px; }
+.navbar__inner { display: flex; align-items: center; justify-content: space-between; gap: 24px; min-block-size: 63px; }
 .navbar__brand-links { display: flex; align-items: center; gap: 40px; }
 .navbar__logo { display: inline-flex; }
 
@@ -26,7 +26,7 @@
 }
 
 @media (min-width: 1200px) {
-  .navbar__inner { min-block-size: 76px; }
+  .navbar__inner { min-block-size: 75px; }
   .navbar__links, .navbar__actions { display: flex; }
   .navbar__menu-button:not(.navbar__menu-button--visible) { display: none; }
 }

@@ -41,9 +41,19 @@ export default function CircuitPattern({ variant = 'desktop', animated = true, c
   }
 
   const net = variant === 'band' ? BAND : DESKTOP;
-  return (
+  const svg = (
     <svg className={cls} viewBox={`0 0 ${net.width} ${net.height}`} width={net.width} height={net.height} aria-hidden="true" focusable="false">
       <Network traces={net.traces} nodes={net.nodes} signals={animated && variant === 'desktop'} />
     </svg>
+  );
+  if (variant !== 'desktop') return svg;
+
+  // Figma `Pattern / Circuit · Desktop — Readability Fade`: page-coloured, 86%, 48px
+  // layer blur at x720 y0 636×366 — dims the traces on the copy side of the hero.
+  return (
+    <div className="circuit-frame" aria-hidden="true">
+      {svg}
+      <span className="circuit__fade" />
+    </div>
   );
 }

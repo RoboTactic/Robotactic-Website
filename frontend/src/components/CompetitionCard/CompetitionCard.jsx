@@ -17,7 +17,7 @@ export default function CompetitionCard({ title, level, focus, icon, audience, t
       <div className="competition-card__head">
         <h3 className="rt-card__title t-h3">{title}</h3>
         <p className="competition-card__focus">
-          <span className="t-body competition-card__focus-label">محور التحدي:</span>{' '}
+          <span className="t-body competition-card__focus-label">محور التحدي:</span>
           <span className="t-body-bold competition-card__focus-value">{focus}</span>
         </p>
       </div>

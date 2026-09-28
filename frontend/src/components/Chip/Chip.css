@@ -1,10 +1,10 @@
 .chip {
   display: inline-flex; align-items: center; gap: 7px;
   padding: 6px 12px; border-radius: var(--radius-full);
-  border: 1.25px solid transparent; white-space: nowrap;
+  white-space: nowrap;
 }
-.chip--outline { color: var(--color-text-brand); border-color: var(--color-border-brand); }
+.chip--outline { color: var(--color-text-brand); border: 1.25px solid var(--color-border-brand); }
 .chip--accent  { background: var(--color-brand-accent); color: var(--color-text-on-accent); }
 .chip--brand   { background: var(--color-brand-primary); color: var(--color-text-on-brand); }
-.chip--live    { color: var(--color-status-live); border-color: var(--color-status-live); }
+.chip--live    { color: var(--color-status-live); border: 1.25px solid var(--color-status-live); }
 .chip__dot { inline-size: 7px; block-size: 7px; border-radius: 50%; background: currentColor; flex: none; }
