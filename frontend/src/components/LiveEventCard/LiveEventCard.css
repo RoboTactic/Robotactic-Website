@@ -1,0 +1,17 @@
+.live-card {
+  display: flex; flex-direction: column; gap: 10px; block-size: 100%;
+  padding: 18px; border-radius: 14px; text-align: start;
+  background: var(--color-surface-sunken); border: 1px solid var(--color-border-default);
+}
+.live-card--live { border-color: var(--color-status-live); }
+.live-card__header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.live-card__time { color: var(--color-text-secondary); direction: rtl; }
+.live-card__title { color: var(--color-text-primary); }
+.live-card__location { color: var(--color-text-muted); }
+
+.live-card--empty { flex-direction: row; align-items: center; gap: 14px; background: var(--color-surface-raised); }
+.live-card__empty-icon {
+  display: inline-flex; padding: 11px; border-radius: var(--radius-md); flex: none;
+  background: var(--color-surface-card); border: 1px solid var(--color-border-subtle); color: var(--color-text-muted);
+}
+.live-card__supporting { color: var(--color-text-secondary); }

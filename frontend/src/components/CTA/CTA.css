@@ -1,0 +1,10 @@
+.cta-band {
+  position: relative; overflow: hidden; isolation: isolate;
+  border-radius: 20px; background: var(--color-surface-brand-band);
+  padding: 34px 24px; text-align: center;
+}
+.cta-band__pattern { position: absolute; inset-block-start: -20px; left: 0; opacity: .45; z-index: -1; }
+.cta-band__content { display: flex; flex-direction: column; align-items: center; gap: 18px; }
+.cta-band__content > p { margin-block-start: -8px; } /* title ↔ description sit 10px apart, as in Figma */
+.cta-band__title { color: var(--color-text-primary); }
+.cta-band__description { color: var(--color-text-secondary); max-inline-size: 42ch; }

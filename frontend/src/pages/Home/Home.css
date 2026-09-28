@@ -1,0 +1,92 @@
+/* ─── Home page layout — mobile first (375 Figma), desktop from 1024 (1440 Figma) ─── */
+
+/* ── Hero ─────────────────────────────────────────────────────────────── */
+.hero { position: relative; overflow: hidden; background: var(--color-surface-page); }
+.hero__pattern { position: absolute; inset-inline-start: 50%; translate: 50% 0; z-index: 0; pointer-events: none; }
+[dir='ltr'] .hero__pattern { translate: -50% 0; }
+.hero__pattern--mobile { inset-block-start: 0; }
+.hero__pattern--desktop { display: none; inset-block-start: 40px; }
+
+.hero__inner {
+  position: relative; z-index: 1;
+  display: flex; flex-direction: column; align-items: center; gap: 20px;
+  padding-block: 40px 32px; text-align: center;
+}
+.hero__visual { order: -1; --logo-mark-h: 116px; }           /* mobile: emblem on top */
+.hero__copy { display: flex; flex-direction: column; align-items: center; gap: 20px; position: relative; isolation: isolate; }
+
+/* Readability fade (Figma `Readability Fade`): a blurred patch of the page colour
+   behind the copy dims the circuit traces there, and is invisible on empty areas. */
+.hero__copy::before {
+  content: ''; position: absolute; inset: -16px -8px; z-index: -1;
+  background: var(--color-surface-page); opacity: .86; filter: blur(32px); border-radius: 48px;
+}
+.hero__title { color: var(--color-text-primary); }
+.hero__description { color: var(--color-text-secondary); }
+.hero__actions { display: flex; flex-direction: column; gap: 8px; inline-size: 100%; }
+
+@media (min-width: 1024px) {
+  .hero__pattern--mobile { display: none; }
+  .hero__pattern--desktop { display: block; }
+  .hero__inner { flex-direction: row; justify-content: space-between; gap: 72px; padding-block: 72px 64px; text-align: start; }
+  .hero__visual { order: 0; flex: 1; display: flex; justify-content: center; --logo-mark-h: 225px; }
+  .hero__copy { flex: 1; align-items: flex-start; gap: 22px; }
+  .hero__actions { flex-direction: row; inline-size: auto; gap: 12px; }
+  .hero__copy::before { inset: -36px; filter: blur(48px); }
+}
+
+/* ── Shared section rhythm ────────────────────────────────────────────── */
+.home-section__stack { display: flex; flex-direction: column; gap: 20px; }
+.home-section__action { inline-size: 100%; }
+
+.card-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+.card-grid > li { display: flex; flex-direction: column; min-inline-size: 0; }
+
+@media (min-width: 1024px) {
+  .home-section__stack { gap: 32px; }
+  .home-section__action { inline-size: auto; align-self: flex-start; }
+  .card-grid { gap: 24px; }
+  .card-grid--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .card-grid--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* ── About ────────────────────────────────────────────────────────────── */
+.about { padding-block: 12px 48px; }
+.about__inner { display: flex; flex-direction: column; gap: 18px; }
+.about__content { display: flex; flex-direction: column; gap: 18px; }
+.about__body { font: 400 15px/28px var(--font-arabic); color: var(--color-text-secondary); }
+.about__values { display: flex; flex-wrap: wrap; gap: 10px; }
+
+@media (min-width: 1024px) {
+  .about { padding-block: 64px 72px; }
+  .about__inner { flex-direction: row; align-items: center; gap: 64px; }
+  .about__heading, .about__content { flex: 1; }
+  .about__content { gap: 20px; }
+  .about__body { font-size: 17px; line-height: 32px; }
+  .about__values { max-inline-size: 420px; }
+}
+
+/* ── Countdown band ───────────────────────────────────────────────────── */
+.home-countdown { padding-block: 36px; }
+@media (min-width: 1024px) { .home-countdown { padding-block: 56px; } }
+
+/* ── Competitions / Workshops ─────────────────────────────────────────── */
+.home-competitions { padding-block: 48px 32px; }
+.home-workshops { padding-block: 8px 48px; }
+@media (min-width: 1024px) {
+  .home-competitions { padding-block: 96px 72px; }
+  .home-workshops { padding-block: 8px 96px; }
+}
+
+/* ── Live Now (band) ──────────────────────────────────────────────────── */
+.home-live { padding-block: 40px 44px; }
+.home-live .home-section__stack { gap: 16px; }
+@media (min-width: 1024px) {
+  .home-live { padding-block: 88px; }
+  .home-live .home-section__stack { gap: 28px; }
+  .home-live__empty { max-inline-size: 588px; }
+}
+
+/* ── CTA ──────────────────────────────────────────────────────────────── */
+.home-cta { padding-block: 40px 48px; }
+@media (min-width: 1024px) { .home-cta { padding-block: 64px 96px; } }

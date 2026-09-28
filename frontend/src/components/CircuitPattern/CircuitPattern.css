@@ -1,0 +1,33 @@
+.circuit { display: block; overflow: visible; pointer-events: none; }
+.circuit__trace { fill: none; stroke: var(--color-brand-primary); stroke-width: 1.25; stroke-linecap: round; stroke-linejoin: round; }
+.circuit__trace--active { stroke: var(--color-brand-accent); }
+.circuit__node--filled, .circuit__node--core { fill: var(--color-brand-primary); }
+.circuit__node--active { fill: var(--color-brand-accent); }
+.circuit__node--hollow, .circuit__node--hub { fill: var(--color-surface-page); stroke: var(--color-brand-primary); stroke-width: 1.25; }
+.circuit__signal { display: none; }
+
+/* CTA band motif: quieter, as in Figma (traces 50%, nodes 60%) */
+.circuit--band .circuit__trace { opacity: .5; }
+.circuit--band .circuit__node { opacity: .6; }
+
+/* ── Progressive enhancement: ambient motion (off for reduced-motion) ── */
+@media (prefers-reduced-motion: no-preference) {
+  .circuit--animated .circuit__node--filled,
+  .circuit--animated .circuit__node--core {
+    animation: circuit-pulse 3.6s ease-in-out infinite;
+    animation-delay: var(--node-delay, 0s);
+  }
+  .circuit--animated .circuit__signal {
+    display: block; fill: none; stroke: var(--color-brand-accent); stroke-width: 1.5; stroke-linecap: round;
+    stroke-dasharray: 0.06 0.94; stroke-dashoffset: 1; opacity: 0;
+    animation: circuit-signal 7s linear infinite;
+    animation-delay: var(--signal-delay, 0s);
+  }
+}
+@keyframes circuit-pulse { 0%, 100% { opacity: 1; } 50% { opacity: .45; } }
+@keyframes circuit-signal {
+  0% { stroke-dashoffset: 1; opacity: 0; }
+  8% { opacity: .9; }
+  55% { stroke-dashoffset: 0; opacity: .9; }
+  62%, 100% { stroke-dashoffset: 0; opacity: 0; }
+}

@@ -1,4 +1,42 @@
-/* Add approved font files under public/fonts/ when they are ready.
-   Arabic: Thmanyah
-   English: IBM Plex Sans
-*/
+/* ─────────────────────────────────────────────────────────────────────────
+   Typography — mirrors the Figma text styles (AR/* and EN/*).
+
+   ⚠ THMANYAH LICENSING
+   The Thmanyah licence forbids uploading/hosting the font files or making them
+   downloadable through web embedding. So the font files are NOT in this repo:
+   Thmanyah is used only where it is already installed on the device (local()),
+   and everyone else gets IBM Plex Sans Arabic. Serving Thmanyah to all visitors
+   needs a licence exception from thmanyah (ask@thmanyah.com).
+   ───────────────────────────────────────────────────────────────────────── */
+
+@font-face { font-family: 'Thmanyah Serif Text'; font-weight: 400; font-display: swap; src: local('thmanyah serif text Regular'), local('thmanyahseriftext-Regular'); }
+@font-face { font-family: 'Thmanyah Serif Text'; font-weight: 500; font-display: swap; src: local('thmanyah serif text Medium'), local('thmanyahseriftext-Medium'); }
+@font-face { font-family: 'Thmanyah Serif Text'; font-weight: 700; font-display: swap; src: local('thmanyah serif text Bold'), local('thmanyahseriftext-Bold'); }
+
+:root {
+  --font-arabic: 'Thmanyah Serif Text', 'IBM Plex Sans Arabic', 'Segoe UI', Tahoma, sans-serif;
+  --font-latin: 'IBM Plex Sans', 'Segoe UI', Arial, sans-serif;
+}
+
+/* Arabic scale (mobile first; desktop sizes from 1024px) */
+.t-display { font: 700 34px/46px var(--font-arabic); letter-spacing: -0.01em; }
+.t-h1      { font: 700 28px/40px var(--font-arabic); letter-spacing: -0.01em; }
+.t-h2      { font: 700 22px/34px var(--font-arabic); letter-spacing: -0.005em; }
+.t-h3      { font: 700 19px/30px var(--font-arabic); }
+.t-body-lg { font: 400 17px/32px var(--font-arabic); }
+.t-body    { font: 400 15px/28px var(--font-arabic); }
+.t-body-bold { font: 700 15px/28px var(--font-arabic); }
+.t-caption { font: 500 13px/22px var(--font-arabic); }
+.t-button  { font: 700 15px/22px var(--font-arabic); }
+.t-nav     { font: 500 15px/22px var(--font-arabic); }
+
+/* Latin styles */
+.t-overline { font: 600 12px/16px var(--font-latin); letter-spacing: 0.08em; text-transform: uppercase; }
+.t-numeral  { font: 700 34px/40px var(--font-latin); letter-spacing: -0.01em; font-variant-numeric: tabular-nums; }
+.t-label    { font: 500 13px/20px var(--font-latin); }
+
+@media (min-width: 1024px) {
+  .t-display { font-size: 60px; line-height: 76px; letter-spacing: -0.015em; }
+  .t-h1      { font-size: 40px; line-height: 54px; }
+  .t-h2      { font-size: 30px; line-height: 44px; }
+}

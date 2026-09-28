@@ -1,0 +1,8 @@
+.section-heading { display: flex; flex-direction: column; gap: 10px; text-align: start; }
+.section-heading--center { align-items: center; text-align: center; }
+/* overline row: in RTL the tick (first child) sits to the right of the text, as in Figma */
+.section-heading__overline { display: flex; align-items: center; gap: 8px; color: var(--color-text-accent); }
+.section-heading--center .section-heading__overline { justify-content: center; }
+.section-heading__tick { inline-size: 22px; block-size: 2px; background: var(--color-brand-accent); border-radius: 2px; }
+.section-heading__title { color: var(--color-text-primary); }
+.section-heading__description { color: var(--color-text-secondary); }

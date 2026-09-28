@@ -1,0 +1,8 @@
+.lang-switch {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-block-size: 44px; padding: 9px 16px; /* 44px touch target (AGENTS.md) */
+  border: 1.25px solid var(--color-border-outline); border-radius: var(--radius-full);
+  color: var(--color-text-secondary); direction: ltr;
+}
+.lang-switch--full { inline-size: 100%; }
+@media (hover: hover) { .lang-switch:hover { color: var(--color-text-primary); border-color: var(--color-text-secondary); } }

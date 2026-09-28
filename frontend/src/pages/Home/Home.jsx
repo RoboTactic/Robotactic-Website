@@ -1,29 +1,25 @@
-import SectionHeading from '../../components/SectionHeading/SectionHeading';
-import Countdown from '../../components/Countdown/Countdown';
+import HeroSection from './sections/HeroSection';
+import AboutSection from './sections/AboutSection';
+import CountdownSection from './sections/CountdownSection';
+import CompetitionsPreview from './sections/CompetitionsPreview';
+import WorkshopsPreview from './sections/WorkshopsPreview';
+import LiveNowSection from './sections/LiveNowSection';
+import CtaSection from './sections/CtaSection';
+import './Home.css';
 
+/* Home — section order follows the approved Figma Home:
+   Hero → About → Countdown → Competitions → Workshops → Live Now → CTA
+   (Navbar and Footer come from the app shell). */
 export default function Home() {
   return (
     <>
-      <section className="hero container">
-        <p>RoboTactic 2026</p>
-        <h1>ابتكار يقوده التفكير</h1>
-      </section>
-
-      <section className="container section">
-        <SectionHeading title="عن الملتقى" />
-      </section>
-
-      <section className="container section">
-        <SectionHeading title="المسابقات" />
-      </section>
-
-      <section className="container section">
-        <SectionHeading title="ورش العمل" />
-      </section>
-
-      <section className="container section">
-        <Countdown />
-      </section>
+      <HeroSection />
+      <AboutSection />
+      <CountdownSection />
+      <CompetitionsPreview />
+      <WorkshopsPreview />
+      <LiveNowSection />
+      <CtaSection />
     </>
   );
 }

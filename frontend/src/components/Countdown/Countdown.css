@@ -1,0 +1,22 @@
+.countdown { display: flex; flex-direction: column; align-items: center; gap: 16px; text-align: center; }
+.countdown__text { display: contents; }
+.countdown__heading { align-items: center; text-align: center; }
+.countdown__heading .section-heading__overline { justify-content: center; }
+.countdown__heading .section-heading__tick { display: none; } /* Figma: centred overline without tick on mobile */
+.countdown__units { display: flex; gap: 10px; order: 2; max-inline-size: 100%; }
+.countdown__note { color: var(--color-text-muted); order: 3; }
+.countdown__unit {
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  inline-size: 74px; flex-shrink: 1; min-inline-size: 0; padding-block: 14px 12px; border-radius: var(--radius-md);
+  background: var(--color-surface-card); border: 1px solid var(--color-border-default);
+}
+.countdown__value { color: var(--color-text-accent); }
+.countdown__label { color: var(--color-text-muted); }
+
+@media (min-width: 1024px) {
+  .countdown { flex-direction: row; justify-content: space-between; text-align: start; }
+  .countdown__text { display: flex; flex-direction: column; gap: 4px; align-items: flex-start; }
+  .countdown__heading { align-items: flex-start; text-align: start; gap: 4px; }
+  .countdown__heading .section-heading__overline { justify-content: flex-start; }
+  .countdown__units { order: 0; }
+}

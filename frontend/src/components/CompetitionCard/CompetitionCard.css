@@ -1,0 +1,3 @@
+.competition-card__head { display: flex; flex-direction: column; gap: 6px; }
+.competition-card__focus-label { color: var(--color-text-muted); }
+.competition-card__focus-value { color: var(--color-text-accent); }
