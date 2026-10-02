@@ -1,0 +1,41 @@
+@import './EventFonts.css';
+
+.event-registration {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-block-start: auto;
+  text-align: center;
+}
+
+.event-registration__action {
+  display: flex;
+  min-height: 52px;
+  align-items: center;
+  justify-content: center;
+  padding-inline: var(--space-20);
+  border-radius: var(--radius-md);
+  background: var(--color-action-primary);
+  color: var(--color-text-on-accent);
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 22px;
+}
+
+.event-registration__action--closed {
+  background: var(--color-surface-raised);
+  color: var(--color-text-muted);
+}
+
+.event-registration__action:focus-visible {
+  outline: 2px solid var(--color-border-focus);
+  outline-offset: 2px;
+}
+
+.event-registration p {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 22px;
+}
