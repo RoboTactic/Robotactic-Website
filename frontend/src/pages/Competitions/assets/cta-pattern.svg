@@ -1,0 +1,21 @@
+<svg preserveAspectRatio="none" overflow="visible" style="display: block;" width="375" height="240" viewBox="0 0 375 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="CTA / Band &#226;&#128;&#148; Pattern" opacity="0.45" clip-path="url(#clip0_0_68)">
+<path id="Pattern &#226;&#128;&#148; Trace" opacity="0.5" d="M375 40H300L276 64H210" stroke="#16A66A" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Pattern &#226;&#128;&#148; Trace_2" opacity="0.5" d="M375 96H330L306 120H232" stroke="#16A66A" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Pattern &#226;&#128;&#148; Trace_3" opacity="0.5" d="M0 200H70L94 176H160" stroke="#16A66A" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Pattern &#226;&#128;&#148; Trace_4" opacity="0.5" d="M0 140H44L68 116H130" stroke="#16A66A" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Pattern &#226;&#128;&#148; Trace_5" opacity="0.5" d="M250 0V30L226 54V110" stroke="#16A66A" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Pattern &#226;&#128;&#148; Trace_6" opacity="0.5" d="M120 240V206L144 182V140" stroke="#16A66A" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+<circle id="Pattern &#226;&#128;&#148; Node" opacity="0.6" cx="210" cy="64" r="4.5" fill="#16A66A"/>
+<circle id="Pattern &#226;&#128;&#148; Node_2" opacity="0.6" cx="232" cy="120" r="3.875" fill="#0A2A1F" stroke="#16A66A" stroke-width="1.25"/>
+<circle id="Pattern &#226;&#128;&#148; Node_3" opacity="0.6" cx="160" cy="176" r="4.5" fill="#16A66A"/>
+<circle id="Pattern &#226;&#128;&#148; Node_4" opacity="0.6" cx="130" cy="116" r="3.875" fill="#0A2A1F" stroke="#16A66A" stroke-width="1.25"/>
+<circle id="Pattern &#226;&#128;&#148; Node_5" opacity="0.6" cx="226" cy="110" r="4.5" fill="#16A66A"/>
+<circle id="Pattern &#226;&#128;&#148; Node_6" opacity="0.6" cx="144" cy="140" r="3.875" fill="#0A2A1F" stroke="#16A66A" stroke-width="1.25"/>
+</g>
+<defs>
+<clipPath id="clip0_0_68">
+<rect width="375" height="240" fill="white"/>
+</clipPath>
+</defs>
+</svg>
