@@ -8,6 +8,7 @@ import Workshops from './pages/Workshops/Workshops';
 import Projects from './pages/Projects/Projects';
 import Team from './pages/Team/Team';
 import Timeline from './pages/Timeline/Timeline';
+import Dashboard from './pages/Dashboard/Dashboard';
 
 export default function App() {
   return (
@@ -22,6 +23,7 @@ export default function App() {
           <Route path="/projects" element={<Projects />} />
           <Route path="/team" element={<Team />} />
           <Route path="/timeline" element={<Timeline />} />
+          <Route path="/dashboard/*" element={<Dashboard />} />
         </Routes>
       </main>
       <Footer />
