@@ -1,5 +1,7 @@
+import { useApiData } from '../../services/api/useApiData';
+import { presentCompetition } from '../../services/api/presentRecords';
+import ApiState from '../../components/ApiState/ApiState';
 import CompetitionCard from '../../components/CompetitionCard/CompetitionCard';
-import { competitions } from '../../data/competitions';
 import cansatIcon from './assets/cansat.svg';
 import circuitPattern from '../Workshops/assets/circuit-pattern.svg';
 import controllerIcon from './assets/controller.svg';
@@ -14,6 +16,8 @@ const competitionIcons = {
 };
 
 export default function Competitions() {
+  const { data, loading, error, reload } = useApiData('competitions');
+  const competitions = (data || []).map(presentCompetition);
   const scrollToCompetitions = () => {
     document.getElementById('competition-tracks')?.scrollIntoView({ behavior: 'smooth' });
   };
@@ -31,6 +35,7 @@ export default function Competitions() {
 
       <section className="competitions-tracks" id="competition-tracks" aria-label="مسارات المسابقات">
         <div className="competitions-page__container competitions-grid">
+          <ApiState loading={loading} error={error} empty={!loading && !error && !competitions.length ? 'لا توجد مسابقات منشورة حاليًا.' : ''} onRetry={reload} />
           {competitions.map((competition) => (
             <CompetitionCard key={competition.id} competition={competition}
               icon={competitionIcons[competition.icon]} />

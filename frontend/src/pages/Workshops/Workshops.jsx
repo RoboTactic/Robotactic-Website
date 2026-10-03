@@ -1,8 +1,10 @@
 import { useMemo, useState } from 'react';
+import ApiState from '../../components/ApiState/ApiState';
+import { useApiData } from '../../services/api/useApiData';
+import { presentWorkshop } from '../../services/api/presentRecords';
 import WorkshopCard from '../../components/WorkshopCard/WorkshopCard';
 import FilterChips from '../../components/EventUI/FilterChips';
 import SectionHeading from '../../components/EventUI/SectionHeading';
-import { workshopDays, workshopEmptyState, workshops } from '../../data/workshops';
 import circuitPattern from './assets/circuit-pattern.svg';
 import workshopIcon from './assets/workshop.svg';
 import teamIcon from './assets/team.svg';
@@ -10,9 +12,20 @@ import './Workshops.css';
 
 export default function Workshops() {
   const [selectedDay, setSelectedDay] = useState('all');
+  const { data, loading, error, reload } = useApiData('workshops');
+  const workshops = useMemo(() => (data || []).map(presentWorkshop), [data]);
+  const workshopDays = useMemo(() => {
+    const groups = [...new Map(workshops.map((workshop) => {
+      const date = new Date(workshop.startAt);
+      const key = new Intl.DateTimeFormat('en-CA', { calendar: 'gregory', year: 'numeric', month: '2-digit', day: '2-digit' }).format(date);
+      const label = new Intl.DateTimeFormat(document.documentElement.lang === 'en' ? 'en-GB' : 'ar-SA-u-ca-gregory', { dateStyle: 'full' }).format(new Date(workshop.startAt));
+      return [key, { id: key, label, heading: label }];
+    })).values()];
+    return [{ id: 'all', label: document.documentElement.lang === 'en' ? 'All workshops' : 'عرض الكل' }, ...groups];
+  }, [workshops]);
   const visibleWorkshops = useMemo(
-    () => selectedDay === 'all' ? workshops : workshops.filter((item) => item.dayId === selectedDay),
-    [selectedDay],
+    () => selectedDay === 'all' ? workshops : workshops.filter((item) => new Intl.DateTimeFormat('en-CA', { calendar: 'gregory', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date(item.startAt)) === selectedDay),
+    [selectedDay, workshops],
   );
   const selectedDayDetails = workshopDays.find((day) => day.id === selectedDay);
 
@@ -41,16 +54,17 @@ export default function Workshops() {
       <section className="workshops-results" aria-live="polite">
         <div className="workshops-page__container">
           {selectedDay !== 'all' && <h2 className="workshops-results__day">{selectedDayDetails?.heading}</h2>}
-          {visibleWorkshops.length ? (
+          <ApiState loading={loading} error={error} empty={!loading && !error && !workshops.length ? 'لا توجد ورش منشورة حاليًا.' : ''} onRetry={reload} />
+          {!loading && !error && visibleWorkshops.length ? (
             <div className="workshops-grid">
               {visibleWorkshops.map((workshop) => (
                 <WorkshopCard key={workshop.id} workshop={workshop} workshopIcon={workshopIcon} teamIcon={teamIcon} />
               ))}
             </div>
-          ) : (
+          ) : !loading && !error && workshops.length > 0 && (
             <div className="workshops-empty">
-              <h2>{workshopEmptyState.title}</h2>
-              <p>{workshopEmptyState.description}</p>
+              <h2>لا توجد ورش في هذا اليوم.</h2>
+              <p>اختر يومًا آخر للاطلاع على الورش المنشورة.</p>
             </div>
           )}
         </div>

@@ -1,15 +1,25 @@
 
 
-CREATE TABLE admin_credentials (
+CREATE TABLE admin_users (
     id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 
-    role_code VARCHAR(50) NOT NULL UNIQUE,
+    full_name TEXT NOT NULL,
+
+    email VARCHAR(255) NOT NULL UNIQUE,
+
+    phone VARCHAR(30),
+
+    role_code VARCHAR(50) NOT NULL,
 
     password_hash TEXT NOT NULL,
 
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
     updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT admin_credentials_role_check
+    CONSTRAINT admin_users_role_check
         CHECK (
             role_code IN (
                 'super_admin',
@@ -57,15 +67,27 @@ CREATE TABLE announcements (
     description_ar TEXT,
     description_en TEXT,
 
+    image_url TEXT,
+
     link_url TEXT,
 
     start_at TIMESTAMPTZ,
     end_at TIMESTAMPTZ,
 
-    is_active BOOLEAN NOT NULL DEFAULT TRUE,
+    status VARCHAR(30) NOT NULL DEFAULT 'draft',
 
     created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT announcements_status_check
+        CHECK (
+            status IN (
+                'draft',
+                'published',
+                'in_review',
+                'expired'
+            )
+        ),
 
     CONSTRAINT announcements_dates_check
         CHECK (
@@ -87,6 +109,8 @@ CREATE TABLE competitions (
     description_ar TEXT NOT NULL,
     description_en TEXT NOT NULL,
 
+    category_code VARCHAR(30) NOT NULL DEFAULT 'other',
+
     requirements_ar TEXT,
     requirements_en TEXT,
 
@@ -94,6 +118,8 @@ CREATE TABLE competitions (
 
     team_size_min INTEGER,
     team_size_max INTEGER,
+
+    max_teams INTEGER,
 
     start_at TIMESTAMPTZ,
     end_at TIMESTAMPTZ,
@@ -111,6 +137,16 @@ CREATE TABLE competitions (
 
     created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT competitions_category_check
+        CHECK (
+            category_code IN (
+                'combat',
+                'simulation',
+                'sensing',
+                'other'
+            )
+        ),
 
     CONSTRAINT competitions_registration_status_check
         CHECK (
@@ -149,6 +185,12 @@ CREATE TABLE competitions (
             OR team_size_max >= team_size_min
         ),
 
+    CONSTRAINT competitions_max_teams_check
+        CHECK (
+            max_teams IS NULL
+            OR max_teams > 0
+        ),
+
     CONSTRAINT competitions_dates_check
         CHECK (
             start_at IS NULL
@@ -162,6 +204,37 @@ CREATE TABLE competitions (
             OR featured_order > 0
         )
 );
+
+
+
+CREATE TABLE competition_teams (
+    id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+
+    competition_id INTEGER NOT NULL,
+
+    team_name TEXT NOT NULL,
+
+    team_leader_name TEXT NOT NULL,
+
+    leader_email VARCHAR(255) NOT NULL,
+
+    leader_phone VARCHAR(30) NOT NULL,
+
+    member_names TEXT NOT NULL,
+
+    registered_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT competition_teams_competition_fk
+        FOREIGN KEY (competition_id)
+        REFERENCES competitions(id)
+        ON DELETE CASCADE
+);
+
+CREATE INDEX competition_teams_competition_id_idx
+    ON competition_teams (competition_id);
 
 
 
@@ -251,6 +324,37 @@ CREATE TABLE workshops (
 
 
 
+CREATE TABLE workshop_participants (
+    id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+
+    workshop_id INTEGER NOT NULL,
+
+    full_name TEXT NOT NULL,
+
+    email VARCHAR(255) NOT NULL,
+
+    phone VARCHAR(30) NOT NULL,
+
+    institution TEXT NOT NULL,
+
+    notes TEXT,
+
+    registered_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT workshop_participants_workshop_fk
+        FOREIGN KEY (workshop_id)
+        REFERENCES workshops(id)
+        ON DELETE CASCADE
+);
+
+CREATE INDEX workshop_participants_workshop_id_idx
+    ON workshop_participants (workshop_id);
+
+
+
 CREATE TABLE project_categories (
     id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 
@@ -281,6 +385,14 @@ CREATE TABLE projects (
     image_url TEXT,
 
     team_name TEXT NOT NULL,
+
+    team_leader_name TEXT,
+
+    project_url TEXT,
+
+    video_url TEXT,
+
+    technologies TEXT,
 
     stage_ar TEXT,
     stage_en TEXT,

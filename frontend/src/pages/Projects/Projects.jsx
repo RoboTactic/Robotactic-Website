@@ -1,12 +1,11 @@
 import { useMemo, useState } from 'react';
+import ApiState from '../../components/ApiState/ApiState';
+import { useApiData } from '../../services/api/useApiData';
+import { presentProject } from '../../services/api/presentRecords';
 import FilterChips from '../../components/EventUI/FilterChips';
 import SectionHeading from '../../components/EventUI/SectionHeading';
 import {
   filterProjects,
-  projectCategories,
-  projects,
-  projectsEmptyState,
-  projectsSearchEmptyState,
 } from '../../data/projects';
 import ProjectCard from './components/ProjectCard';
 import circuitPattern from '../Workshops/assets/circuit-pattern.svg';
@@ -16,13 +15,19 @@ import './Projects.css';
 export default function Projects() {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const { data, loading, error, reload } = useApiData('projects');
+  const projects = useMemo(() => (data || []).map(presentProject), [data]);
+  const projectCategories = useMemo(() => {
+    const language = document.documentElement.lang === 'en' ? 1 : 0;
+    const labels = { defense: ['مشاريع دفاعية','Defense projects'], invention: ['مشاريع ابتكارية','Invention projects'] };
+    return [{ id: 'all', label: language ? 'All projects' : 'عرض الكل' }, ...[...new Set(projects.map((project) => project.categoryId))].map((id) => ({ id, label: labels[id]?.[language] || id }))];
+  }, [projects]);
 
   const visibleProjects = useMemo(
     () => filterProjects(projects, selectedCategory, searchQuery),
     [searchQuery, selectedCategory],
   );
   const hasSearchQuery = searchQuery.trim().length > 0;
-  const emptyState = hasSearchQuery ? projectsSearchEmptyState : projectsEmptyState;
 
   return (
     <div className="projects-page" dir="rtl">
@@ -46,16 +51,17 @@ export default function Projects() {
               className="projects-filters" />
           </div>
 
-          {visibleProjects.length ? (
+          <ApiState loading={loading} error={error} empty={!loading && !error && !projects.length ? 'لا توجد مشاريع منشورة حاليًا.' : ''} onRetry={reload} />
+          {!loading && !error && visibleProjects.length ? (
             <div className="projects-grid">
               {visibleProjects.map((project) => (
                 <ProjectCard key={project.id} project={project} teamIcon={teamIcon} />
               ))}
             </div>
-          ) : (
+          ) : !loading && !error && projects.length > 0 && (
             <div className="projects-empty" role="status">
-              <h3>{emptyState.title}</h3>
-              <p>{emptyState.description}</p>
+              <h3>{hasSearchQuery ? 'لا توجد نتائج مطابقة.' : 'لا توجد مشاريع مطابقة للتصفية.'}</h3>
+              <p>جرّب تعديل عبارة البحث أو اختيار تصنيف آخر.</p>
             </div>
           )}
         </div>

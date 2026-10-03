@@ -47,3 +47,7 @@ ul { margin: 0; padding: 0; list-style: none; }
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
 }
+/* API states shared by public content sections and pages. */
+.api-state { padding: 20px; border: 1px solid var(--color-border-subtle); border-radius: var(--radius-md); color: var(--color-text-secondary); background: var(--color-surface-card); }
+.api-state--error { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; border-color: var(--color-status-error, #b42318); }
+.api-state button { min-block-size: 44px; padding: 8px 14px; border: 1px solid currentColor; border-radius: var(--radius-md); color: inherit; background: transparent; cursor: pointer; }

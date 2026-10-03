@@ -2,26 +2,29 @@ import SectionHeading from '../../../components/SectionHeading/SectionHeading';
 import CompetitionCard from '../../../components/CompetitionCard/CompetitionCard';
 import Button from '../../../components/Button/Button';
 import Icon from '../../../components/Icon/Icon';
-import { competitions } from '../../../data/competitions';
+import { useApiData } from '../../../services/api/useApiData';
+import { presentCompetition } from '../../../services/api/presentRecords';
+import ApiState from '../../../components/ApiState/ApiState';
 import { sections } from '../../../data/home';
 import '../../Competitions/Competitions.css'; // shared CompetitionCard base styles
 
-// data/competitions.js icon keys → Figma icons (CanSat uses Icon / Simulation)
-const ICONS = { sensor: 'sensor', controller: 'controller', cansat: 'simulation' };
-// The approved Figma Home shows no category chip on the CanSat card
-const HIDE_LEVEL_ON_HOME = new Set(['cansat-rockets']);
+// Database category codes map to the existing visual track icons.
+const ICONS = { sensor: 'sensor', controller: 'controller', simulation: 'simulation' };
 
 export default function CompetitionsPreview() {
   const s = sections.competitions;
+  const { data, loading, error, reload } = useApiData('competitions');
+  const records = (data || []).filter((item) => item.is_featured).map(presentCompetition);
   return (
     <section className="home-section home-competitions" aria-labelledby="home-competitions-title">
       <div className="container home-section__stack">
         <SectionHeading overline={s.overline} title={<span id="home-competitions-title">{s.title}</span>} />
+        <ApiState loading={loading} error={error} empty={!loading && !error && !records.length ? 'لا توجد مسابقات مميزة منشورة حاليًا.' : ''} onRetry={reload} />
         <ul className="card-grid card-grid--3">
-          {competitions.map(c => (
+          {records.map(c => (
             <li key={c.id}>
               <CompetitionCard
-                competition={HIDE_LEVEL_ON_HOME.has(c.id) ? { ...c, level: null } : c}
+                competition={c}
                 icon={<Icon name={ICONS[c.icon] ?? 'competition'} />}
                 registrationLabel="سجّل عبر نموذج Google"
                 registrationIcon={<Icon name="externalLink" size={18} strokeWidth={2} />}

@@ -19,10 +19,12 @@ function ScrollToTop() {
 }
 
 export default function App() {
+  const { pathname } = useLocation();
+  const isDashboard = pathname.startsWith('/dashboard');
   return (
     <>
       <ScrollToTop />
-      <Navbar />
+      {!isDashboard && <Navbar />}
       <main>
         <Routes>
           <Route path="/" element={<Home />} />
@@ -35,7 +37,7 @@ export default function App() {
           <Route path="/dashboard/*" element={<Dashboard />} />
         </Routes>
       </main>
-      <Footer />
+      {!isDashboard && <Footer />}
     </>
   );
 }

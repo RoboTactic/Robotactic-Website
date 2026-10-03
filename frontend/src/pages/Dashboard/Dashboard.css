@@ -1,6 +1,7 @@
 @import '../../components/EventUI/EventFonts.css';
 
 .dashboard { font-family: 'Thmanyah Serif Text', sans-serif; line-height: 1.7; }
+.dash-login { max-inline-size: 560px; margin-inline: auto; }
 .dashboard[lang=en] { font-family: 'IBM Plex Sans', sans-serif; }
 .dashboard * { min-inline-size: 0; }
 .dashboard button, .dashboard input, .dashboard select, .dashboard textarea { font: inherit; }
