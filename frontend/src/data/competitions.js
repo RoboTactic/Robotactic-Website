@@ -1,45 +1,47 @@
-/* The three official competition tracks. Only the track name, level and
-   focus area are confirmed — nothing else is invented. Unconfirmed details
-   stay as «يُحدَّد لاحقًا».
+/* The three official competition tracks, shared by the Competitions page and Home.
+   Only track names, levels and focus areas are confirmed; everything else stays
+   «يُحدَّد لاحقًا» until announced.
 
-   ⚠ registrationUrl values are PLACEHOLDERS. Replace each with the track's
+   ⚠ registrationUrl values are PLACEHOLDERS — replace each with the track's
    official Google Form link. */
 
 export const PLACEHOLDER_FORM_URL = 'https://forms.gle/REPLACE-WITH-OFFICIAL-FORM';
-const TBD = 'يُحدَّد لاحقًا';
 
 export const competitions = [
   {
-    id: 'university',
+    id: 'university-robotics',
     title: 'مسابقة الروبوتات الجامعية',
     level: 'جامعي',
     focus: 'المستشعرات',
     icon: 'sensor',
     audience: 'طلاب وطالبات الجامعات',
-    teamSize: TBD,
-    date: TBD,
+    teamSize: 'يُحدَّد لاحقًا',
+    date: 'يُحدَّد لاحقًا',
+    registrationStatus: 'open',
     registrationUrl: PLACEHOLDER_FORM_URL,
   },
   {
-    id: 'secondary',
+    id: 'secondary-beginners',
     title: 'مسابقة الثانوي / المبتدئين',
     level: 'ثانوي',
     focus: 'وحدة التحكم',
     icon: 'controller',
     audience: 'طلاب وطالبات المرحلة الثانوية',
-    teamSize: TBD,
-    date: TBD,
+    teamSize: 'يُحدَّد لاحقًا',
+    date: 'يُحدَّد لاحقًا',
+    registrationStatus: 'open',
     registrationUrl: PLACEHOLDER_FORM_URL,
   },
   {
-    id: 'cansat',
+    id: 'cansat-rockets',
     title: 'كانسات / الصواريخ',
-    level: null, // audience not specified in the requirements — no level chip
+    level: 'جامعي',
     focus: 'المحاكاة',
-    icon: 'simulation',
-    audience: TBD,
-    teamSize: TBD,
-    date: TBD,
+    icon: 'cansat',
+    audience: 'يُحدَّد لاحقًا',
+    teamSize: 'يُحدَّد لاحقًا',
+    date: 'يُحدَّد لاحقًا',
+    registrationStatus: 'open',
     registrationUrl: PLACEHOLDER_FORM_URL,
   },
 ];

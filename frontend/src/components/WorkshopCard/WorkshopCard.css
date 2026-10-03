@@ -1,0 +1,6 @@
+/* Optional header chip (Figma `Card / Workshop — Tag`). Base card styles live with the Workshops page. */
+.workshop-card__tag {
+  display: inline-flex; align-items: center; padding: 6px 12px; border-radius: var(--radius-full);
+  background: var(--color-brand-accent); color: var(--color-text-on-accent);
+  font: 500 13px/22px var(--font-arabic); white-space: nowrap;
+}

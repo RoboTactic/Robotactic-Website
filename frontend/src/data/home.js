@@ -1,5 +1,7 @@
 /* Home page copy — taken verbatim from the approved Figma Home design. */
 
+import { PLACEHOLDER_FORM_URL } from './competitions';
+
 export const hero = {
   eyebrow: 'ملتقى روبوتاكتيك · 2026',
   title: 'ابتكار يقوده التفكير',
@@ -33,6 +35,19 @@ export const sections = {
   competitions: { overline: 'COMPETITIONS', title: 'المسابقات', action: { label: 'عرض كل المسابقات', path: '/competitions' } },
   workshops: { overline: 'WORKSHOPS', title: 'ورش العمل', action: { label: 'عرض كل الورش', path: '/workshops' } },
   liveNow: { overline: 'LIVE NOW', title: 'مباشر الآن' },
+};
+
+/* Home's Workshops preview shows only the currently confirmed workshop.
+   (data/workshops.js holds the Workshops page's schedule mock-up, which is
+   not announced yet — don't surface it on Home.) */
+export const confirmedWorkshop = {
+  id: 'technical-workshops',
+  title: 'ورش تقنية مصاحبة',
+  description: 'جلسات عملية ضمن برنامج الملتقى. العناوين والمواعيد تُحدَّد لاحقًا.',
+  date: 'يُحدَّد لاحقًا',
+  time: 'يُحدَّد لاحقًا',
+  registrationStatus: 'open',
+  registrationUrl: PLACEHOLDER_FORM_URL, // ⚠ placeholder — replace with the official Google Form
 };
 
 export const cta = {

@@ -1,36 +1,53 @@
-import Button from '../Button/Button';
-import Chip from '../Chip/Chip';
-import Icon from '../Icon/Icon';
-import '../Card/Card.css';
+import EventRegistrationAction from '../EventUI/EventRegistrationAction';
+import './WorkshopCard.css';
 
-/* One workshop: name, date, time and — only when officially available — a
-   short description. Unknown date/time stay «يُحدَّد لاحقًا». */
-export default function WorkshopCard({ tag = 'ورشة', title, description, date, time, registrationUrl }) {
+/* Shared workshop card, used by the Workshops page and the Home preview.
+   Optional fields render only when present, so a workshop with unconfirmed
+   details (no presenter / seats yet) never shows invented values.
+   - workshopIcon / teamIcon: image URLs (string) or React nodes
+   - tag: optional chip in the header (Home shows «ورشة»)
+   - dateLabel: label for the date row (Workshops page: «اليوم», Home: «التاريخ»)
+   - metaIcons: optional { date, time } icons shown before the meta labels
+   - registrationIcon: optional icon after the registration label */
+export default function WorkshopCard({
+  workshop,
+  workshopIcon,
+  teamIcon,
+  tag,
+  dateLabel = 'اليوم',
+  registrationLabel,
+  registrationIcon,
+  metaIcons = {},
+  helperText = 'سينقلك الزر إلى نموذج Google خارجي في تبويب جديد',
+}) {
+  const isOpen = workshop.registrationStatus === 'open';
+  const iconNode = src => (typeof src === 'string' ? <img src={src} alt="" width="24" height="24" /> : src);
+
   return (
-    <article className="rt-card workshop-card">
-      <div className="rt-card__header">
-        <span className="rt-card__badge"><Icon name="workshop" /></span>
-        <Chip tone="accent">{tag}</Chip>
-      </div>
-
-      <h3 className="rt-card__title t-h3">{title}</h3>
-      {description && <p className="workshop-card__description t-body">{description}</p>}
-
-      <dl className="rt-card__meta">
-        {[['التاريخ', date, 'calendar'], ['الوقت', time, 'clock']].map(([k, v, icon]) => (
-          <div className="rt-card__meta-row" key={k}>
-            <dt className="rt-card__meta-key t-caption"><Icon name={icon} size={16} strokeWidth={1.5} />{k}</dt>
-            <dd className="rt-card__meta-value t-caption">{v}</dd>
+    <article className="workshop-card">
+      <header className="workshop-card__header">
+        {iconNode(workshopIcon)}
+        {tag && <span className="workshop-card__tag">{tag}</span>}
+      </header>
+      <div className="workshop-card__content">
+        <h3>{workshop.title}</h3>
+        {workshop.presenter && (
+          <div className="workshop-card__presenter">
+            {iconNode(teamIcon)}
+            <span>{workshop.presenter}</span>
           </div>
-        ))}
+        )}
+        {workshop.description && <p className="workshop-card__description">{workshop.description}</p>}
+      </div>
+      <dl className="workshop-card__meta">
+        <div><dt>{metaIcons.date}{dateLabel}</dt><dd>{workshop.date}</dd></div>
+        <div><dt>{metaIcons.time}الوقت</dt><dd>{workshop.time}</dd></div>
+        {workshop.availableSeats != null && <div><dt>المقاعد المتاحة</dt><dd>{workshop.availableSeats}</dd></div>}
       </dl>
-
-      {registrationUrl && (
-        <div className="rt-card__footer">
-          <Button href={registrationUrl} external fullWidth>سجّل عبر نموذج Google</Button>
-          <p className="rt-card__note t-caption">سينقلك الزر إلى نموذج Google خارجي في تبويب جديد</p>
-        </div>
-      )}
+      <EventRegistrationAction isOpen={isOpen} url={workshop.registrationUrl}
+        {...(registrationLabel ? { openLabel: registrationLabel } : {})}
+        icon={registrationIcon}
+        helperText={helperText} />
     </article>
   );
 }

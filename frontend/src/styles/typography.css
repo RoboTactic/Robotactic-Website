@@ -7,6 +7,11 @@
    Thmanyah is used only where it is already installed on the device (local()),
    and everyone else gets IBM Plex Sans Arabic. Serving Thmanyah to all visitors
    needs a licence exception from thmanyah (ask@thmanyah.com).
+
+   ⚠ TEAM NOTE: components/EventUI/EventFonts.css imports the unofficial
+   `@dawod/thmanyah-font-web` package, which loads Thmanyah from a jsDelivr CDN
+   for every page (Home included). That conflicts with the licence above —
+   please confirm permission with Thmanyah or remove that import as a team.
    ───────────────────────────────────────────────────────────────────────── */
 
 @font-face { font-family: 'Thmanyah Serif Text'; font-weight: 400; font-display: swap; src: local('thmanyah serif text Regular'), local('thmanyahseriftext-Regular'); }

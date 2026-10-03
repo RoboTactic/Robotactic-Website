@@ -1,42 +1,44 @@
-import Button from '../Button/Button';
-import Chip from '../Chip/Chip';
-import Icon from '../Icon/Icon';
-import '../Card/Card.css';
-import './CompetitionCard.css';
+import EventRegistrationAction from '../EventUI/EventRegistrationAction';
 
-/* One official competition track. Only confirmed information is shown:
-   title, level (optional — hidden when unknown), focus area, and meta rows. */
-export default function CompetitionCard({ title, level, focus, icon, audience, teamSize, date, registrationUrl }) {
+/* Shared competition track card (Figma `Card / Competition`), used by the
+   Competitions page and the Home preview.
+   - competition: one item from data/competitions.js
+   - icon: an image URL (string) or a React node (e.g. <Icon name="sensor" />)
+   - registrationLabel / registrationIcon / helperText: optional overrides for the Google Form action */
+export default function CompetitionCard({
+  competition,
+  icon,
+  registrationLabel,
+  registrationIcon,
+  helperText = 'سينقلك الزر إلى رابط التسجيل في تبويب جديد',
+}) {
+  const isOpen = competition.registrationStatus === 'open';
+
   return (
-    <article className="rt-card competition-card">
-      <div className="rt-card__header">
-        <span className="rt-card__badge"><Icon name={icon} /></span>
-        {level && <Chip tone="outline">{level}</Chip>}
+    <article className="competition-card">
+      <header className="competition-card__header">
+        <span className="competition-card__icon">
+          {typeof icon === 'string' ? <img src={icon} alt="" width="24" height="24" /> : icon}
+        </span>
+        {competition.level && <span className="competition-card__level">{competition.level}</span>}
+      </header>
+
+      <div className="competition-card__title-group">
+        <h2>{competition.title}</h2>
+        <p><span>محور التحدي:</span> <strong>{competition.focus}</strong></p>
       </div>
 
-      <div className="competition-card__head">
-        <h3 className="rt-card__title t-h3">{title}</h3>
-        <p className="competition-card__focus">
-          <span className="t-body competition-card__focus-label">محور التحدي:</span>
-          <span className="t-body-bold competition-card__focus-value">{focus}</span>
-        </p>
-      </div>
-
-      <dl className="rt-card__meta">
-        {[['الفئة المستهدفة', audience], ['حجم الفريق', teamSize], ['موعد المسابقة', date]].map(([k, v]) => (
-          <div className="rt-card__meta-row" key={k}>
-            <dt className="rt-card__meta-key t-caption">{k}</dt>
-            <dd className="rt-card__meta-value t-caption">{v}</dd>
-          </div>
-        ))}
+      <dl className="competition-card__meta">
+        <div><dt>الفئة المستهدفة</dt><dd>{competition.audience}</dd></div>
+        <div><dt>حجم الفريق</dt><dd>{competition.teamSize}</dd></div>
+        <div><dt>موعد المسابقة</dt><dd>{competition.date}</dd></div>
       </dl>
 
-      {registrationUrl && (
-        <div className="rt-card__footer">
-          <Button href={registrationUrl} external fullWidth>سجّل عبر نموذج Google</Button>
-          <p className="rt-card__note t-caption">سينقلك الزر إلى نموذج Google خارجي في تبويب جديد</p>
-        </div>
-      )}
+      <EventRegistrationAction isOpen={isOpen} url={competition.registrationUrl}
+        {...(registrationLabel ? { openLabel: registrationLabel } : {})}
+        icon={registrationIcon}
+        helperText={helperText}
+        closedHelperText="التسجيل غير متاح حاليًا" />
     </article>
   );
 }

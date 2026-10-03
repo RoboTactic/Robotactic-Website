@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import Logo from '../Logo/Logo';
 import Button from '../Button/Button';
@@ -10,11 +10,13 @@ import './Navbar.css';
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const { pathname } = useLocation();
+  const menuButton = useRef(null);
+  const closeMenu = () => { setMenuOpen(false); menuButton.current?.focus(); }; // return focus to the trigger
 
   useEffect(() => setMenuOpen(false), [pathname]);                 // close on navigation
   useEffect(() => {
     if (!menuOpen) return undefined;
-    const onKey = e => e.key === 'Escape' && setMenuOpen(false);
+    const onKey = e => e.key === 'Escape' && closeMenu();
     document.addEventListener('keydown', onKey);
     document.body.style.overflow = 'hidden';                       // lock page scroll behind the menu
     return () => { document.removeEventListener('keydown', onKey); document.body.style.overflow = ''; };
@@ -41,6 +43,7 @@ export default function Navbar() {
 
         <button
           type="button"
+          ref={menuButton}
           className="navbar__menu-button"
           aria-expanded={menuOpen}
           aria-controls="mobile-menu"
@@ -55,7 +58,7 @@ export default function Navbar() {
         <div id="mobile-menu" className="mobile-menu" role="dialog" aria-modal="true" aria-label="القائمة">
           <div className="mobile-menu__top container">
             <Link to="/" aria-label="RoboTactic — الرئيسية"><Logo layout="horizontal" markHeight={44} /></Link>
-            <button type="button" className="navbar__menu-button navbar__menu-button--visible" aria-label="إغلاق القائمة" onClick={() => setMenuOpen(false)} autoFocus>
+            <button type="button" className="navbar__menu-button navbar__menu-button--visible" aria-label="إغلاق القائمة" onClick={closeMenu} autoFocus>
               <Icon name="close" />
             </button>
           </div>
