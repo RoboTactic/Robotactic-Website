@@ -1,6 +1,11 @@
 /* Line icons exported from the Figma `Icon / *` components (24px grid,
    1.75 stroke, round caps). Each path is placed at its Figma offset. */
 export const ICONS = {
+  users: [
+    { d: 'M 9 10 A 3 3 0 1 0 9 4 A 3 3 0 1 0 9 10 Z M 3 21 V 18 A 6 6 0 0 1 15 18 V 21', x: 0, y: 0 },
+    { d: 'M 16 4 A 3 3 0 0 1 16 10 M 18 13 A 5 5 0 0 1 21 18 V 21', x: 0, y: 0 },
+  ],
+  logout: [{ d: 'M 10 5 H 4 V 19 H 10 M 9 12 H 21 M 17 8 L 21 12 L 17 16', x: 0, y: 0 }],
   externalLink: [{ d: 'M 0 14 L 14 0', x: 5, y: 5 }, { d: 'M 0 0 L 10 0 L 10 10', x: 9, y: 5 }],
   menu: [{ d: 'M 0 0 L 18 0', x: 3, y: 7 }, { d: 'M 0 0 L 18 0', x: 3, y: 12 }, { d: 'M 0 0 L 11 0', x: 3, y: 17 }],
   close: [{ d: 'M 0 0 L 12 12', x: 6, y: 6 }, { d: 'M 12 0 L 0 12', x: 6, y: 6 }],
