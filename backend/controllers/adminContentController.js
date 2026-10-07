@@ -4,8 +4,7 @@ function createAdminContentController(pool) {
   return {
     list: (resource) => async (request, response) => {
       const parent = request.query.parent;
-      const filter = resource === "teams" && parent ? ["competition_id", parent]
-        : resource === "participants" && parent ? ["workshop_id", parent] : null;
+      const filter = resource === "teams" && parent ? ["competition_id", parent] : null;
       response.json({ data: await service.list(pool, resource, filter) });
     },
     get: (resource) => async (request, response) => response.json({ data: await service.get(pool, resource, request.params.id) }),

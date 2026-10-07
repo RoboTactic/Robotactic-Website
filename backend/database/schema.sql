@@ -5,7 +5,8 @@ CREATE TABLE admin_users (
 
     full_name TEXT NOT NULL,
 
-    email VARCHAR(255) NOT NULL UNIQUE,
+    email VARCHAR(255) UNIQUE,
+    login_name VARCHAR(40) NOT NULL UNIQUE,
 
     phone VARCHAR(30),
 
@@ -24,10 +25,29 @@ CREATE TABLE admin_users (
             role_code IN (
                 'super_admin',
                 'competition_manager',
-                'workshop_manager'
+                'workshop_manager',
+                'team_member'
             )
         )
 );
+
+ALTER TABLE admin_users ADD CONSTRAINT admin_users_login_name_check CHECK (login_name ~ '^[a-zA-Z0-9._-]{3,40}$');
+CREATE TABLE admin_user_permissions (
+    user_id INTEGER NOT NULL REFERENCES admin_users(id) ON DELETE CASCADE,
+    scope VARCHAR(30) NOT NULL CHECK (scope IN ('competitions', 'teams', 'workshops', 'speakers', 'projects', 'announcements')),
+    PRIMARY KEY (user_id, scope)
+);
+ALTER TABLE admin_users ENABLE ROW LEVEL SECURITY;
+ALTER TABLE admin_user_permissions ENABLE ROW LEVEL SECURITY;
+DO $$
+BEGIN
+    IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'anon') THEN
+        REVOKE ALL ON admin_users, admin_user_permissions FROM anon;
+    END IF;
+    IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'authenticated') THEN
+        REVOKE ALL ON admin_users, admin_user_permissions FROM authenticated;
+    END IF;
+END $$;
 
 
 
@@ -247,7 +267,7 @@ CREATE TABLE workshops (
     description_ar TEXT NOT NULL,
     description_en TEXT NOT NULL,
 
-    presenter_name TEXT NOT NULL,
+    presenter_name TEXT,
 
     image_url TEXT,
 
@@ -324,34 +344,51 @@ CREATE TABLE workshops (
 
 
 
-CREATE TABLE workshop_participants (
+-- Speaker contact details are read only through the authenticated backend.
+CREATE TABLE speakers (
     id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-
-    workshop_id INTEGER NOT NULL,
-
-    full_name TEXT NOT NULL,
-
-    email VARCHAR(255) NOT NULL,
-
+    full_name VARCHAR(255) NOT NULL,
     phone VARCHAR(30) NOT NULL,
-
-    institution TEXT NOT NULL,
-
     notes TEXT,
-
-    registered_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
     created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT workshop_participants_workshop_fk
-        FOREIGN KEY (workshop_id)
-        REFERENCES workshops(id)
-        ON DELETE CASCADE
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE INDEX workshop_participants_workshop_id_idx
-    ON workshop_participants (workshop_id);
+CREATE TABLE workshop_speakers (
+    workshop_id INTEGER NOT NULL REFERENCES workshops(id) ON DELETE CASCADE,
+    speaker_id INTEGER NOT NULL REFERENCES speakers(id) ON DELETE CASCADE,
+    is_public BOOLEAN NOT NULL DEFAULT FALSE,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (workshop_id, speaker_id)
+);
+
+CREATE INDEX workshop_speakers_speaker_id_idx ON workshop_speakers (speaker_id);
+
+-- Storage schema is present on Supabase projects. Other PostgreSQL installs
+-- can omit the bucket and configure an equivalent image store separately.
+DO $$
+BEGIN
+    IF to_regclass('storage.buckets') IS NOT NULL THEN
+        INSERT INTO storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+        VALUES ('robotactic-images', 'robotactic-images', TRUE, 5242880,
+                ARRAY['image/jpeg', 'image/png', 'image/webp']::TEXT[])
+        ON CONFLICT (id) DO NOTHING;
+    END IF;
+END $$;
+
+ALTER TABLE speakers ENABLE ROW LEVEL SECURITY;
+ALTER TABLE workshop_speakers ENABLE ROW LEVEL SECURITY;
+
+DO $$
+BEGIN
+    IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'anon') THEN
+        REVOKE ALL ON speakers, workshop_speakers FROM anon;
+    END IF;
+    IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'authenticated') THEN
+        REVOKE ALL ON speakers, workshop_speakers FROM authenticated;
+    END IF;
+END $$;
 
 
 

@@ -29,12 +29,13 @@ export default function WorkshopCard({
         {iconNode(workshopIcon)}
         {tag && <span className="workshop-card__tag">{tag}</span>}
       </header>
+      {workshop.imageUrl && <img className="workshop-card__image" src={workshop.imageUrl} alt={workshop.title} loading="lazy" />}
       <div className="workshop-card__content">
         <h3>{workshop.title}</h3>
         {workshop.presenter && (
           <div className="workshop-card__presenter">
             {iconNode(teamIcon)}
-            <span>{workshop.presenter}</span>
+            <span>{document.documentElement.lang === 'en' ? 'Presented by ' : 'يقدمها '}{workshop.presenter}</span>
           </div>
         )}
         {workshop.description && <p className="workshop-card__description">{workshop.description}</p>}

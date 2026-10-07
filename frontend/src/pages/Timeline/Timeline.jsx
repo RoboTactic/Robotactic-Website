@@ -11,7 +11,7 @@ export default function Timeline() {
   const { data, loading, error, reload } = useApiData('timeline-events');
   const events = data || [];
   return <section className="page container timeline-page" dir="rtl">
-    <SectionHeading overline="SCHEDULE" title="الجدول الزمني" />
+    <SectionHeading as="h1" size="h1" overline="SCHEDULE" title="الجدول الزمني" />
     <ApiState loading={loading} error={error} empty={!loading && !error && !events.length ? 'سيُنشر الجدول الزمني بعد اعتماده.' : ''} onRetry={reload} />
     {!loading && !error && events.length > 0 && <ol className="timeline-list">{events.map((event)=><li className="timeline-list__item" key={event.id}>
       <time dateTime={event.start_at}>{formatDate(event.start_at)}</time>

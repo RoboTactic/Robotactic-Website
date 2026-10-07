@@ -38,6 +38,7 @@
   background: var(--color-surface-card);
 }
 .competition-card__header { display: flex; min-width: 0; align-items: center; justify-content: space-between; gap: 16px; }
+.competition-card__image { display: block; inline-size: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: var(--radius-md); }
 .competition-card__level {
   max-width: calc(100% - 64px); padding: 6px 12px; border: 1.25px solid var(--color-border-brand);
   border-radius: var(--radius-full); color: var(--color-text-brand); font-size: 13px;

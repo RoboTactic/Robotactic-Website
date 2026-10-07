@@ -1,5 +1,7 @@
 const { COOKIE_NAME, TOKEN_TTL_SECONDS, createToken, cookieOptions } = require("../middleware/authenticate");
 const { authenticateCredentials } = require("../services/authService");
+const { listLoginOptions } = require("../database/authRepository");
+const { httpError } = require("../utils/httpError");
 
 const attempts = new Map();
 const WINDOW_MS = 15 * 60 * 1000;
@@ -25,16 +27,20 @@ function consumeAttempt(key) {
 
 function createAuthController({ pool, tokenSecret, isProduction }) {
   return {
+    loginOptions: async (_request, response) => {
+      response.set("Cache-Control", "no-store");
+      response.json({ data: await listLoginOptions(pool) });
+    },
     login: async (request, response) => {
       const ipKey = request.ip || "unknown";
       if (!consumeAttempt(ipKey)) {
         console.warn("Admin sign-in was rate limited.");
         throw httpError(429, "Too many sign-in attempts. Try again later.");
       }
-      const { email, password } = request.body || {};
+      const { login_name: loginName, password } = request.body || {};
       let admin;
       try {
-        admin = await authenticateCredentials(pool, email, password);
+        admin = await authenticateCredentials(pool, loginName, password);
       } catch (error) {
         if (error.statusCode === 401) {
           console.warn("Admin sign-in was rejected.");
@@ -45,7 +51,8 @@ function createAuthController({ pool, tokenSecret, isProduction }) {
       console.info("Admin sign-in succeeded.");
       const token = createToken(admin, tokenSecret);
       response.cookie(COOKIE_NAME, token, cookieOptions(isProduction));
-      response.json({ data: { id: admin.id, full_name: admin.full_name, email: admin.email, role_code: admin.role_code }, expires_in: TOKEN_TTL_SECONDS });
+      const { password_hash: _passwordHash, ...session } = admin;
+      response.json({ data: session, expires_in: TOKEN_TTL_SECONDS });
     },
     logout: async (_request, response) => {
       response.clearCookie(COOKIE_NAME, cookieOptions(isProduction));

@@ -18,6 +18,7 @@ export function presentCompetition(row) {
   return {
     id: row.id,
     title: localized(row.name_ar, row.name_en),
+    imageUrl: row.image_url || '',
     level: row.audience_type || null,
     focus: category[isEnglish() ? 1 : 0],
     categoryLabel: category[isEnglish() ? 1 : 0],
@@ -34,7 +35,8 @@ export function presentWorkshop(row) {
   return {
     id: row.id,
     title: localized(row.title_ar, row.title_en),
-    presenter: row.presenter_name,
+    imageUrl: row.image_url || '',
+    presenter: Array.isArray(row.speakers) ? row.speakers.join(isEnglish() ? ', ' : '، ') : '',
     description: localized(row.description_ar, row.description_en),
     date: dateOf(row.start_at, { dateStyle: 'medium' }),
     time: dateOf(row.start_at, { hour: 'numeric', minute: '2-digit' }),

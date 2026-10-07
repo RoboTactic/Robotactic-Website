@@ -23,6 +23,8 @@ export default function CompetitionCard({
         {competition.level && <span className="competition-card__level">{competition.level}</span>}
       </header>
 
+      {competition.imageUrl && <img className="competition-card__image" src={competition.imageUrl} alt={competition.title} loading="lazy" />}
+
       <div className="competition-card__title-group">
         <h2>{competition.title}</h2>
         <p><span>محور التحدي:</span> <strong>{competition.focus}</strong></p>

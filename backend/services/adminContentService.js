@@ -30,14 +30,14 @@ const resources = {
     fields: {
       title_ar: { type: "string", required: true }, title_en: { type: "string", required: true },
       description_ar: { type: "string", required: true }, description_en: { type: "string", required: true },
-      presenter_name: { type: "string", required: true }, image_url: { type: "url", nullable: true },
+      image_url: { type: "url", nullable: true },
       start_at: { type: "date", required: true }, end_at: { type: "date", nullable: true },
       capacity: { type: "integer", nullable: true }, available_seats: { type: "integer", nullable: true },
       registration_status: { type: "enum", values: ["open", "closed", "coming_soon"] },
       registration_url: { type: "url", nullable: true }, meeting_url: { type: "url", nullable: true },
       ...shared,
     },
-    required: ["title_ar", "title_en", "description_ar", "description_en", "presenter_name", "start_at"],
+    required: ["title_ar", "title_en", "description_ar", "description_en", "start_at"],
     order: "start_at ASC, id ASC",
   },
   projects: {
@@ -74,16 +74,6 @@ const resources = {
       leader_phone: { type: "string", required: true }, member_names: { type: "string", required: true },
     },
     required: ["competition_id", "team_name", "team_leader_name", "leader_email", "leader_phone", "member_names"],
-    order: "registered_at DESC, id DESC",
-  },
-  participants: {
-    table: "workshop_participants",
-    fields: {
-      workshop_id: { type: "positiveInteger", required: true }, full_name: { type: "string", required: true },
-      email: { type: "email", required: true }, phone: { type: "string", required: true },
-      institution: { type: "string", required: true }, notes: { type: "string", nullable: true },
-    },
-    required: ["workshop_id", "full_name", "email", "phone", "institution"],
     order: "registered_at DESC, id DESC",
   },
 };

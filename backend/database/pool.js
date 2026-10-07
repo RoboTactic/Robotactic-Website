@@ -1,10 +1,11 @@
 const { Pool } = require("pg");
 
 const { databaseUrl, databaseSsl } = require("../config/env");
+const { getDatabaseSslOptions } = require("../config/databaseSsl");
 
 const pool = new Pool({
   connectionString: databaseUrl,
-  ...(databaseSsl ? { ssl: { rejectUnauthorized: true } } : {}),
+  ...(databaseSsl ? { ssl: getDatabaseSslOptions() } : {}),
   connectionTimeoutMillis: 5000,
   idleTimeoutMillis: 30000,
   max: 10,

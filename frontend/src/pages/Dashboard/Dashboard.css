@@ -47,15 +47,15 @@
 .dash-action--danger { color: var(--color-status-live); border-color: var(--color-status-live); }
 .dash-action:hover { background: var(--color-surface-raised); }
 .dash-action--primary:hover { background: var(--color-brand-accent); }
-.dash-grid { display: grid; gap: 20px; }
-.dash-details-layout { display: grid; gap: 20px; margin-block: 24px; align-items: start; }
+.dash-grid { display: grid; gap: 20px; max-inline-size: 1280px; }
+.dash-details-layout { display: grid; gap: 20px; max-inline-size: 1120px; margin-block: 24px; align-items: start; }
 .dash-details-layout .dash-detail-fields { margin-block: 0; }
 .dash-card-actions { margin-block-start: auto; }
 .dash-card { padding: 20px; border: 1px solid var(--color-border-default); border-radius: var(--radius-lg); background: var(--color-surface-card); display: flex; flex-direction: column; gap: 12px; }
 .dash-card-heading { display: flex; align-items: start; gap: 12px; justify-content: space-between; }
 .dash-status { flex-shrink: 0; border: 1px solid var(--color-border-brand); color: var(--color-text-secondary); border-radius: var(--radius-full); padding: 4px 10px; font-size: 12px; }
-.dash-card-actions { display: flex; gap: 12px; flex-wrap: wrap; }
-.dash-card-actions > * { flex: 1; }
+.dash-card-actions { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 8px; }
+.dash-card-actions > * { min-inline-size: 0; padding-inline: 8px; font-size: 13px; }
 .dash-meta { margin: 0; padding: 12px 16px; background: var(--color-surface-sunken); border-radius: var(--radius-md); font-size: 13px; }
 .dash-meta div { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,2fr); gap: 12px; padding-block: 3px; align-items: start; }
 .dash-meta .dash-meta-entry--full { grid-template-columns: minmax(0,1fr); gap: 6px; padding-block: 8px; }
@@ -63,7 +63,7 @@
 .dash-meta dt { color: var(--color-text-secondary); }
 .dash-meta dt { overflow-wrap: anywhere; }
 .dash-meta dd { margin: 0; overflow-wrap: anywhere; }
-.dash-stats { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 12px; }
+.dash-stats { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 12px; max-inline-size: 1280px; }
 .dash-stat { display: flex; flex-direction: column; gap: 12px; padding: 20px; border: 1px solid var(--color-border-default); border-radius: var(--radius-lg); background: var(--color-surface-card); }
 .dash-stat strong { font: 600 34px 'IBM Plex Sans', sans-serif; }
 .dash-stat > span:last-child { font-size: 13px; color: var(--color-text-secondary); }
@@ -71,20 +71,25 @@
 .dash-detail-fields { margin-block: 24px; }
 .dash-detail-fields dd { white-space: pre-wrap; }
 .dash-filters { display: flex; flex-direction: column; gap: 12px; }
-.dash-filters label { flex: 1; }
+.dash-filters label { flex: 1; max-inline-size: 360px; }
 .dash-filters label, .dash-form label { display: flex; flex-direction: column; gap: 8px; color: var(--color-text-secondary); font-size: 14px; }
 .dashboard input, .dashboard select, .dashboard textarea { inline-size: 100%; min-block-size: 44px; border: 1px solid var(--color-border-default); border-radius: 12px; background: var(--color-surface-raised); color: var(--color-text-primary); padding: 10px 14px; }
-.dashboard input[type=file] { border-style: dashed; }
-.dashboard input[type=file]::file-selector-button { font: inherit; padding: 8px 12px; margin-inline-end: 12px; border: 1px solid var(--color-border-brand); border-radius: 8px; background: var(--color-surface-brand-band); color: var(--color-text-primary); cursor: pointer; min-block-size: 44px; }
-.dashboard input[type=file]::file-selector-button:hover { background: var(--color-surface-card); }
+.dash-upload-control { position: relative; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; min-block-size: 56px; padding: 6px; border: 1px dashed var(--color-border-brand); border-radius: 12px; background: var(--color-surface-raised); cursor: pointer; }
+.dash-file-trigger { display: inline-flex; align-items: center; justify-content: center; min-block-size: 44px; padding: 8px 14px; border: 1px solid var(--color-border-brand); border-radius: 8px; background: var(--color-surface-brand-band); color: var(--color-text-primary); font-weight: 700; }
+.dash-file-name { flex: 1 1 140px; min-inline-size: 0; overflow-wrap: anywhere; font-size: 13px; }
+.dashboard .dash-file-input { position: absolute; inline-size: 1px; block-size: 1px; min-block-size: 1px; padding: 0; opacity: 0; inset-inline-start: 0; inset-block-end: 0; }
+.dash-upload-control:focus-within { outline: 2px solid var(--color-border-focus); outline-offset: 3px; }
+.dash-image-preview { display: block; inline-size: 100%; max-block-size: 260px; object-fit: contain; border: 1px solid var(--color-border-default); border-radius: var(--radius-md); background: var(--color-surface-sunken); }
 .dashboard input:is([type=date],[type=time],[type=datetime-local]) { font-family: 'IBM Plex Sans', sans-serif; accent-color: var(--color-brand-primary); color-scheme: dark; }
 .dashboard input:is([type=date],[type=time],[type=datetime-local])::-webkit-calendar-picker-indicator { cursor: pointer; opacity: .9; padding: 8px; }
 .dashboard textarea { resize: vertical; }
+.dash-form textarea:not([name=members]) { block-size: 112px; min-block-size: 112px; }
+.dash-form textarea[name=members] { block-size: 140px; min-block-size: 140px; }
 .dash-result-count { font-size: 13px; color: var(--color-text-secondary); }
-.dash-form { padding: 24px; background: var(--color-surface-card); border: 1px solid var(--color-border-default); border-radius: var(--radius-lg); }
-.dash-form-grid { display: grid; gap: 24px; margin-block-end: 24px; }
-.dash-form-actions { display: flex; gap: 12px; flex-wrap: wrap; }
-.dash-form-actions > * { flex: 1; }
+.dash-form { inline-size: 100%; max-inline-size: 820px; padding: 16px; background: var(--color-surface-card); border: 1px solid var(--color-border-default); border-radius: var(--radius-lg); }
+.dash-form-grid { display: grid; gap: 16px; margin-block-end: 20px; }
+.dash-form-actions { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 12px; }
+.dash-form-actions > * { inline-size: 100%; min-inline-size: 0; }
 .dash-back { display: inline-flex; align-items: center; min-block-size: 44px; color: var(--color-text-accent); margin-block-end: 16px; }
 .dash-empty { padding: 32px; border: 1px solid var(--color-border-default); border-radius: 16px; }
 .dash-notice { background: var(--color-surface-raised); border: 1px solid var(--color-border-brand); border-radius: 12px; padding: 16px; margin-block-end: 20px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
@@ -93,10 +98,23 @@
 @media(min-width:700px) {
   .dash-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
   .dash-filters { flex-direction: row; align-items: end; }
-  .dash-form-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .dash-form { padding: 24px; }
+  .dash-form-grid { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 20px; margin-block-end: 24px; }
   .dash-field--full { grid-column: 1 / -1; }
   .dash-heading { flex-direction: row; align-items: end; justify-content: space-between; }
-  .dash-form-actions > * { flex: initial; }
+  .dash-form-actions { display: flex; justify-content: flex-start; flex-wrap: wrap; }
+  .dash-form-actions > * { inline-size: auto; }
+}
+@media(max-width:370px) {
+  .dash-card .dash-meta div { grid-template-columns: minmax(0,1fr); gap: 2px; padding-block: 6px; }
+  .dash-card .dash-meta dd { font-weight: 600; }
+  .dash-card-actions { gap: 6px; }
+  .dash-card-actions > * { padding-inline: 6px; }
+  .dash-speaker-workshops .dash-form-actions { grid-template-columns: minmax(0,1fr); }
+}
+@media(max-width:699px) {
+  .dash-detail-fields .dash-meta div { grid-template-columns: minmax(0,1fr); gap: 2px; padding-block: 7px; }
+  .dash-detail-fields .dash-meta dd { font-weight: 600; }
 }
 @media(min-width:1024px) {
   .dash-layout { flex-direction: row; }
@@ -114,12 +132,21 @@
 .dashboard input[type=checkbox] { inline-size: 24px; min-block-size: 24px; block-size: 24px; accent-color: var(--color-brand-primary); }
 
 .dash-field { display: flex; flex-direction: column; gap: 8px; }
+.dash-checkbox-label { display: flex; flex-direction: row !important; align-items: center; justify-content: space-between; gap: 12px; min-block-size: 44px; }
+.dash-checkbox-label input { flex: 0 0 24px; }
+.dash-permissions { border: 1px solid var(--color-border-default); border-radius: 12px; padding: 16px; margin-block: 0 24px; }
+.dash-permissions legend { color: var(--color-text-primary); font-weight: 700; padding-inline: 8px; }
+.dash-permission-grid { display: grid; gap: 8px 16px; }
+@media (min-width: 640px) { .dash-permission-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.dash-speaker-workshops { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.dash-speaker-workshops li { display: grid; gap: 8px; padding: 12px; border: 1px solid var(--color-border-default); border-radius: 12px; }
+.dash-speaker-workshops li > span { color: var(--color-text-secondary); }
 .dash-date-field { position: relative; }
 .dash-date-input { display: grid; grid-template-columns: minmax(0,1fr) 44px; align-items: center; gap: 8px; }
 .dashboard .dash-date-input input[type=text] { font-family: var(--font-latin); }
 .dash-calendar-trigger, .dash-calendar-months button { display: inline-flex; align-items: center; justify-content: center; inline-size: 44px; block-size: 44px; border: 1px solid var(--color-border-brand); border-radius: 10px; color: var(--color-text-accent); background: var(--color-surface-raised); }
 .dash-date-hint { display: block; margin-block-start: 6px; color: var(--color-text-secondary); font-size: 12px; }
-.dash-date-popover { position: fixed; z-index: 20; inset-inline: 0; inset-block-start: 12px; inline-size: 352px; max-inline-size: 100vw; margin-inline: auto; padding: 5px; border: 1px solid var(--color-border-brand); border-radius: 14px; background: var(--color-surface-card); color: var(--color-text-primary); max-block-size: calc(100dvh - 24px); overflow-y: auto; box-shadow: 0 8px 28px var(--color-surface-footer); }
+.dash-date-popover { position: fixed; z-index: 20; inset-inline: 4px; inset-block-start: 12px; inline-size: auto; max-inline-size: 352px; margin-inline: auto; padding: 5px; border: 1px solid var(--color-border-brand); border-radius: 14px; background: var(--color-surface-card); color: var(--color-text-primary); max-block-size: calc(100dvh - 24px); overflow-y: auto; box-shadow: 0 8px 28px var(--color-surface-footer); }
 .dash-calendar-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-block-end: 8px; }
 .dash-calendar-heading h2 { font-size: 16px; }
 .dash-calendar-months { display: flex; gap: 4px; }

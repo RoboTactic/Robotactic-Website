@@ -17,10 +17,16 @@ async function getCompetitions(pool) {
 
 async function getWorkshops(pool) {
   const { rows } = await pool.query(`
-    SELECT id, title_ar, title_en, description_ar, description_en, presenter_name, image_url,
-           start_at, end_at, capacity, available_seats, registration_status, registration_url,
-           is_featured, featured_order
-    FROM workshops WHERE status = 'published' ORDER BY start_at ASC, id ASC
+    SELECT w.id, w.title_ar, w.title_en, w.description_ar, w.description_en, w.image_url,
+           w.start_at, w.end_at, w.capacity, w.available_seats, w.registration_status, w.registration_url,
+           w.is_featured, w.featured_order, COALESCE(public_speakers.names, '[]'::json) AS speakers
+    FROM workshops w
+    LEFT JOIN LATERAL (
+      SELECT json_agg(s.full_name ORDER BY s.full_name, s.id) AS names
+      FROM workshop_speakers ws JOIN speakers s ON s.id = ws.speaker_id
+      WHERE ws.workshop_id = w.id AND ws.is_public = TRUE
+    ) public_speakers ON TRUE
+    WHERE w.status = 'published' ORDER BY w.start_at ASC, w.id ASC
   `);
   return rows;
 }

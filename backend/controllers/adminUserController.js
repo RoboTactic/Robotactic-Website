@@ -3,6 +3,7 @@ const service = require("../services/adminUserService");
 function createAdminUserController(pool) {
   return {
     list: async (_request, response) => response.json({ data: await service.list(pool) }),
+    get: async (request, response) => response.json({ data: await service.get(pool, request.params.id) }),
     create: async (request, response) => response.status(201).json({ data: await service.create(pool, request.body) }),
     update: async (request, response) => response.json({ data: await service.update(pool, request.admin.id, request.params.id, request.body) }),
     remove: async (request, response) => {

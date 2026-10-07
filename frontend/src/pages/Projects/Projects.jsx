@@ -25,7 +25,7 @@ export default function Projects() {
 
   const visibleProjects = useMemo(
     () => filterProjects(projects, selectedCategory, searchQuery),
-    [searchQuery, selectedCategory],
+    [projects, searchQuery, selectedCategory],
   );
   const hasSearchQuery = searchQuery.trim().length > 0;
 

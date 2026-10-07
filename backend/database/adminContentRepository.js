@@ -6,7 +6,7 @@ function safeId(value) {
 }
 
 function columnsFor(resource, definition) {
-  return ["id", ...Object.keys(definition.fields), "created_at", "updated_at", ...(resource === "teams" || resource === "participants" ? ["registered_at"] : [])];
+  return ["id", ...Object.keys(definition.fields), "created_at", "updated_at", ...(resource === "teams" ? ["registered_at"] : [])];
 }
 
 const projectMembersSql = `, (SELECT COALESCE(json_agg(json_build_object('id', pm.id, 'name', pm.name, 'linkedin_url', pm.linkedin_url, 'x_url', pm.x_url, 'display_order', pm.display_order) ORDER BY pm.display_order ASC NULLS LAST, pm.id ASC), '[]'::json) FROM project_members pm WHERE pm.project_id = projects.id) AS members`;

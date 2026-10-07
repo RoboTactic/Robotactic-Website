@@ -23,4 +23,6 @@ module.exports = {
   databaseSsl: process.env.DATABASE_SSL === "true",
   corsOrigins,
   authTokenSecret,
+  supabaseUrl: process.env.SUPABASE_URL,
+  supabaseSecretKey: process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_SERVICE_ROLE_KEY,
 };

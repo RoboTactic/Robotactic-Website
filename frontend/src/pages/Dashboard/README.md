@@ -2,18 +2,23 @@
 
 Open `/dashboard` after starting the frontend with `npm run dev`. The current dashboard uses the admin API and requires an approved team account. Configure the frontend/backend as described in their existing setup documentation; authentication and database setup remain owned by the event administrator.
 
+Sign-in uses a dropdown of active team account login names and a password. A Super Admin can create and edit accounts under Users and permissions, assign one or more dashboard sections, and disable accounts. Email is optional. The server checks permissions on every request.
+
 ## Admin UI fixes
 
 - A compact dashboard header contains the official shared Logo and the language switch. The desktop sidebar starts directly beneath it, without an extra language toolbar row.
 - Arabic uses the same `--font-arabic` fallback stack as the public site; English uses IBM Plex Sans, including its local regular face. The switch uses the font and direction of its destination language.
-- Navigation reuses shared Icon components for sections visible to the signed-in role. Users and logout icons extend the shared 24px line-icon system. Mobile navigation closes on Escape and returns focus to its trigger.
+- Navigation reuses shared Icon components for sections allowed for the signed-in account. Users and logout icons extend the shared 24px line-icon system. Mobile navigation closes on Escape and returns focus to its trigger.
 - Date/time fields use a branded in-page Gregorian calendar, with hour/minute controls, clear/today/done actions, keyboard arrows/Home/End/PageUp/PageDown, Escape dismissal and focus return. Manual entry is validated, including leap dates. The submitted local datetime format is unchanged, preserving existing API conversion. The calendar stays inside the viewport on phones and desktops, so it does not depend on the browser's white native popup.
-- File chooser buttons use green surface/border tokens. The latest backend-connected forms accept image URLs instead of file uploads; this styling does not add an upload flow.
+- File chooser buttons use green surface/border tokens. Competition, workshop, project, and announcement forms accept either an image URL or a JPEG/PNG/WebP upload. A selected file replaces the URL when the form is saved.
 - Management lists show one column on phones, two from 700px, and three from 1280px. Details use adjacent overview/detail panels from 1280px, stacked below that. Every previously visible field appears once across the panels; long descriptions and arrays use a full-width row inside their panel so labels stay readable.
+- The dashboard home cards display total record counts from the permission-filtered admin statistics API; they show loading and retry states instead of inventing counts when the request fails.
 
-## Integration boundary
+## Speaker management
 
-These fixes preserve the existing session checks, API requests, role-based navigation and create/update/delete flows introduced by the backend integration. No API endpoint, payload shape, backend authorization or database schema is changed. The UI role filter is not authorization: the backend remains responsible for every admin operation. No authentication bypass or sample credentials are added.
+Workshop managers and super admins see a Speakers section. Create a speaker with name, phone, optional private notes, a workshop selected by title, and a public-name checkbox that starts unchecked. A speaker's detail page can assign more workshops and change visibility independently for each workshop. The backend enforces the role checks. Public workshop responses include only names marked public, never phone numbers or notes.
+
+The dashboard keeps its existing session checks and does not add sample credentials. The backend enforces permissions for every admin operation.
 
 The public Navbar and Footer are unchanged. The dashboard keeps its own header, as in the latest integrated layout.
 

@@ -11,12 +11,14 @@ import '../../Workshops/Workshops.css'; // shared WorkshopCard base styles
 export default function WorkshopsPreview() {
   const s = sections.workshops;
   const { data, loading, error, reload } = useApiData('workshops');
-  const workshop = (data || []).find((item) => item.is_featured);
+  const workshop = (data || []).find((item) => item.is_featured)
+    || (data || []).find((item) => item.speakers?.length)
+    || (data || [])[0];
   return (
     <section className="home-section home-workshops" aria-labelledby="home-workshops-title">
       <div className="container home-section__stack">
         <SectionHeading overline={s.overline} title={<span id="home-workshops-title">{s.title}</span>} />
-        <ApiState loading={loading} error={error} empty={!loading && !error && !workshop ? 'لا توجد ورشة مميزة منشورة حاليًا.' : ''} onRetry={reload} />
+        <ApiState loading={loading} error={error} empty={!loading && !error && !workshop ? 'لا توجد ورش منشورة حاليًا.' : ''} onRetry={reload} />
         {workshop && <ul className="card-grid card-grid--3">
           <li>
             <WorkshopCard
