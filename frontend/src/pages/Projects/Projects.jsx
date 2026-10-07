@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import ApiState from '../../components/ApiState/ApiState';
 import { useApiData } from '../../services/api/useApiData';
 import { presentProject } from '../../services/api/presentRecords';
@@ -10,6 +10,7 @@ import {
 import ProjectCard from './components/ProjectCard';
 import circuitPattern from '../Workshops/assets/circuit-pattern.svg';
 import teamIcon from './assets/team.svg';
+import ProjectsCircuit from './ProjectsCircuit';
 import './Projects.css';
 
 export default function Projects() {
@@ -28,9 +29,12 @@ export default function Projects() {
     [projects, searchQuery, selectedCategory],
   );
   const hasSearchQuery = searchQuery.trim().length > 0;
+  const rootRef = useRef(null);
+  const signature = loading ? 'loading' : `${selectedCategory}|${visibleProjects.map((p) => p.id).join(',')}`;
 
   return (
-    <div className="projects-page" dir="rtl">
+    <div ref={rootRef} className="projects-page" dir="rtl">
+      <ProjectsCircuit rootRef={rootRef} signature={signature} />
       <header className="projects-hero">
         <img className="projects-hero__pattern" src={circuitPattern} alt="" />
         <div className="projects-page__container projects-hero__content">
@@ -66,6 +70,7 @@ export default function Projects() {
           )}
         </div>
       </section>
+      <div className="rt-end" aria-hidden="true" />
     </div>
   );
 }

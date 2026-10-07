@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import ApiState from '../../components/ApiState/ApiState';
 import { useApiData } from '../../services/api/useApiData';
 import { presentWorkshop } from '../../services/api/presentRecords';
@@ -8,10 +8,13 @@ import SectionHeading from '../../components/EventUI/SectionHeading';
 import circuitPattern from './assets/circuit-pattern.svg';
 import workshopIcon from './assets/workshop.svg';
 import teamIcon from './assets/team.svg';
+import WorkshopsCircuit from './WorkshopsCircuit';
 import './Workshops.css';
 
 export default function Workshops() {
   const [selectedDay, setSelectedDay] = useState('all');
+  const [filtered, setFiltered] = useState(false); // local results transition only after a user change
+  const selectDay = (id) => { setSelectedDay(id); setFiltered(true); };
   const { data, loading, error, reload } = useApiData('workshops');
   const workshops = useMemo(() => (data || []).map(presentWorkshop), [data]);
   const workshopDays = useMemo(() => {
@@ -28,9 +31,11 @@ export default function Workshops() {
     [selectedDay, workshops],
   );
   const selectedDayDetails = workshopDays.find((day) => day.id === selectedDay);
+  const rootRef = useRef(null);
 
   return (
-    <div className="workshops-page" dir="rtl">
+    <div ref={rootRef} className="workshops-page" dir="rtl">
+      <WorkshopsCircuit rootRef={rootRef} selectedDay={selectedDay} count={loading ? -1 : visibleWorkshops.length} />
       <header className="workshops-hero">
         <img className="workshops-hero__pattern" src={circuitPattern} alt="" />
         <div className="workshops-page__container workshops-hero__content">
@@ -43,7 +48,7 @@ export default function Workshops() {
       <section className="workshops-filters" aria-labelledby="workshop-day-filter-title">
         <div className="workshops-page__container">
           <SectionHeading id="workshop-day-filter-title">استعرض ورش العمل</SectionHeading>
-          <FilterChips items={workshopDays} selectedId={selectedDay} onSelect={setSelectedDay}
+          <FilterChips items={workshopDays} selectedId={selectedDay} onSelect={selectDay}
             ariaLabel="تصفية الورش حسب اليوم" className="workshops-filters__list"
             onItemClick={(_, event) => event.currentTarget.scrollIntoView({
               behavior: 'smooth', block: 'nearest', inline: 'nearest',
@@ -56,7 +61,7 @@ export default function Workshops() {
           {selectedDay !== 'all' && <h2 className="workshops-results__day">{selectedDayDetails?.heading}</h2>}
           <ApiState loading={loading} error={error} empty={!loading && !error && !workshops.length ? 'لا توجد ورش منشورة حاليًا.' : ''} onRetry={reload} />
           {!loading && !error && visibleWorkshops.length ? (
-            <div className="workshops-grid">
+            <div className={`workshops-grid${filtered ? ' workshops-grid--changed' : ''}`} key={selectedDay}>
               {visibleWorkshops.map((workshop) => (
                 <WorkshopCard key={workshop.id} workshop={workshop} workshopIcon={workshopIcon} teamIcon={teamIcon} />
               ))}
@@ -69,6 +74,7 @@ export default function Workshops() {
           )}
         </div>
       </section>
+      <div className="rt-end" aria-hidden="true" />
     </div>
   );
 }

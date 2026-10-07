@@ -1,3 +1,9 @@
+/* Circuit journey layer (HomeCircuit.jsx): content sits above it; the CTA band stays
+   below it so its receiver can sit inside the band (routed clear of the copy). */
+.home { position: relative; }
+.home > section > .container, .home .hero__inner { position: relative; z-index: 2; }
+.home__end { block-size: 1px; }
+
 /* ─── Home page layout — mobile first (375 Figma), desktop from 1024 (1440 Figma) ─── */
 
 /* ── Hero ─────────────────────────────────────────────────────────────── */

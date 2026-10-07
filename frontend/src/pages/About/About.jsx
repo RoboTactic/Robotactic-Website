@@ -1,12 +1,18 @@
+import { useRef } from 'react';
 import { Link } from 'react-router-dom';
 import SectionHeading from '../../components/SectionHeading/SectionHeading';
 import { about } from '../../data/home';
+import circuitPattern from '../Workshops/assets/circuit-pattern.svg';
+import AboutCircuit from './AboutCircuit';
 import '../InfoPages.css';
 
 export default function About() {
+  const rootRef = useRef(null);
   return (
-    <div className="info-page" dir="rtl">
+    <div ref={rootRef} className="info-page" dir="rtl">
+      <AboutCircuit rootRef={rootRef} />
       <header className="info-page__hero">
+        <img className="info-page__pattern" src={circuitPattern} alt="" />
         <div className="container">
           <SectionHeading as="h1" size="h1" overline={about.overline} title={about.title} description={about.subtitle} />
         </div>

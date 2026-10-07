@@ -16,24 +16,22 @@
 .circuit--band .circuit__trace { opacity: .5; }
 .circuit--band .circuit__node { opacity: .6; }
 
-/* ── Progressive enhancement: ambient motion (off for reduced-motion) ── */
+/* ── Progressive enhancement: hero ambient signal (off for reduced-motion) ──
+   Travels for ~3.5s, then idles; the only loop on a page. Paused off-screen, in a hidden
+   tab (.is-paused) and while a section signal runs (html.rt-busy). No node pulsing. */
 @media (prefers-reduced-motion: no-preference) {
-  .circuit--animated .circuit__node--filled,
-  .circuit--animated .circuit__node--core {
-    animation: circuit-pulse 3.6s ease-in-out infinite;
-    animation-delay: var(--node-delay, 0s);
-  }
   .circuit--animated .circuit__signal {
     display: block; fill: none; stroke: var(--color-brand-accent); stroke-width: 1.5; stroke-linecap: round;
     stroke-dasharray: 0.06 0.94; stroke-dashoffset: 1; opacity: 0;
-    animation: circuit-signal 7s linear infinite;
+    animation: circuit-signal 9s linear infinite;
     animation-delay: var(--signal-delay, 0s);
   }
+  .circuit--animated.is-paused .circuit__signal,
+  html.rt-busy .circuit--animated .circuit__signal { animation-play-state: paused; }
 }
-@keyframes circuit-pulse { 0%, 100% { opacity: 1; } 50% { opacity: .45; } }
 @keyframes circuit-signal {
   0% { stroke-dashoffset: 1; opacity: 0; }
-  8% { opacity: .9; }
-  55% { stroke-dashoffset: 0; opacity: .9; }
-  62%, 100% { stroke-dashoffset: 0; opacity: 0; }
+  4% { opacity: .85; }
+  38% { stroke-dashoffset: 0; opacity: .85; }
+  42%, 100% { stroke-dashoffset: 0; opacity: 0; }
 }

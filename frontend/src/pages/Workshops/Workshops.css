@@ -1,4 +1,5 @@
 .workshops-page {
+  position: relative;
   --workshops-content-width: 1200px;
   min-height: 100%;
   background: var(--color-surface-page);
@@ -17,7 +18,9 @@
   position: absolute; inset-block-start: 0; inset-inline-end: 0;
   width: 375px; height: 240px; object-fit: contain; opacity: .85; pointer-events: none;
 }
-.workshops-hero__content { position: relative; padding-block-start: 64px; text-align: start; }
+.workshops-hero__content { position: relative; z-index: 2; padding-block-start: 64px; text-align: start; }
+/* Circuit layer (WorkshopsCircuit.jsx) sits behind the filters and sessions. */
+.workshops-filters > .workshops-page__container, .workshops-results > .workshops-page__container { position: relative; z-index: 2; }
 .workshops-overline {
   display: flex; align-items: center; gap: var(--space-8); color: var(--color-text-accent);
   font-family: 'IBM Plex Sans', sans-serif; font-size: 12px; font-weight: 600;
@@ -36,6 +39,11 @@
 }
 
 .workshops-results { padding-block: 32px 96px; }
+/* Day change (user action only, never first load): a tiny local response on the results. */
+@media (prefers-reduced-motion: no-preference) {
+  .workshops-grid--changed { animation: workshops-results-in 160ms ease-out; }
+}
+@keyframes workshops-results-in { from { opacity: .75; } }
 .workshops-grid {
   display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 24px; align-items: stretch;
@@ -106,14 +114,21 @@
   .workshops-hero h1 { font-size: 28px; line-height: 40px; }
   .workshops-hero p { font-size: 15px; line-height: 28px; }
   .workshops-filters { padding-block: 24px; }
-  .workshops-filters__list {
-    width: 100%; height: 50px; flex-wrap: nowrap; flex-direction: row;
-    justify-content: flex-start; overflow-x: auto; overflow-y: hidden;
-    overscroll-behavior-inline: contain; scroll-snap-type: inline proximity;
+  /* Day filters: one row that scrolls on its own (never the page).
+     Doubled class: Home imports this file before EventControls.css, so a single class
+     lost to `.event-filter-chips { flex-wrap: wrap }` and the wrapped chips were clipped
+     by a fixed 50px row. The row bleeds to the screen edges (container gutter is 20px)
+     with matching padding, so the first and last day can scroll fully into view, and
+     a little block padding keeps the focus ring visible. */
+  .event-filter-chips.workshops-filters__list {
+    flex-wrap: nowrap; flex-direction: row; justify-content: flex-start; align-items: center;
+    width: auto; height: auto; margin-inline: -20px; padding: 4px 20px;
+    overflow-x: auto; overflow-y: hidden; overscroll-behavior-inline: contain;
+    scroll-padding-inline: 20px; /* no scroll-snap: it pulled a tapped chip back off-screen */
     scrollbar-width: none; -webkit-overflow-scrolling: touch;
   }
-  .workshops-filters__list::-webkit-scrollbar { display: none; }
-  .workshops-filters__list button { flex: 0 0 auto; scroll-snap-align: start; }
+  .event-filter-chips.workshops-filters__list::-webkit-scrollbar { display: none; }
+  .event-filter-chips.workshops-filters__list button { flex: 0 0 auto; min-height: 48px; }
   .workshops-results { padding-block: 24px 72px; }
   .workshops-results__day { font-size: 19px; line-height: 34px; }
   .workshops-grid { grid-template-columns: 1fr; gap: var(--space-16); }

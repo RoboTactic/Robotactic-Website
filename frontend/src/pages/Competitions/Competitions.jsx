@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import { useApiData } from '../../services/api/useApiData';
 import { presentCompetition } from '../../services/api/presentRecords';
 import ApiState from '../../components/ApiState/ApiState';
@@ -7,6 +8,7 @@ import circuitPattern from '../Workshops/assets/circuit-pattern.svg';
 import controllerIcon from './assets/controller.svg';
 import ctaPattern from './assets/cta-pattern.svg';
 import sensorIcon from './assets/sensor.svg';
+import CompetitionsCircuit from './CompetitionsCircuit';
 import './Competitions.css';
 
 const competitionIcons = {
@@ -22,8 +24,11 @@ export default function Competitions() {
     document.getElementById('competition-tracks')?.scrollIntoView({ behavior: 'smooth' });
   };
 
+  const rootRef = useRef(null);
+
   return (
-    <div className="competitions-page" dir="rtl">
+    <div ref={rootRef} className="competitions-page" dir="rtl">
+      <CompetitionsCircuit rootRef={rootRef} />
       <header className="competitions-hero">
         <img className="competitions-hero__pattern" src={circuitPattern} alt="" />
         <div className="competitions-page__container competitions-hero__content">
@@ -53,6 +58,7 @@ export default function Competitions() {
           <button type="button" onClick={scrollToCompetitions}>استعرض المسابقات</button>
         </div>
       </section>
+      <div className="rt-end" aria-hidden="true" />
     </div>
   );
 }

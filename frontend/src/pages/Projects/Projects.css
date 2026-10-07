@@ -1,4 +1,5 @@
 .projects-page {
+  position: relative;
   --projects-content-width: 1200px;
   min-height: 100%;
   background: var(--color-surface-page);
@@ -14,7 +15,7 @@
   width: 375px; height: 240px; object-fit: contain; opacity: .85; pointer-events: none;
 }
 .projects-hero__content {
-  position: relative; display: flex; flex-direction: column; align-items: flex-start;
+  position: relative; z-index: 2; display: flex; flex-direction: column; align-items: flex-start;
   padding-block-start: 64px; text-align: start;
 }
 .projects-overline {
@@ -30,6 +31,8 @@
 }
 
 .projects-browser { padding-block: 24px 80px; }
+/* Circuit layer (ProjectsCircuit.jsx) sits behind the project network. */
+.projects-browser > .projects-page__container { position: relative; z-index: 2; }
 .projects-controls { display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; margin-block-end: 32px; }
 .projects-controls input {
   order: 2; width: 360px; height: 52px; padding-inline: 16px;
@@ -102,7 +105,12 @@ a.project-social:focus-visible { outline: 2px solid var(--color-border-focus); o
   }
   .projects-filters button { flex: 0 0 auto; }
   .projects-grid { grid-template-columns: 1fr; gap: 20px; }
-  .project-card { min-height: 620px; }
+  /* Mobile: hug the content — the old 620px minimum left a large empty gap above the details. */
+  .project-card { min-height: 0; gap: 12px; padding: 16px; }
+  .project-card__placeholder,
+  .project-card__image { height: 148px; flex-basis: 148px; }
+  .project-card__details { gap: 0; margin-block-start: 4px; padding: 6px 12px; }
+  .project-card__details div { padding-block: 8px; }
   .project-card__heading h3 { font-size: 19px; line-height: 30px; }
   .project-card__heading p { font-size: 15px; line-height: 28px; }
   .project-card__member { min-height: 44px; }

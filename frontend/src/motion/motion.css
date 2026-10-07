@@ -1,0 +1,52 @@
+/* ── RoboTactic motion system: circuit layer (identity) ─────────────────── */
+.rt-circuit { position: absolute; top: 0; left: 0; z-index: 1; overflow: visible; pointer-events: none; }
+.rt-circuit path { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.rt-circuit__trace { stroke: var(--color-brand-primary); stroke-width: 1.25; }
+.rt-circuit__signal, .rt-circuit__ambient { stroke: var(--color-brand-accent); stroke-width: 1.75; }
+.rt-circuit__ambient { opacity: 0; }
+.rt-circuit__signal--packet { stroke-width: 4; stroke-linecap: butt; }
+.rt-circuit__packet { fill: var(--color-brand-primary); opacity: .45; }
+
+/* Nodes: hollow at rest → lime while the signal passes → calmer once passed. */
+.rt-node { fill: var(--color-surface-page); stroke: var(--color-brand-primary); stroke-width: 1.25; opacity: .42;
+  transition: opacity 260ms ease-out, fill 260ms ease-out, stroke 260ms ease-out; }
+.rt-node--dot { opacity: .42; }
+.rt-node--ring { stroke-width: 1.5; }
+.rt-node.is-active { opacity: 1; stroke: var(--color-brand-accent); fill: var(--color-brand-accent); }
+.rt-node.is-done { opacity: .6; }
+.rt-node--ring.is-done { opacity: .5; fill: var(--color-surface-page); }
+
+/* End-of-page sentinel that triggers a page's final endpoint. */
+.rt-end { block-size: 1px; }
+
+/* ── Micro-interactions (response) ──────────────────────────────────────── */
+.competition-card, .workshop-card, .project-card, .info-page__panel {
+  transition: border-color 200ms cubic-bezier(.2,.8,.2,1), transform 200ms cubic-bezier(.2,.8,.2,1), box-shadow 200ms cubic-bezier(.2,.8,.2,1);
+}
+.competition-card:focus-within, .workshop-card:focus-within, .project-card:focus-within { border-color: var(--color-brand-primary); }
+.event-registration__icon, .competition-card__icon, .workshop-card__header > :first-child { transition: transform 180ms ease-out; }
+
+@media (hover: hover) and (pointer: fine) {
+  .competition-card:hover, .workshop-card:hover, .project-card:hover {
+    border-color: var(--color-brand-primary); transform: translateY(-3px); box-shadow: 0 16px 36px rgb(0 0 0 / .16);
+  }
+  .competition-card:hover .competition-card__icon,
+  .workshop-card:hover .workshop-card__header > :first-child { animation: rt-icon-pulse 240ms ease-out 1; }
+  .event-registration__action:hover .event-registration__icon,
+  .competition-card:hover .event-registration__icon,
+  .workshop-card:hover .event-registration__icon { transform: translate(3px, -3px); }
+}
+.event-registration__action:focus-visible .event-registration__icon { transform: translate(3px, -3px); }
+@keyframes rt-icon-pulse { 50% { transform: scale(1.06); } }
+
+/* Filters: smooth state change */
+.event-filter-chips button { transition: background-color 200ms ease, border-color 200ms ease, color 200ms ease; }
+
+/* Navbar: quiet colour response only */
+.navbar__link { transition: color 160ms ease; }
+
+@media (prefers-reduced-motion: reduce) {
+  .competition-card:hover, .workshop-card:hover, .project-card:hover { transform: none; }
+  .competition-card:hover .competition-card__icon, .workshop-card:hover .workshop-card__header > :first-child { animation: none; }
+  .event-registration__icon, .competition-card__icon { transform: none !important; }
+}
