@@ -5,4 +5,5 @@
   color: var(--color-text-secondary); direction: ltr;
 }
 .lang-switch--full { inline-size: 100%; }
-@media (hover: hover) { .lang-switch:hover { color: var(--color-text-primary); border-color: var(--color-text-secondary); } }
+.lang-switch:disabled { cursor: default; opacity: .7; }
+@media (hover: hover) { .lang-switch:not(:disabled):hover { color: var(--color-text-primary); border-color: var(--color-text-secondary); } }

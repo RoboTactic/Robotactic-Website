@@ -2,8 +2,8 @@ import Icon from '../Icon/Icon';
 import { languageSwitch } from '../../data/site';
 import './LanguageSwitcher.css';
 
-/* Shows the language you can switch TO. The English site isn't built yet, so
-   this is visual only for now — wire `onClick` when the EN version exists. */
+/* The public English version is not available yet. Keep the control disabled
+   until a real language switch handler is provided. */
 export default function LanguageSwitcher({ fullWidth = false, onClick }) {
   return (
     <button
@@ -11,7 +11,9 @@ export default function LanguageSwitcher({ fullWidth = false, onClick }) {
       className={`lang-switch t-label ${fullWidth ? 'lang-switch--full' : ''}`}
       lang={languageSwitch.lang}
       onClick={onClick}
-      title="English version — coming soon"
+      disabled={!onClick}
+      aria-label={onClick ? languageSwitch.label : 'English version — coming soon'}
+      title={onClick ? undefined : 'English version — coming soon'}
     >
       <Icon name="globe" size={24} strokeWidth={1.5} />
       <span>{languageSwitch.label}</span>
