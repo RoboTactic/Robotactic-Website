@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import WorkshopCard from '../../components/WorkshopCard/WorkshopCard';
 import FilterChips from '../../components/EventUI/FilterChips';
 import SectionHeading from '../../components/EventUI/SectionHeading';
-import { workshopDays, workshopEmptyState, workshops } from '../../data/workshops';
+import { workshopAudiences, workshopDays, workshopEmptyState, workshops } from '../../data/workshops';
 import circuitPattern from './assets/circuit-pattern.svg';
 import workshopIcon from './assets/workshop.svg';
 import teamIcon from './assets/team.svg';
@@ -10,12 +10,14 @@ import './Workshops.css';
 
 export default function Workshops() {
   const [selectedDay, setSelectedDay] = useState('all');
+  const [selectedAudience, setSelectedAudience] = useState('all');
   const visibleWorkshops = useMemo(
-    () => selectedDay === 'all' ? workshops : workshops.filter((item) => item.dayId === selectedDay),
-    [selectedDay],
+    () => workshops.filter((item) => (
+      (selectedDay === 'all' || item.dayId === selectedDay)
+      && (selectedAudience === 'all' || item.audienceId === selectedAudience)
+    )),
+    [selectedAudience, selectedDay],
   );
-  const selectedDayDetails = workshopDays.find((day) => day.id === selectedDay);
-
   return (
     <div className="workshops-page" dir="rtl">
       <header className="workshops-hero">
@@ -27,20 +29,27 @@ export default function Workshops() {
         </div>
       </header>
 
-      <section className="workshops-filters" aria-labelledby="workshop-day-filter-title">
+      <section className="workshops-filters" aria-labelledby="workshop-filters-title">
         <div className="workshops-page__container">
-          <SectionHeading id="workshop-day-filter-title">استعرض ورش العمل</SectionHeading>
-          <FilterChips items={workshopDays} selectedId={selectedDay} onSelect={setSelectedDay}
-            ariaLabel="تصفية الورش حسب اليوم" className="workshops-filters__list"
-            onItemClick={(_, event) => event.currentTarget.scrollIntoView({
-              behavior: 'smooth', block: 'nearest', inline: 'nearest',
-            })} />
+          <SectionHeading id="workshop-filters-title">استعرض ورش العمل</SectionHeading>
+          <div className="workshops-filters__controls">
+            <FilterChips items={workshopAudiences} selectedId={selectedAudience} onSelect={setSelectedAudience}
+              ariaLabel="تصفية الورش حسب الفئة المستهدفة" className="workshops-filters__list"
+              onItemClick={(_, event) => event.currentTarget.scrollIntoView({
+                behavior: 'smooth', block: 'nearest', inline: 'nearest',
+              })} />
+            <label className="workshops-day-select">
+              <span>تصفية الورش حسب اليوم</span>
+              <select value={selectedDay} onChange={(event) => setSelectedDay(event.target.value)}>
+                {workshopDays.map((day) => <option key={day.id} value={day.id}>{day.label}</option>)}
+              </select>
+            </label>
+          </div>
         </div>
       </section>
 
       <section className="workshops-results" aria-live="polite">
         <div className="workshops-page__container">
-          {selectedDay !== 'all' && <h2 className="workshops-results__day">{selectedDayDetails?.heading}</h2>}
           {visibleWorkshops.length ? (
             <div className="workshops-grid">
               {visibleWorkshops.map((workshop) => (

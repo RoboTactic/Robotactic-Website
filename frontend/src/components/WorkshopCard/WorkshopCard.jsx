@@ -7,6 +7,7 @@ export default function WorkshopCard({ workshop, workshopIcon, teamIcon }) {
     <article className="workshop-card">
       <header className="workshop-card__header">
         <img src={workshopIcon} alt="" width="24" height="24" />
+        <span className="workshop-card__audience">{workshop.audienceLabel}</span>
       </header>
       <div className="workshop-card__content">
         <h3>{workshop.title}</h3>
