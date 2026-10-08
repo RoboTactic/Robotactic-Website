@@ -8,6 +8,7 @@ import SectionHeading from '../../components/EventUI/SectionHeading';
 import circuitPattern from './assets/circuit-pattern.svg';
 import workshopIcon from './assets/workshop.svg';
 import teamIcon from './assets/team.svg';
+import { prefersReducedMotion } from '../../motion/signalBus';
 import WorkshopsCircuit from './WorkshopsCircuit';
 import './Workshops.css';
 
@@ -51,7 +52,7 @@ export default function Workshops() {
           <FilterChips items={workshopDays} selectedId={selectedDay} onSelect={selectDay}
             ariaLabel="تصفية الورش حسب اليوم" className="workshops-filters__list"
             onItemClick={(_, event) => event.currentTarget.scrollIntoView({
-              behavior: 'smooth', block: 'nearest', inline: 'nearest',
+              behavior: prefersReducedMotion() ? 'instant' : 'smooth', block: 'nearest', inline: 'nearest',
             })} />
         </div>
       </section>

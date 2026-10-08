@@ -46,6 +46,8 @@
 .navbar__link { transition: color 160ms ease; }
 
 @media (prefers-reduced-motion: reduce) {
+  .rt-circuit__signal, .rt-circuit__ambient { display: none; }
+  .rt-node { transition: none; }
   .competition-card:hover, .workshop-card:hover, .project-card:hover { transform: none; }
   .competition-card:hover .competition-card__icon, .workshop-card:hover .workshop-card__header > :first-child { animation: none; }
   .event-registration__icon, .competition-card__icon { transform: none !important; }

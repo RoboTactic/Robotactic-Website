@@ -1,5 +1,5 @@
 import { useLayoutEffect, useRef, useState } from 'react';
-import { signalBus, motionSupported } from './signalBus';
+import { signalBus, motionSupported, prefersReducedMotion } from './signalBus';
 import { makeContext, toD, lengthOf, segLength } from './geometry';
 import './motion.css';
 
@@ -15,7 +15,7 @@ import './motion.css';
 
   The circuit is DECORATIVE ONLY. Content is never hidden and never waits for a signal:
   `reveal` elements are visible from first paint and only get a short entry ease
-  (opacity .6 → 1, 8px) when they enter the viewport, on an observer of their own.
+  (opacity .85 → 1, 6px) when they enter the viewport, on an observer of their own.
 
   Station: {
     key, trigger: Element, rootMargin?,
@@ -76,6 +76,15 @@ function normalize(st) {
 }
 
 export default function CircuitLayer({ rootRef, compose, deps = [], replayKey, settleOnChange = false }) {
+  const [reducedMotion, setReducedMotion] = useState(prefersReducedMotion);
+  useLayoutEffect(() => {
+    const media = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const update = () => setReducedMotion(media.matches);
+    update();
+    media.addEventListener('change', update);
+    return () => media.removeEventListener('change', update);
+  }, []);
+
   const [geo, setGeo] = useState(null);
   const [attempt, setAttempt] = useState(0);
   const svgRef = useRef(null);
@@ -125,7 +134,7 @@ export default function CircuitLayer({ rootRef, compose, deps = [], replayKey, s
       st.domNodes.forEach(({ el }) => { el.classList.remove('is-active'); el.classList.add('is-done'); });
     };
 
-    if (!motionSupported()) return undefined;
+    if (reducedMotion || !motionSupported()) return undefined;
 
     const owner = {};
     const timers = new Set();
@@ -272,10 +281,13 @@ export default function CircuitLayer({ rootRef, compose, deps = [], replayKey, s
       ambient?.cancel();
       signalBus.release(owner);
       inFlight.forEach((key) => done.delete(key)); // interrupted → may run again after re-measure
-      stations.forEach((st) => st.domNodes.forEach(({ el }) => el.classList.remove('is-active')));
+      stations.forEach((st) => {
+        svgNodes(st).forEach((n) => n.classList.remove('is-active'));
+        st.domNodes.forEach(({ el }) => el.classList.remove('is-active'));
+      });
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [geo, replayKey]);
+  }, [geo, replayKey, reducedMotion]);
 
   if (!geo) return null;
   return (

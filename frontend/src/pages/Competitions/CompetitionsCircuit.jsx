@@ -44,20 +44,18 @@ function compose(ctx) {
         reveal: cardEls.map((el, i) => ({ el, delay: (i % Math.max(1, firstRow.length)) * 80 })),
       });
 
-      // Every further row stays on the network: the east drop continues down and turns in
-      // toward the row's first card (or, without margin room, a short link from the first gap).
-      let fromY = y;
+      // Further rows get a local 45-degree handoff in negative space, never a full-height rail.
       extraRows.forEach((row, n) => {
         const first = c[row[0]];
         const yr = first.top + 28;
         let link;
         let end;
         if (roomy) {
-          link = [[W - 61, fromY], [W - 61, yr - 16], [W - 45, yr], [first.right + 14, yr]];
+          link = [[W - 45, yr - 52], [W - 45, yr - 16], [W - 61, yr], [first.right + 14, yr]];
           end = [first.right + 10, yr];
         } else if (firstRow.length > 1) {
           const gx = (firstRow[0].left + firstRow[1].right) / 2;
-          link = [[gx, first.top - 20], [gx, yr]];
+          link = [[gx + 16, first.top - 12], [gx + 8, first.top - 12], [gx, first.top - 4], [gx, yr]];
           end = [gx, yr + 4];
         }
         if (!link) return;
@@ -66,7 +64,6 @@ function compose(ctx) {
           paths: [{ pts: link }], signals: [link],
           nodes: [{ at: end, r: 3.5, mark: 'auto' }],
         });
-        fromY = yr;
       });
     } else {
       const y = top - 12;
