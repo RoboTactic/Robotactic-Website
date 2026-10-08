@@ -60,14 +60,20 @@ function compose(ctx) {
       const yTop = top - 14;
       const y0 = compTitle.cy;
       const d = yTop - y0;
-      const inlet = [[0, y0], [gx - d, y0], [gx, yTop]];
+      // When «عرض كل المسابقات» sits in the header row, the inlet starts just past it.
+      const headerLink = btn && btn.bottom < top && btn.top < y0 + 20 && btn.bottom > y0 - 20;
+      const x0 = headerLink ? Math.min(btn.right + 20, gx - d - 24) : 0;
+      const inlet = [[x0, y0], [gx - d, y0], [gx, yTop]];
       const paths = [{ pts: inlet }];
       const nodes = [{ at: [gx, yTop], r: 4.5, mark: 'auto' }];
       const signals = [inlet];
-      if (c.length >= 3 && btn) {
+      if (c.length >= 3) {
         const g2 = (c[1].left + c[2].right) / 2;
-        const y = Math.min(btn.cy, bottom + 44);
-        const endX = btn.left - 36;
+        // Toward «عرض كل المسابقات» only when it sits below the cards; when it lives in the
+        // section header row (Refined Dark), the exit settles in the negative space instead.
+        const below = btn && btn.top > bottom;
+        const y = below ? Math.min(btn.cy, bottom + 44) : bottom + 44;
+        const endX = below ? btn.left - 36 : g2 + 200;
         if (endX > g2 + 80) {
           const exit = [[g2, bottom + 14], [g2 + (y - bottom - 14), y], [endX, y]];
           paths.push({ pts: exit });
@@ -97,13 +103,23 @@ function compose(ctx) {
   const shop = q('.home-workshops .card-grid > li');
   if (shop) {
     const k = rect(shop);
-    if (desktop) {
+    if (desktop && k.left - 400 > 24) {
       const y = k.cy;
       const handoff = [[k.left - 24, y], [k.left - 200, y], [k.left - 224, y + 24], [k.left - 380, y + 24]];
       stations.push({
         key: 'workshops', trigger: shop, packet: true,
         paths: [{ pts: handoff, op: 0.38 }],
         nodes: [{ at: [k.left - 110, y], kind: 'packet' }, { at: [k.left - 384, y + 24], r: 3.5, mark: 'auto' }],
+        signals: [handoff], reveal: [{ el: shop, mark: 0 }],
+      });
+    } else if (desktop) {
+      // A single full-width feature card: the packet leaves along a short run beneath it.
+      const y = k.bottom + 30;
+      const handoff = [[k.left + 320, k.bottom + 8], [k.left + 320, y - 8], [k.left + 312, y], [k.left + 60, y], [k.left + 44, y + 16]];
+      stations.push({
+        key: 'workshops', trigger: shop, packet: true,
+        paths: [{ pts: handoff, op: 0.38 }],
+        nodes: [{ at: [k.left + 190, y], kind: 'packet' }, { at: [k.left + 41, y + 19], r: 3.5, mark: 'auto' }],
         signals: [handoff], reveal: [{ el: shop, mark: 0 }],
       });
     } else {

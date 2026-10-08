@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 420" fill="none">
+  <!-- Original RoboTactic artwork: a faceted glass "innovation structure" with lit circuit
+       ridges on a perspective floor. Brand colours only (#16A66A, #0B3D2E, #B6F23A, #101D2B). -->
+  <defs>
+    <linearGradient id="lit" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1F7A58" stop-opacity=".95"/>
+      <stop offset=".55" stop-color="#0F4136"/>
+      <stop offset="1" stop-color="#0A2328"/>
+    </linearGradient>
+    <linearGradient id="mid" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#14473A"/>
+      <stop offset="1" stop-color="#0A1A24"/>
+    </linearGradient>
+    <linearGradient id="dark" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0E2C2E"/>
+      <stop offset="1" stop-color="#08131D"/>
+    </linearGradient>
+    <linearGradient id="far" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0D2A2A"/>
+      <stop offset="1" stop-color="#091520"/>
+    </linearGradient>
+    <radialGradient id="pool" cx=".5" cy=".5" r=".5">
+      <stop offset="0" stop-color="#16A66A" stop-opacity=".45"/>
+      <stop offset="1" stop-color="#16A66A" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="sky" cx=".46" cy=".42" r=".55">
+      <stop offset="0" stop-color="#16A66A" stop-opacity=".22"/>
+      <stop offset=".6" stop-color="#0B3D2E" stop-opacity=".18"/>
+      <stop offset="1" stop-color="#101D2B" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="floorFade" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff" stop-opacity=".9"/>
+      <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+    </linearGradient>
+    <mask id="floorMask"><rect x="0" y="352" width="640" height="68" fill="url(#floorFade)"/></mask>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="3"/></filter>
+    <filter id="soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="10"/></filter>
+    <clipPath id="f1"><path d="M300 36 128 352 246 366Z"/></clipPath>
+    <clipPath id="f2"><path d="M300 36 246 366 362 360Z"/></clipPath>
+    <clipPath id="f3"><path d="M300 36 362 360 472 346Z"/></clipPath>
+    <clipPath id="f4"><path d="M486 118 412 350 566 356Z"/></clipPath>
+  </defs>
+
+  <ellipse cx="300" cy="190" rx="300" ry="190" fill="url(#sky)"/>
+
+  <!-- floor: perspective grid fading toward the viewer -->
+  <g mask="url(#floorMask)" stroke="#16A66A" stroke-width=".8" opacity=".55">
+    <path d="M0 362H640M0 372H640M0 386H640M0 404H640"/>
+    <path d="M320 356 -260 420M320 356 -120 420M320 356 20 420M320 356 160 420M320 356 300 420M320 356 440 420M320 356 580 420M320 356 720 420M320 356 860 420"/>
+  </g>
+  <ellipse cx="310" cy="360" rx="250" ry="22" fill="url(#pool)" filter="url(#soft)"/>
+
+  <!-- far peaks (behind) -->
+  <path d="M118 150 28 350 150 358Z" fill="url(#far)"/>
+  <path d="M118 150 150 358 196 354Z" fill="url(#mid)" opacity=".85"/>
+  <path d="M486 118 412 350 566 356Z" fill="url(#mid)"/>
+  <path d="M486 118 566 356 626 342Z" fill="url(#far)"/>
+  <g clip-path="url(#f4)" stroke="#fff" stroke-opacity=".06">
+    <path d="M380 180H600M380 240H600M380 300H600M486 118 450 360M486 118 520 360"/>
+  </g>
+
+  <!-- main structure -->
+  <path d="M300 36 128 352 246 366Z" fill="url(#mid)"/>
+  <path d="M300 36 246 366 362 360Z" fill="url(#lit)"/>
+  <path d="M300 36 362 360 472 346Z" fill="url(#dark)"/>
+  <g stroke="#fff" stroke-opacity=".07">
+    <g clip-path="url(#f1)"><path d="M100 120H360M100 190H360M100 260H360M100 320H360M300 36 166 362M300 36 206 364"/></g>
+    <g clip-path="url(#f2)"><path d="M200 110H400M200 170H400M200 230H400M200 290H400M200 340H400M300 36 275 366M300 36 304 364M300 36 333 362"/></g>
+    <g clip-path="url(#f3)"><path d="M290 130H500M290 200H500M290 270H500M290 330H500M300 36 397 356M300 36 434 352"/></g>
+  </g>
+
+  <!-- ridges: green structure, two lime-lit edges -->
+  <g stroke="#16A66A" stroke-width="1.2" stroke-opacity=".6" stroke-linecap="round">
+    <path d="M118 150 28 350M118 150 150 358M118 150 196 354"/>
+    <path d="M486 118 412 350M486 118 566 356M486 118 626 342"/>
+    <path d="M300 36 128 352M300 36 362 360M300 36 472 346"/>
+    <path d="M28 350 128 352 246 366 362 360 472 346 566 356 626 342"/>
+  </g>
+  <g stroke="#B6F23A" stroke-linecap="round">
+    <path d="M300 36 246 366M486 118 566 356" stroke-width="5" stroke-opacity=".35" filter="url(#glow)"/>
+    <path d="M300 36 246 366M486 118 566 356" stroke-width="1.4" stroke-opacity=".9"/>
+  </g>
+
+  <!-- ground-level lights -->
+  <g fill="#B6F23A">
+    <circle cx="96" cy="353" r="1.3" opacity=".7"/><circle cx="142" cy="356" r="1.1" opacity=".5"/>
+    <circle cx="188" cy="360" r="1.4" opacity=".8"/><circle cx="224" cy="363" r="1.1" opacity=".55"/>
+    <circle cx="282" cy="365" r="1.5" opacity=".85"/><circle cx="318" cy="363" r="1.1" opacity=".6"/>
+    <circle cx="352" cy="361" r="1.3" opacity=".7"/><circle cx="404" cy="352" r="1.1" opacity=".5"/>
+    <circle cx="452" cy="350" r="1.4" opacity=".75"/><circle cx="520" cy="354" r="1.1" opacity=".55"/>
+    <circle cx="588" cy="349" r="1.3" opacity=".6"/>
+  </g>
+  <circle cx="300" cy="36" r="3" fill="#B6F23A"/>
+  <circle cx="300" cy="36" r="9" fill="#B6F23A" opacity=".25" filter="url(#glow)"/>
+</svg>
