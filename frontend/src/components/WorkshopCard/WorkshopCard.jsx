@@ -11,11 +11,11 @@ export default function WorkshopCard({ workshop, workshopIcon, teamIcon }) {
       </header>
       <div className="workshop-card__content">
         <h3>{workshop.title}</h3>
+        <p className="workshop-card__description">{workshop.description}</p>
         <div className="workshop-card__presenter">
           <img src={teamIcon} alt="" width="24" height="24" />
           <span>{workshop.presenter}</span>
         </div>
-        <p className="workshop-card__description">{workshop.description}</p>
       </div>
       <dl className="workshop-card__meta">
         <div><dt>اليوم</dt><dd>{workshop.date}</dd></div>

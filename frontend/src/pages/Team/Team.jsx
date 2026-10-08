@@ -1,7 +1,7 @@
 import { teamSections } from '../../data/team';
 import circuitPattern from '../Workshops/assets/circuit-pattern.svg';
-import maleIcon from './assets/male.png';
-import femaleIcon from './assets/female.png';
+import maleIcon from './assets/male-icon.png';
+import femaleIcon from './assets/female-icon.png';
 import '../Workshops/Workshops.css';
 import './Team.css';
 
