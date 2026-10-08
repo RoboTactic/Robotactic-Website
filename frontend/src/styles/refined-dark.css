@@ -321,3 +321,250 @@ html.rt-refined body { background: var(--color-surface-page); }
   .rt-refined .home .rt-arrow::after, .rt-refined .hero__actions .button--primary::after,
   .rt-refined .home .home-section__action::after { transition: none; transform: none !important; }
 }
+
+/* ═════════════════════════════════════════════════════════════════════════════
+   Phase 2 — the remaining public pages. Same family as Home (navy glass, green
+   structure, restrained lime, pill actions), but every page keeps its own layout,
+   hierarchy and circuit identity. Each block is scoped to its page root, so the
+   approved Home rules above are never affected.
+   ═════════════════════════════════════════════════════════════════════════════ */
+
+/* ── Page headers: cinematic navy band, light from the RTL start side ──────── */
+.rt-refined :is(.competitions-hero, .workshops-hero, .projects-hero, .info-page__hero, .timeline-hero) {
+  background:
+    radial-gradient(55% 130% at 92% 0%, rgb(22 166 106 / .17), transparent 66%),
+    radial-gradient(40% 100% at 8% 0%, rgb(11 61 46 / .5), transparent 70%),
+    linear-gradient(180deg, #08131E 0%, #07111B 100%);
+  border-block-end: 0;
+}
+.rt-refined :is(.competitions-hero, .workshops-hero, .projects-hero, .info-page__hero, .timeline-hero)::after {
+  content: ''; position: absolute; inset-inline: 0; inset-block-end: 0; block-size: 1px;
+  background: var(--rt-hairline); opacity: .45; pointer-events: none;
+}
+.rt-refined :is(.competitions-hero__pattern, .workshops-hero__pattern, .projects-hero__pattern) { opacity: .55; }
+.rt-refined :is(.competitions-hero, .workshops-hero, .projects-hero) h1 { font-size: clamp(32px, 7.5vw, 52px); line-height: 1.25; letter-spacing: -.01em; }
+.rt-refined :is(.info-page__hero, .timeline-hero) .section-heading__title { font-size: clamp(32px, 7.5vw, 52px); line-height: 1.25; }
+
+/* ── Shared: pill actions, filter chips, empty states ─────────────────────── */
+.rt-refined .event-registration__action { border-radius: var(--radius-full); }
+.rt-refined .event-filter-chips button {
+  border-radius: var(--radius-full); background: rgb(13 26 39 / .85); border-color: rgb(22 166 106 / .22);
+}
+.rt-refined .event-filter-chips button.is-active {
+  background: var(--color-brand-accent); border-color: var(--color-brand-accent); box-shadow: 0 8px 24px -12px rgb(182 242 58 / .5);
+}
+.rt-refined :is(.workshops-empty, .projects-empty) {
+  border-radius: 20px; background: var(--rt-panel); border-color: var(--rt-panel-border); box-shadow: var(--rt-shadow);
+}
+.rt-refined .event-section-heading { font-size: 22px; font-weight: 700; color: var(--color-text-primary); }
+
+/* ── Cards on Competitions + Workshops: navy glass with a media header ───────
+   Same language as Home's cards; the header bleeds to the card edges. */
+.rt-refined :is(.competitions-page, .workshops-page) :is(.competition-card, .workshop-card) {
+  --rt-pad: 24px;
+  overflow: hidden; border-radius: 18px;
+  background: var(--rt-card); border-color: rgb(22 166 106 / .22); box-shadow: var(--rt-shadow);
+}
+.rt-refined .competitions-page .competition-card__header,
+.rt-refined .workshops-page .workshop-card__header {
+  margin: calc(var(--rt-pad) * -1) calc(var(--rt-pad) * -1) 0; padding: 20px var(--rt-pad);
+  inline-size: auto; min-block-size: 104px; align-items: flex-start;
+  border-block-end: 1px solid rgb(22 166 106 / .18);
+  background:
+    radial-gradient(70% 90% at 80% 0%, rgb(22 166 106 / .3), transparent 70%),
+    linear-gradient(180deg, rgb(11 22 34 / .2), rgb(11 22 34 / .85)),
+    url('../pages/Workshops/assets/circuit-pattern.svg') right -40px top -30px / 320px auto no-repeat,
+    linear-gradient(160deg, #102638, #0A1622);
+}
+.rt-refined .competitions-page .competition-card__icon,
+.rt-refined .workshops-page .workshop-card__header > img:first-child {
+  display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box;
+  inline-size: 52px; block-size: 52px; flex: 0 0 52px; padding: 14px; object-fit: contain;
+  border-radius: 15px; background: rgb(7 17 27 / .7); border: 1px solid rgb(22 166 106 / .45);
+}
+.rt-refined .competitions-page .competition-card__level { background: rgb(7 17 27 / .6); }
+.rt-refined :is(.competitions-page, .workshops-page) :is(.competition-card__meta, .workshop-card__meta) {
+  background: rgb(4 10 17 / .55); box-shadow: inset 0 0 0 1px rgb(255 255 255 / .04);
+}
+.rt-refined :is(.competitions-page, .workshops-page) .event-registration__action--closed { background: rgb(255 255 255 / .05); }
+@media (max-width: 767px) {
+  .rt-refined :is(.competitions-page, .workshops-page) :is(.competition-card, .workshop-card) { --rt-pad: 20px; }
+}
+@media (hover: hover) and (pointer: fine) {
+  .rt-refined :is(.competitions-page, .workshops-page) :is(.competition-card, .workshop-card):hover {
+    border-color: rgb(22 166 106 / .7);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / .05), 0 30px 60px -30px rgb(22 166 106 / .35);
+  }
+}
+
+/* ── Competitions: the register band ──────────────────────────────────────── */
+.rt-refined .competitions-cta__band {
+  min-block-size: 220px; border-radius: 22px;
+  background:
+    radial-gradient(70% 140% at 86% 0%, rgb(22 166 106 / .3), transparent 62%),
+    linear-gradient(135deg, #0B3D2E 0%, #0A2D2A 42%, #0B1A26 100%);
+  border: 1px solid rgb(22 166 106 / .34); box-shadow: var(--rt-shadow);
+}
+.rt-refined .competitions-cta__pattern { opacity: .3; }
+.rt-refined .competitions-cta h2 { font-size: clamp(24px, 5vw, 36px); }
+.rt-refined .competitions-cta button {
+  display: inline-flex; align-items: center; gap: 8px; border-radius: var(--radius-full);
+  box-shadow: 0 10px 30px -12px rgb(182 242 58 / .45);
+}
+
+/* ── Workshops: day heading ───────────────────────────────────────────────── */
+.rt-refined .workshops-results__day { color: var(--color-text-primary); font-weight: 700; }
+
+/* ── Projects: media-first discovery cards ────────────────────────────────── */
+.rt-refined .projects-controls input {
+  border-radius: var(--radius-full); padding-inline: 20px;
+  background: rgb(13 26 39 / .85); border-color: rgb(22 166 106 / .24);
+}
+.rt-refined .projects-controls input:focus { padding-inline: 19px; }
+.rt-refined .project-card {
+  --rt-pad: 20px;
+  overflow: hidden; border-radius: 18px;
+  background: var(--rt-card); border-color: rgb(22 166 106 / .22); box-shadow: var(--rt-shadow);
+}
+.rt-refined .project-card__placeholder,
+.rt-refined .project-card__image {
+  inline-size: calc(100% + var(--rt-pad) * 2); margin: calc(var(--rt-pad) * -1) calc(var(--rt-pad) * -1) 4px;
+  border-radius: 0; border-block-end: 1px solid rgb(22 166 106 / .18);
+}
+.rt-refined .project-card__placeholder {
+  background:
+    radial-gradient(60% 80% at 50% 30%, rgb(22 166 106 / .2), transparent 70%),
+    linear-gradient(180deg, rgb(11 22 34 / .2), rgb(11 22 34 / .9)),
+    url('../pages/Workshops/assets/circuit-pattern.svg') center / 360px auto no-repeat,
+    linear-gradient(160deg, #102638, #0A1622);
+}
+.rt-refined .project-card__placeholder img {
+  box-sizing: content-box; padding: 12px; border-radius: 14px;
+  background: rgb(7 17 27 / .7); border: 1px solid rgb(22 166 106 / .4);
+}
+.rt-refined .project-card__details { background: rgb(4 10 17 / .55); box-shadow: inset 0 0 0 1px rgb(255 255 255 / .04); }
+.rt-refined .project-social { border-color: rgb(255 255 255 / .3); border-radius: 10px; }
+@media (max-width: 767px) { .rt-refined .project-card { --rt-pad: 16px; } }
+@media (hover: hover) and (pointer: fine) {
+  .rt-refined .project-card:hover { border-color: rgb(22 166 106 / .7); box-shadow: inset 0 1px 0 rgb(255 255 255 / .05), 0 30px 60px -30px rgb(22 166 106 / .35); }
+}
+
+/* ── About + Team (info pages): calm layered panels ───────────────────────── */
+.rt-refined .info-page { background: var(--color-surface-page); }
+.rt-refined .info-page__pattern { opacity: .45; }
+.rt-refined .info-page__panel {
+  border-radius: 20px; background: var(--rt-panel); border-color: var(--rt-panel-border); box-shadow: var(--rt-shadow);
+}
+.rt-refined .info-page__panel h2 { font-size: 24px; font-weight: 700; }
+/* About: values as node tiles (they still light in order via the circuit) */
+.rt-refined .info-page__values { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.rt-refined .info-page__values li {
+  display: flex; align-items: center; gap: 12px; min-block-size: 56px; padding: 12px 14px;
+  border-radius: 14px; border-color: rgb(22 166 106 / .22); background: rgb(7 17 27 / .55);
+}
+.rt-refined .info-page__values li::before {
+  content: ''; inline-size: 22px; block-size: 22px; flex: none; border-radius: 50%;
+  border: 1.5px solid var(--color-brand-primary);
+  background: radial-gradient(circle, var(--color-brand-accent) 0 3px, transparent 3.5px);
+}
+.rt-refined .info-page__values li.is-active { border-color: var(--color-brand-accent); color: var(--color-text-accent); }
+.rt-refined .info-page__values li.is-done { border-color: rgb(22 166 106 / .5); }
+/* actions: pill links with the forward arrow */
+.rt-refined :is(.info-page__links a, .info-page__panel--empty a) {
+  gap: 8px; border-radius: var(--radius-full); background: rgb(13 26 39 / .85); border-color: rgb(22 166 106 / .4);
+}
+.rt-refined :is(.info-page__links a, .info-page__panel--empty a)::after {
+  content: ''; inline-size: 16px; block-size: 16px; flex: none; background: currentColor;
+  -webkit-mask: var(--rt-arrow) center / contain no-repeat; mask: var(--rt-arrow) center / contain no-repeat;
+  transition: transform 180ms ease-out;
+}
+@media (hover: hover) and (pointer: fine) {
+  .rt-refined :is(.info-page__links a, .info-page__panel--empty a):hover::after { transform: translateX(-3px); }
+}
+/* Team: the approved placeholder, presented as a quiet network waiting for its people */
+.rt-refined .info-page__panel--empty {
+  position: relative; overflow: hidden; padding-block: 56px;
+  background: radial-gradient(50% 90% at 50% 0%, rgb(22 166 106 / .16), transparent 70%), var(--rt-panel);
+}
+.rt-refined .info-page__panel--empty::before {
+  content: ''; display: block; inline-size: 132px; block-size: 48px; margin: 0 auto 20px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 132 48' fill='none'%3E%3Cpath d='M14 34h24l14-14h28l14 14h24' stroke='%2316A66A' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round' opacity='.7'/%3E%3Cpath d='M66 20V8' stroke='%2316A66A' stroke-width='1.5' stroke-linecap='round' opacity='.7'/%3E%3Ccircle cx='10' cy='34' r='4' stroke='%2316A66A' stroke-width='1.5' fill='%2307111B'/%3E%3Ccircle cx='122' cy='34' r='4' stroke='%2316A66A' stroke-width='1.5' fill='%2307111B'/%3E%3Ccircle cx='66' cy='20' r='5.5' stroke='%23B6F23A' stroke-width='1.5' fill='%2307111B'/%3E%3Ccircle cx='66' cy='20' r='2' fill='%23B6F23A'/%3E%3Ccircle cx='66' cy='6' r='3' stroke='%2316A66A' stroke-width='1.5' fill='%2307111B'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+/* ── Timeline: the schedule as a clear progression ────────────────────────── */
+.rt-refined .timeline-summary span { background: rgb(13 26 39 / .85); border-color: rgb(22 166 106 / .3); }
+.rt-refined .timeline-item__card {
+  border-radius: 18px; background: var(--rt-card); border-color: rgb(22 166 106 / .2); box-shadow: var(--rt-shadow);
+}
+.rt-refined .timeline-item__time { text-shadow: 0 0 20px rgb(182 242 58 / .2); }
+.rt-refined .timeline-item__link { border-radius: var(--radius-full); background: rgb(13 26 39 / .6); }
+@media (hover: hover) and (pointer: fine) {
+  .rt-refined .timeline-item__card:hover { border-color: rgb(22 166 106 / .7); box-shadow: inset 0 1px 0 rgb(255 255 255 / .05), 0 30px 60px -30px rgb(22 166 106 / .35); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rt-refined :is(.info-page__links a, .info-page__panel--empty a)::after { transition: none; transform: none !important; }
+}
+
+/* QA fixes */
+/* The page's icon map has no entry for one API category, so some badges were always
+   empty; an empty slot was invisible at 24px but not as a 52px badge — hide it. */
+.rt-refined .competitions-page .competition-card__icon:empty { display: none; }
+/* Project cards fit their content (rows still align: the grid stretches); the old 593px
+   minimum left a dead gap above the details. */
+.rt-refined .project-card { min-block-size: 0; }
+
+/* ── Phase 2 polish ───────────────────────────────────────────────────────── */
+
+/* Timeline: tighter rhythm inside a day; the ≥56px gap between days stays (the circuit's
+   day-entry routes run through it). On desktop the action moves into a side column so each
+   event reads as one compact row. */
+.rt-refined .timeline-page { padding-block-end: 32px; }
+.rt-refined .timeline-item__card h2 { font-weight: 700; }
+@media (min-width: 700px) {
+  .rt-refined .timeline-summary { margin-block-end: 52px; }
+  .rt-refined .timeline-list { gap: 18px; }
+  .rt-refined .timeline-item--station-start { margin-block-start: 38px; }
+  .rt-refined .timeline-item__card {
+    display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 24px; align-items: center;
+    padding: 20px 24px;
+  }
+  .rt-refined .timeline-item__card > * { grid-column: 1; }
+  .rt-refined .timeline-item__card > .timeline-item__link { grid-column: 2; grid-row: 1 / span 4; margin: 0; align-self: center; }
+  .rt-refined .timeline-item__top { margin-block-end: 8px; }
+  .rt-refined .timeline-item__description { margin-block-start: 6px; -webkit-line-clamp: 2; }
+  .rt-refined .timeline-item__card h2 { font-size: 21px; }
+}
+
+/* Projects: clearer hierarchy — title leads, team is a quiet subtitle, the category badge
+   sits on the media for scanning, the placeholder note steps back. */
+.rt-refined .project-card__badge {
+  background: rgb(7 17 27 / .78); border-color: rgb(22 166 106 / .45);
+  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+}
+.rt-refined .project-card__heading { gap: 4px; }
+.rt-refined .project-card__heading h3 { font-size: 20px; line-height: 1.45; color: var(--color-text-primary); }
+.rt-refined .project-card__heading p { font-size: 14px; font-weight: 600; line-height: 1.6; color: var(--color-text-brand); }
+.rt-refined .project-card__description { font-size: 14px; line-height: 1.85; }
+.rt-refined .project-card__placeholder span { font-size: 12px; opacity: .85; }
+.rt-refined .project-card__members { padding-block: 10px 2px; border-block-start: 1px solid rgb(22 166 106 / .12); }
+
+/* Team: the honest placeholder as a deliberate composition — a larger network motif with an
+   orbit ring, a stronger title, and a quiet circuit field behind it. No people are implied. */
+.rt-refined .info-page__panel--empty {
+  display: grid; justify-items: center; align-content: center; gap: 10px;
+  min-block-size: 340px; padding: 56px 24px;
+  background:
+    radial-gradient(45% 70% at 50% 18%, rgb(22 166 106 / .18), transparent 70%),
+    linear-gradient(180deg, rgb(9 19 30 / .55), rgb(9 19 30 / .92)),
+    url('../pages/Workshops/assets/circuit-pattern.svg') center top -20px / 760px auto no-repeat,
+    var(--rt-panel);
+}
+.rt-refined .info-page__panel--empty::before {
+  inline-size: 168px; block-size: 72px; margin-block-end: 14px;
+  filter: drop-shadow(0 0 18px rgb(22 166 106 / .25));
+}
+.rt-refined .info-page__panel--empty h2 { font-size: clamp(24px, 5vw, 32px); margin: 0; }
+.rt-refined .info-page__panel--empty p { margin: 0; font-size: 16px; }
+.rt-refined .info-page__panel--empty a { margin-block-start: 18px; }
+.rt-refined .project-card__placeholder { padding-block-start: 30px; } /* clear the category badge */

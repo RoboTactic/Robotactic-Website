@@ -6,7 +6,7 @@ import WorkshopsPreview from './sections/WorkshopsPreview';
 import LiveNowSection from './sections/LiveNowSection';
 import CtaSection from './sections/CtaSection';
 import HomeCircuit from './HomeCircuit';
-import { useLayoutEffect, useRef } from 'react';
+import { useRef } from 'react';
 import './Home.css';
 
 /* Home — section order follows the approved Figma Home:
@@ -14,11 +14,6 @@ import './Home.css';
    (Navbar and Footer come from the app shell). */
 export default function Home() {
   const rootRef = useRef(null);
-  // Refined Dark (Phase 1): theme the shell (Navbar/Footer/tokens) only while Home is mounted.
-  useLayoutEffect(() => {
-    document.documentElement.classList.add('rt-refined');
-    return () => document.documentElement.classList.remove('rt-refined');
-  }, []);
   return (
     <div className="home" ref={rootRef}>
       <HomeCircuit rootRef={rootRef} />

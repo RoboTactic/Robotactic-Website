@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useLayoutEffect } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar/Navbar';
 import Footer from './components/Footer/Footer';
@@ -21,6 +21,11 @@ function ScrollToTop() {
 export default function App() {
   const { pathname } = useLocation();
   const isDashboard = pathname.startsWith('/dashboard');
+  // Refined Dark is the public site's visual identity (styles/refined-dark.css); the
+  // internal Dashboard keeps its own styling.
+  useLayoutEffect(() => {
+    document.documentElement.classList.toggle('rt-refined', !isDashboard);
+  }, [isDashboard]);
   return (
     <>
       <ScrollToTop />

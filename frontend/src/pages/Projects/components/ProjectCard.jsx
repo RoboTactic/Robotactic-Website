@@ -36,6 +36,9 @@ function ProjectMember({ member }) {
 export default function ProjectCard({ project, teamIcon }) {
   return (
     <article className="project-card">
+      {/* The project's own category, surfaced on the media for scanning; the details list
+          below still carries it for assistive tech, so this badge is decorative. */}
+      {project.categoryLabel && <span className="project-card__badge" aria-hidden="true">{project.categoryLabel}</span>}
       {project.imageUrl ? (
         <img className="project-card__image" src={project.imageUrl} alt={project.imageAlt || ''} />
       ) : (
