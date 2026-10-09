@@ -10,6 +10,7 @@ import Projects from './pages/Projects/Projects';
 import Team from './pages/Team/Team';
 import Timeline from './pages/Timeline/Timeline';
 import Dashboard from './pages/Dashboard/Dashboard';
+import NotFound from './pages/NotFound/NotFound';
 
 // Start each page at the top when navigating between routes
 function ScrollToTop() {
@@ -40,6 +41,8 @@ export default function App() {
           <Route path="/team" element={<Team />} />
           <Route path="/timeline" element={<Timeline />} />
           <Route path="/dashboard/*" element={<Dashboard />} />
+          {/* Unknown public URLs only; /dashboard/* is matched above and keeps its own auth/access states. */}
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
       {!isDashboard && <Footer />}

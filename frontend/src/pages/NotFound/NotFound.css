@@ -1,0 +1,159 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   404 — SIGNAL LOST · Refined Dark.
+   Default styles are the FINAL state; animations only describe how elements arrive
+   (fill: both). Reduced motion removes the animations, so nothing ever waits on motion.
+   Intro ≈ 2.6s: signal 0.25–1.4s → node B flickers 1.35s → glyphs power on 1.55s →
+   nodes 2.0s. Copy appears at 0.15s, independent of the artwork.
+   ───────────────────────────────────────────────────────────────────────────── */
+.nf {
+  position: relative; overflow: hidden; isolation: isolate;
+  display: grid; place-items: center;
+  min-block-size: calc(100svh - 76px);
+  padding-block: clamp(40px, 7vh, 88px) clamp(56px, 9vh, 104px);
+  background:
+    radial-gradient(56% 46% at 50% 36%, rgb(22 166 106 / .17), transparent 72%),
+    radial-gradient(30% 24% at 50% 34%, rgb(182 242 58 / .06), transparent 70%),
+    linear-gradient(180deg, #0A1824 0%, var(--color-surface-page) 58%);
+}
+.nf::after { /* soft floor light under the artwork */
+  content: ''; position: absolute; z-index: -1; inset-inline: 10%; inset-block-start: 52%; block-size: 120px;
+  background: radial-gradient(50% 50% at 50% 50%, rgb(22 166 106 / .12), transparent 70%); pointer-events: none;
+}
+
+/* Backdrop circuitry: faint, kept away from the centre */
+.nf-backdrop {
+  position: absolute; inset: 0; z-index: -1; inline-size: 100%; block-size: 100%; pointer-events: none;
+  -webkit-mask-image: radial-gradient(ellipse 70% 62% at 50% 45%, transparent 30%, #000 74%);
+  mask-image: radial-gradient(ellipse 70% 62% at 50% 45%, transparent 30%, #000 74%);
+}
+.nf-backdrop-traces path { stroke: #16A66A; stroke-width: 1.2; opacity: .26; stroke-linejoin: round; }
+.nf-backdrop-nodes circle { fill: #101D2B; stroke: #16A66A; stroke-width: 1.4; opacity: .5; }
+.nf-backdrop-packet { stroke: #B6F23A; stroke-width: 2.2; stroke-linecap: round; stroke-dasharray: .12 1.3; stroke-dashoffset: -1; opacity: 0; }
+
+.nf-inner { position: relative; inline-size: min(960px, 100% - 32px); display: grid; justify-items: center; text-align: center; }
+.nf-overline { display: inline-flex; align-items: center; gap: 10px; margin: 0; color: var(--color-text-accent); font: 600 12px/1.6 var(--font-latin, 'IBM Plex Sans', sans-serif); letter-spacing: .18em; }
+.nf-overline i { inline-size: 28px; block-size: 1px; background: currentColor; opacity: .7; }
+
+/* ── Artwork ── */
+.nf-art-wrap { inline-size: 100%; max-inline-size: 860px; margin-block: clamp(12px, 3vh, 28px) clamp(8px, 2vh, 20px); }
+.nf-art { display: block; inline-size: 100%; block-size: auto; overflow: visible; }
+.nf-ghost path { stroke: #16A66A; stroke-width: 9; opacity: .12; }
+.nf-glow path { stroke: #16A66A; stroke-width: 22; opacity: .34; }
+.nf-body path { stroke: url(#nf-trace); stroke-width: 9; }
+.nf-ridge path { stroke: #B6F23A; stroke-width: 1.8; opacity: .8; }
+.nf-glow path, .nf-body path, .nf-ridge path, .nf-wires path { stroke-dasharray: 1 1; stroke-dashoffset: 0; }
+.nf-inner-trace { stroke: #16A66A; stroke-width: 1.6; stroke-dasharray: .006 .012; opacity: .55; }
+.nf-wires path { stroke: #16A66A; stroke-width: 2; opacity: .65; }
+
+.nf-gap-node { fill: #101D2B; stroke-width: 3; }
+.nf-gap-node--a { stroke: #16A66A; opacity: .85; }
+.nf-gap-node--b { stroke: #B6F23A; }
+.nf-gap-ping { fill: none; stroke: #B6F23A; stroke-width: 2; opacity: 0; transform-box: fill-box; transform-origin: center; }
+.nf-spark { stroke: #B6F23A; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; opacity: .28; }
+.nf-bridge { stroke: #B6F23A; stroke-width: 5; stroke-linecap: round; stroke-dasharray: 1 1; stroke-dashoffset: 1; }
+
+.nf-node-core { fill: color-mix(in srgb, #B6F23A calc(var(--near, 0) * 100%), #16A66A); transform-box: fill-box; transform-origin: center; transform: scale(calc(1 + var(--near, 0) * .75)); transition: transform .3s ease, fill .3s ease; }
+.nf-node--ring .nf-node-core, .nf-node--pad .nf-node-core { stroke: color-mix(in srgb, #B6F23A calc(var(--near, 0) * 100%), #16A66A); transition: transform .3s ease, stroke .3s ease; }
+.nf-node--ring .nf-node-core { fill: #101D2B; stroke-width: 2.5; }
+.nf-node--pad .nf-node-core { fill: #0B3D2E; stroke-width: 1.5; }
+.nf-node-halo { fill: #B6F23A; opacity: calc(var(--near, 0) * .24); transition: opacity .3s ease; }
+
+.nf-signal path { stroke-dasharray: .07 1.3; stroke-dashoffset: -.93; opacity: 0; }
+.nf-signal-glow { stroke: #B6F23A; stroke-width: 16; }
+.nf-signal-core { stroke: #B6F23A; stroke-width: 4.5; }
+
+/* Found: the loop closes */
+.nf-art--found .nf-bridge { stroke-dashoffset: 0; }
+.nf-art--found .nf-gap-node--a { stroke: #B6F23A; opacity: 1; }
+.nf-art--found .nf-spark { opacity: 0; }
+
+/* ── Copy ── */
+.nf-copy { display: grid; justify-items: center; inline-size: 100%; }
+.nf-copy h1 { margin: 0; font-size: clamp(28px, 4.2vw, 46px); line-height: 1.35; color: var(--color-text-primary); text-wrap: balance; }
+.nf-body { margin: 14px auto 0; max-inline-size: 34em; color: var(--color-text-secondary); font-size: clamp(16px, 1.55vw, 19px); line-height: 1.9; text-wrap: pretty; }
+.nf-requested { display: inline-flex; flex-wrap: wrap; justify-content: center; gap: 6px; max-inline-size: 100%; margin: 18px 0 0; padding: 6px 14px; border: 1px solid var(--color-border-subtle); border-radius: var(--radius-full); background: rgb(10 21 32 / .7); color: var(--color-text-muted); font-size: 13px; line-height: 1.6; }
+.nf-requested bdi { font-family: var(--font-latin, 'IBM Plex Sans', sans-serif); color: var(--color-text-secondary); overflow-wrap: anywhere; }
+
+.nf-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-block-start: 28px; }
+.nf .nf-btn { border-radius: var(--radius-full); min-block-size: 52px; gap: 10px; }
+.nf .nf-btn--home::after { content: ''; inline-size: 18px; block-size: 18px; flex: none; background: currentColor; -webkit-mask: var(--rt-arrow) center / contain no-repeat; mask: var(--rt-arrow) center / contain no-repeat; }
+.nf[dir='ltr'] .nf-btn--home::after, .nf[dir='ltr'] .nf-arrow { transform: scaleX(-1); }
+.nf-retry-icon { inline-size: 16px; block-size: 16px; flex: none; border: 2px solid currentColor; border-inline-start-color: transparent; border-radius: 50%; }
+.nf-btn--retry[data-busy] { cursor: progress; }
+.nf-btn--retry[data-busy] .nf-retry-icon { animation: nf-spin .8s linear infinite; }
+.nf a:focus-visible, .nf button:focus-visible { outline: 2px solid var(--color-border-focus); outline-offset: 3px; }
+
+.nf-status { display: grid; justify-items: center; gap: 12px; min-block-size: 28px; margin-block-start: 22px; color: var(--color-text-secondary); font-size: 15px; line-height: 1.8; }
+.nf-status p { margin: 0; }
+.nf-status--near p, .nf-status--none p { color: var(--color-text-primary); }
+.nf-suggest, .nf-sections a { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-block-size: 44px; padding: 8px 18px; border-radius: var(--radius-full); text-decoration: none; transition: border-color .15s ease, background-color .15s ease, color .15s ease; }
+.nf-suggest { border: 1.5px solid var(--color-brand-accent); color: var(--color-text-accent); font-weight: 600; }
+.nf-arrow { inline-size: 16px; block-size: 16px; background: currentColor; -webkit-mask: var(--rt-arrow) center / contain no-repeat; mask: var(--rt-arrow) center / contain no-repeat; }
+.nf-sections { list-style: none; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 0; padding: 0; }
+.nf-sections a { border: 1px solid var(--color-border-outline); color: var(--color-text-primary); font-size: 14px; }
+@media (hover: hover) {
+  .nf-suggest:hover { background: rgb(182 242 58 / .1); }
+  .nf-sections a:hover { border-color: var(--color-brand-primary); background: rgb(22 166 106 / .1); }
+}
+
+@media (max-width: 560px) {
+  .nf { min-block-size: calc(100svh - 64px); }
+  .nf-actions { flex-direction: column; align-items: stretch; inline-size: 100%; max-inline-size: 360px; }
+  .nf .nf-btn { inline-size: 100%; }
+  .nf-requested { font-size: 12px; }
+}
+
+/* ── Motion (skipped entirely with reduced motion) ── */
+@media (prefers-reduced-motion: no-preference) {
+  .nf-copy { animation: nf-rise .6s cubic-bezier(.2,.7,.2,1) .15s both; }
+  .nf-overline { animation: nf-fade .5s ease .05s both; }
+  .nf-ghost { animation: nf-fade .6s ease both; }
+  .nf-signal path { animation: nf-travel 1.4s cubic-bezier(.5,0,.25,1) .25s both; }
+  .nf-art--lost .nf-gap-node--b { animation: nf-arrive .6s ease-out 1.35s both, nf-breathe 3.6s ease-in-out 2.6s infinite alternate; }
+  .nf-gap-node--a { animation: nf-breathe-dim 3.6s ease-in-out 3.4s infinite alternate; }
+  .nf-art--lost .nf-gap-ping { animation: nf-ping .9s ease-out 1.38s both; }
+  .nf-art--lost .nf-spark { animation: nf-spark .7s ease-out 1.4s both; }
+  .nf-glow path { animation: nf-draw 1s cubic-bezier(.65,0,.35,1) 1.55s both, nf-glow-in 1.4s ease 1.55s both; }
+  .nf-body path, .nf-ridge path { animation: nf-draw 1s cubic-bezier(.65,0,.35,1) 1.55s both; }
+  .nf-wires path { animation: nf-draw .6s ease-out 1.95s both; }
+  .nf-inner-trace { animation: nf-fade .8s ease 2.1s both; }
+  .nf-node { animation: nf-fade .4s ease calc(2s + var(--i) * 30ms) both; }
+  .nf-backdrop-packet { animation: nf-packet 10s linear 3.2s 3; }
+  .nf-backdrop-packet--late { animation-delay: 8.2s; }
+
+  /* Reconnect: the signal replays (remounted) and node B answers again */
+  .nf-art--reconnecting .nf-gap-node--b { animation: nf-arrive-2 .6s ease-out 1.3s both; }
+  .nf-art--reconnecting .nf-gap-ping { animation: nf-ping-2 .9s ease-out 1.32s both; }
+  .nf-art--reconnecting .nf-glyphs { animation: nf-dim 1.4s ease both; }
+  .nf-art--failed .nf-spark { animation: nf-spark-2 .7s ease-out both; }
+  .nf-art--failed .nf-gap-node--b { animation: nf-breathe 3.6s ease-in-out .8s infinite alternate; }
+  .nf-art--failed .nf-gap-ping { animation: nf-ping-2 .9s ease-out both; }
+  .nf-art--found .nf-bridge { animation: nf-draw .55s cubic-bezier(.65,0,.35,1) both; }
+  .nf-art--found .nf-gap-ping { animation: nf-ping-3 .9s ease-out .35s both; }
+
+  /* Touch screens: no pointer — nodes glow softly in sequence a few times, then rest */
+  @media (hover: none) {
+    .nf-node-halo { animation: nf-ambient 5s ease-in-out calc(2.8s + var(--i) * .25s) 3; }
+  }
+}
+@keyframes nf-rise { from { opacity: 0; transform: translateY(10px); } }
+@keyframes nf-fade { from { opacity: 0; } }
+@keyframes nf-travel { 0% { stroke-dashoffset: .07; opacity: 1; } 82% { stroke-dashoffset: -.93; opacity: 1; } 100% { stroke-dashoffset: -.93; opacity: 0; } }
+@keyframes nf-arrive { 0% { opacity: .3; stroke: #16A66A; } 25% { opacity: 1; stroke: #B6F23A; } 45% { opacity: .45; } 65% { opacity: 1; } 80% { opacity: .6; } 100% { opacity: 1; } }
+@keyframes nf-arrive-2 { 0%, 20% { opacity: 1; } 35% { opacity: .45; } 55% { opacity: 1; } 75% { opacity: .55; } 100% { opacity: 1; } }
+@keyframes nf-breathe { from { opacity: 1; } to { opacity: .62; } }
+@keyframes nf-breathe-dim { from { opacity: .85; } to { opacity: .5; } }
+@keyframes nf-ping { from { opacity: .75; transform: scale(1); } to { opacity: 0; transform: scale(2.8); } }
+@keyframes nf-ping-2 { from { opacity: .7; transform: scale(1); } to { opacity: 0; transform: scale(2.6); } }
+@keyframes nf-ping-3 { from { opacity: .7; transform: scale(1); } to { opacity: 0; transform: scale(3); } }
+@keyframes nf-spark { 0% { opacity: 0; } 30% { opacity: .95; } 50% { opacity: .2; } 72% { opacity: .75; } 100% { opacity: .28; } }
+@keyframes nf-spark-2 { 0% { opacity: .28; } 30% { opacity: .9; } 55% { opacity: .2; } 100% { opacity: .28; } }
+@keyframes nf-draw { from { stroke-dashoffset: 1; } }
+@keyframes nf-glow-in { from { opacity: 0; } }
+@keyframes nf-dim { 0% { opacity: 1; } 30%, 70% { opacity: .7; } 100% { opacity: 1; } }
+@keyframes nf-packet { 0% { stroke-dashoffset: .12; opacity: 0; } 3% { opacity: .85; } 24% { stroke-dashoffset: -1; opacity: 0; } 100% { stroke-dashoffset: -1; opacity: 0; } }
+@keyframes nf-ambient { 0%, 100% { opacity: 0; } 50% { opacity: .2; } }
+@keyframes nf-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .nf-node-core, .nf-node-halo { transition: none; }
+}
