@@ -8,6 +8,20 @@ const shared = {
 };
 
 const resources = {
+  "team-members": {
+    table: "event_team_members",
+    fields: {
+      name_ar: { type: "string" }, name_en: { type: "string" },
+      role_ar: { type: "string" }, role_en: { type: "string" },
+      bio_ar: { type: "string", nullable: true }, bio_en: { type: "string", nullable: true },
+      image_url: { type: "url", nullable: true }, public_email: { type: "email", nullable: true },
+      contact_url: { type: "url", nullable: true }, linkedin_url: { type: "url", nullable: true }, x_url: { type: "url", nullable: true },
+      display_order: { type: "positiveInteger" }, status: { type: "enum", values: ["draft", "published", "hidden"] },
+    },
+    required: ["name_ar", "name_en", "role_ar", "role_en", "display_order", "status"],
+    order: "display_order ASC, id ASC",
+  },
+
   competitions: {
     table: "competitions",
     fields: {
@@ -123,6 +137,8 @@ const validators = {
 function validate(resource, body, partial = false) {
   const definition = resources[resource];
   if (!body || typeof body !== "object" || Array.isArray(body)) throw httpError(400, "A JSON object is required.");
+  if (resource === "team-members" && Object.keys(body).some(key=>!Object.hasOwn(definition.fields,key))) throw httpError(400,"Unsupported content field.");
+  if (resource === "team-members" && body.display_order !== undefined && (!Number.isSafeInteger(body.display_order) || body.display_order < 1 || body.display_order > 2147483647)) throw httpError(400,"Choose a positive display order up to 2147483647.");
   const unknown = Object.keys(body).filter((key) => !definition.fields[key] && !(resource === "projects" && key === "members"));
   if (unknown.length) throw httpError(400, `Unsupported fields: ${unknown.join(", ")}.`);
   const normalized = {};
@@ -142,6 +158,7 @@ function validate(resource, body, partial = false) {
       continue;
     }
     const descriptor = definition.fields[key];
+    if (resource === "team-members" && value === null && !descriptor.nullable) throw httpError(400, `${key} cannot be null.`);
     if (value === null && descriptor.nullable) normalized[key] = null;
     else normalized[key] = validators[descriptor.type](value, key, descriptor);
   }

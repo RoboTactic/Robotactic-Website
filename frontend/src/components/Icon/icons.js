@@ -1,6 +1,7 @@
 /* Line icons exported from the Figma `Icon / *` components (24px grid,
    1.75 stroke, round caps). Each path is placed at its Figma offset. */
 export const ICONS = {
+  search: [{ d: 'M 18 10.5 A 7.5 7.5 0 1 0 3 10.5 A 7.5 7.5 0 1 0 18 10.5 Z M 16 16 L 21 21', x: 0, y: 0 }],
   users: [
     { d: 'M 9 10 A 3 3 0 1 0 9 4 A 3 3 0 1 0 9 10 Z M 3 21 V 18 A 6 6 0 0 1 15 18 V 21', x: 0, y: 0 },
     { d: 'M 16 4 A 3 3 0 0 1 16 10 M 18 13 A 5 5 0 0 1 21 18 V 21', x: 0, y: 0 },

@@ -37,3 +37,7 @@ Start the API with `npm run dev` or `npm start`. It verifies PostgreSQL before o
 - Admin sign-in uses an eight-hour `HttpOnly`, `SameSite=Strict` cookie. Mutating requests require an allowed `Origin`; list `CORS_ORIGINS` explicitly. Sign-in and admin writes are rate-limited per process.
 - Competition and workshop registration URLs remain external links. Google Forms responses are not imported into PostgreSQL automatically.
 - Participant and team personal data is only available behind the server-side role checks; there is no public endpoint for those tables.
+
+## About and event-team content
+
+Apply pending migrations with the existing `npm run db:migrate` command. Migration 005 adds the singleton About page and public event-team profiles. About's approved text is inserted only when missing; existing edits survive reruns. Super Admin manages both sections; published content is exposed by `/api/public/about` and `/api/public/team-members`. See [local testing and API details](../docs/about-team-management.md).

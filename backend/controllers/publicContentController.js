@@ -2,6 +2,7 @@ const service = require("../services/publicContentService");
 
 function createPublicContentController(pool) {
   return {
+    teamMembers: async (_request, response) => response.json({ data: await service.getTeamMembers(pool) }),
     siteSettings: async (_request, response) => response.json({ data: await service.getSiteSettings(pool) }),
     competitions: async (_request, response) => response.json({ data: await service.getCompetitions(pool) }),
     workshops: async (_request, response) => response.json({ data: await service.getWorkshops(pool) }),

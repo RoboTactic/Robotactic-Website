@@ -88,4 +88,13 @@ async function getFaqs(pool) {
   return rows;
 }
 
-module.exports = { getSiteSettings, getCompetitions, getWorkshops, getProjects, getAnnouncements, getTimelineEvents, getSponsors, getFaqs };
+async function getTeamMembers(pool) {
+  const { rows } = await pool.query(`
+    SELECT id, name_ar, name_en, role_ar, role_en, bio_ar, bio_en, image_url,
+      public_email, contact_url, linkedin_url, x_url, display_order
+    FROM event_team_members WHERE status = 'published' ORDER BY display_order ASC, id ASC
+  `);
+  return rows;
+}
+
+module.exports = { getTeamMembers, getSiteSettings, getCompetitions, getWorkshops, getProjects, getAnnouncements, getTimelineEvents, getSponsors, getFaqs };

@@ -60,11 +60,13 @@ function compose(ctx) {
   // Two contributions converge on one shared endpoint.
   const desktop = ctx.vw >= DESKTOP_MIN;
   const X = desktop ? panel.left + 140 : panel.left + 60;
-  const y = panel.bottom + (desktop ? 34 : 28);
-  const west = [[X - 64, panel.bottom + 12], [X - 42, y], [X - 7, y]];
-  const east = [[X + 64, panel.bottom + 12], [X + 42, y], [X + 7, y]];
+  const panels = ctx.qa('.info-page__panel');
+  const contentBottom = Math.max(...panels.map(el => rect(el).bottom));
+  const y = contentBottom + (desktop ? 34 : 28);
+  const west = [[X - 64, contentBottom + 12], [X - 42, y], [X - 7, y]];
+  const east = [[X + 64, contentBottom + 12], [X + 42, y], [X + 7, y]];
   stations.push({
-    key: 'ending', trigger: panelEl, rootMargin: '0px 0px -30% 0px',
+    key: 'ending', trigger: panels[panels.length - 1] || panelEl, rootMargin: '0px 0px -30% 0px',
     paths: [{ pts: west }, { pts: east }], signals: [west, east],
     nodes: [{ at: [X, y], r: 6, kind: 'ring', pulse: true }],
   });

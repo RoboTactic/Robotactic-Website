@@ -1,6 +1,7 @@
 const repository = require("../database/publicContentRepository");
 
 module.exports = {
+  getTeamMembers: (pool) => repository.getTeamMembers(pool),
   getSiteSettings: (pool) => repository.getSiteSettings(pool),
   getCompetitions: (pool) => repository.getCompetitions(pool),
   getWorkshops: (pool) => repository.getWorkshops(pool),

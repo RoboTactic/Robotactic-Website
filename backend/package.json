@@ -12,7 +12,8 @@
     "seed": "node scripts/seedDatabase.js",
     "seed:publish": "node scripts/seedDatabase.js --publish",
     "seed:full": "node scripts/seedDatabase.js --full --publish",
-    "admin:create": "node scripts/createAdmin.js"
+    "admin:create": "node scripts/createAdmin.js",
+    "admin:reset-password": "node scripts/resetAdminPassword.js"
   },
   "engines": {
     "node": ">=20"

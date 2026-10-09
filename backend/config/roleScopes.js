@@ -8,6 +8,7 @@ const ROLE_DEFAULTS = Object.freeze({
 
 function hasScope(admin, scope) {
   if (!admin) return false;
+  if (["about", "team-members"].includes(scope)) return admin.role_code === "super_admin";
   if (scope === "dashboard") return true;
   if (scope === "users") return admin.role_code === "super_admin";
   if (!CONTENT_SCOPES.includes(scope)) return false;

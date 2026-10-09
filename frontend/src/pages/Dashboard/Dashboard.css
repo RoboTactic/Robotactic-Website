@@ -165,3 +165,112 @@
 @media(min-width:700px) {
   .dash-date-popover { padding: 12px; }
 }
+
+/* Share the approved Refined Dark panels and tokens with public pages. */
+.rt-refined .dashboard { background: var(--color-surface-page); }
+.rt-refined .dash-header { background: var(--color-surface-sunken); }
+.rt-refined .dash-sidebar { background: var(--rt-panel); }
+.rt-refined :is(.dash-card, .dash-stat, .dash-form, .dash-empty) {
+  background: var(--rt-panel);
+  border-color: var(--rt-panel-border);
+  box-shadow: var(--rt-shadow);
+}
+.rt-refined :is(.dash-action, .dash-file-trigger) { border-radius: var(--radius-full); }
+.rt-refined .dash-date-popover { background: var(--color-surface-card); }
+
+.dashboard :is(input, textarea)[dir=ltr] { font-family: var(--font-latin); }
+
+/* A compact sign-in form with deliberate spacing between fields and actions. */
+.dashboard .dash-login { max-inline-size: 480px; }
+.dash-login-page { min-block-size: 0; padding-block: 32px 56px; }
+.dash-login .dash-heading { margin-block-end: 24px; }
+.dash-login h1 { font-size: clamp(24px, 5vw, 30px); line-height: 1.5; overflow-wrap: anywhere; }
+.dash-login-brand { font-family: var(--font-latin); }
+.dash-login .dash-heading p { margin-block: 10px 0; }
+.dash-login-form { display: grid; gap: 20px; }
+.dashboard[lang=ar] .dash-login-form { font-family: 'IBM Plex Sans Arabic', 'Segoe UI', Tahoma, sans-serif; }
+.dash-login-form label { gap: 8px; line-height: 1.6; }
+.dash-login-form .dash-login-status { margin: 0; padding: 12px 14px; border: 1px solid var(--color-border-subtle); border-radius: 12px; background: var(--color-surface-sunken); color: var(--color-text-secondary); font-size: 14px; line-height: 1.7; }
+.dash-login-form .dash-form-actions { margin: 0; }
+.dash-login-form :is(input, select):disabled { opacity: .65; cursor: not-allowed; }
+.dash-login-form button:disabled { opacity: .55; cursor: not-allowed; }
+@media(min-width:1024px) { .dash-login-page { padding-block-start: 48px; } }
+
+/* Dashboard composition uses the public identity with a readable UI text scale. */
+.dashboard { --dash-font-ui-ar: 'IBM Plex Sans Arabic', 'Segoe UI', Tahoma, sans-serif; font-size: 16px; }
+.dashboard[lang=ar] { font-family: var(--dash-font-ui-ar); }
+.dashboard[lang=ar] :is(h1, h2) { font-family: var(--font-arabic); }
+.dashboard [lang=en], .dashboard[lang=en] :is(h1,h2) { font-family: var(--font-latin); }
+.dashboard input[dir=rtl], .dashboard textarea[dir=rtl] { font-family: var(--dash-font-ui-ar); }
+.dash-header { position: sticky; inset-block-start: 0; z-index: 10; padding-inline: 20px; gap: 12px; }
+.dash-header .logo { --logo-mark-h: 44px; --logo-mark-w: calc(44px * 1.073); }
+.dash-content { padding: 28px 16px 48px; }
+.dash-page { inline-size: 100%; max-inline-size: 1280px; margin-inline: auto; }
+.dash-page--editor { max-inline-size: 960px; }
+.dashboard h1 { font-size: clamp(26px, 3vw, 34px); line-height: 1.4; }
+.dash-heading { align-items: start; gap: 20px; margin-block-end: 28px; }
+.dash-heading > div { max-inline-size: 720px; }
+.dash-heading p, .dash-secondary { font-size: 15px; line-height: 1.8; }
+.dash-heading > .dash-action { flex-shrink: 0; }
+.dash-sidebar nav a { font-size: 16px; min-block-size: 48px; padding: 12px; line-height: 1.5; }
+.dash-sidebar nav { gap: 6px; }
+.dash-sidebar-bottom { display: grid; gap: 12px; padding-block-start: 20px; }
+.dash-user { display: flex; align-items: center; gap: 12px; padding: 14px; border: 1px solid var(--color-border-default); border-radius: 16px; background: var(--color-surface-raised); }
+.dash-user-avatar { display: grid; place-items: center; flex: 0 0 44px; inline-size: 44px; block-size: 44px; border-radius: 50%; background: var(--color-surface-sunken); color: var(--color-text-accent); border: 1px solid var(--color-border-brand); }
+.dash-user-copy { display: grid; gap: 4px; min-inline-size: 0; }
+.dash-user-copy strong { font-size: 16px; font-weight: 600; line-height: 1.5; overflow-wrap: anywhere; }
+.dash-user-role { font-size: 13px; line-height: 1.6; color: var(--color-text-secondary); }
+.dash-signout { inline-size: 100%; justify-content: center; min-block-size: 48px; font-size: 15px; }
+.dash-form { max-inline-size: 960px; margin-inline: auto; padding: 20px; }
+.dash-form-grid { gap: 20px; }
+.dash-form label, .dash-field > label { font-size: 15px; font-weight: 500; line-height: 1.6; }
+.dashboard :is(input,select,textarea) { font-size: 16px; line-height: 1.65; }
+.dashboard :is(input,select) { min-block-size: 50px; }
+.dash-form-actions { padding-block-start: 8px; margin-block-start: 20px; gap: 12px; }
+.dash-form-actions .dash-action { min-inline-size: 120px; min-block-size: 48px; font-size: 15px; }
+.dash-editor-group { min-inline-size: 0; margin: 0 0 24px; padding: 20px 0 0; border: 0; border-block-start: 1px solid var(--color-border-default); }
+.dash-editor-group legend { padding-inline-end: 12px; font-size: 17px; font-weight: 600; color: var(--color-text-primary); }
+.dash-editor-group .dash-form-grid { margin-block: 0; }
+.dash-editor-group .dash-secondary { margin-block: 0 16px; }
+.dash-form .dash-editor-group textarea { block-size: auto; min-block-size: 112px; }
+.dash-form .dash-about-body textarea { min-block-size: 224px; }
+.dash-form .dash-about-values textarea { min-block-size: 184px; }
+.dash-about-form > .dash-editor-group:last-of-type { margin-block-end: 0; }
+.dash-about-form > .dash-form-actions { border-block-start: 1px solid var(--color-border-default); padding-block-start: 20px; }
+.dash-filters { display: flex; flex-direction: column; align-items: stretch; gap: 16px; margin-block: 0 24px; padding: 18px; border: 1px solid var(--color-border-default); border-radius: 16px; background: var(--color-surface-card); }
+.dash-search { inline-size: 100%; max-inline-size: 480px; display: grid; gap: 8px; }
+.dash-search > label { font-size: 14px; font-weight: 500; color: var(--color-text-secondary); }
+.dash-search-input { display: flex; align-items: center; gap: 10px; padding-inline: 14px 6px; min-block-size: 50px; border: 1px solid var(--color-border-outline); border-radius: 12px; background: var(--color-surface-raised); }
+.dash-search-input > svg { flex-shrink: 0; color: var(--color-text-secondary); }
+.dashboard .dash-search-input input { border: 0; padding: 10px 0; background: transparent; border-radius: 0; min-inline-size: 0; flex: 1; outline: none; box-shadow: none; }
+.dash-search-input input::placeholder { color: var(--color-text-muted); opacity: 1; }
+.dash-search-input:focus-within { border-color: var(--color-border-focus); box-shadow: 0 0 0 1px var(--color-border-focus); }
+.dash-search-input input::-webkit-search-cancel-button { -webkit-appearance: none; }
+.dash-search-input button { display: grid; place-items: center; inline-size: 44px; block-size: 44px; flex-shrink: 0; border-radius: 8px; color: var(--color-text-secondary); }
+.dash-search-input button:hover { background: var(--color-surface-sunken); }
+.dash-result-count { display: flex; align-items: center; gap: 12px; font-size: 17px; font-weight: 500; color: var(--color-text-secondary); margin: 0; flex-shrink: 0; min-block-size: 50px; }
+.dash-result-count strong { font-size: 26px; font-weight: 600; line-height: 1.3; color: var(--color-text-primary); }
+/* The control font reset above must not erase action text weights. */
+.dashboard .dash-action { font-family: inherit; font-size: 15px; font-weight: 600; line-height: 1.5; }
+.dashboard .dash-action--primary { font-weight: 700; }
+.dash-empty--records { display: grid; justify-items: center; align-content: center; gap: 12px; padding: 32px 24px; text-align: center; }
+.dash-empty--records > svg { color: var(--color-brand-primary); }
+.dash-empty--records p { font-size: 15px; color: var(--color-text-secondary); }
+.dash-meta { font-size: 14px; }
+.dash-card h2 { font-size: 20px; }
+.dash-card-actions > * { font-size: 14px; min-block-size: 44px; }
+.dashboard .dash-login-form { max-inline-size: 480px; }
+.dash-login-form .dash-form-actions { margin-block-start: 0; padding-block-start: 0; }
+@media(min-width:700px) {
+ .dash-filters { flex-direction: row; align-items: end; justify-content: space-between; }
+ .dash-search { margin-inline-start: auto; }
+ .dash-form { padding: 28px; }
+ .dash-heading { align-items: center; }
+}
+@media(min-width:1024px) {
+ .dash-header { min-block-size: 88px; padding-inline: 28px; }
+ .dash-header .logo { --logo-mark-h: 52px; --logo-mark-w: calc(52px * 1.073); }
+ .dash-sidebar { position: sticky; inset-block-start: 88px; block-size: calc(100dvh - 88px); flex: 0 0 292px; align-self: flex-start; padding: 20px 16px; }
+ .dash-sidebar nav { overflow-y: auto; min-block-size: 0; }
+ .dash-content { min-block-size: calc(100dvh - 88px); padding: 40px 32px 64px; }
+}

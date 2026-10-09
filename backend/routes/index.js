@@ -13,9 +13,11 @@ const { authorize } = require("../middleware/authorize");
 const { requireTrustedOrigin } = require("../middleware/requireTrustedOrigin");
 const { rateLimitAdminWrites } = require("../middleware/rateLimitAdminWrites");
 
+const { createAboutController } = require("../controllers/aboutController");
+
 const CONTENT_SCOPES = {
   competitions: "competitions", teams: "teams", workshops: "workshops",
-  projects: "projects", announcements: "announcements",
+  projects: "projects", announcements: "announcements", "team-members": "team-members",
 };
 
 function createApiRoutes({ pool, authTokenSecret, corsOrigins, isProduction }) {
@@ -23,6 +25,7 @@ function createApiRoutes({ pool, authTokenSecret, corsOrigins, isProduction }) {
   const publicRouter = express.Router();
   const adminRouter = express.Router();
   const authRouter = express.Router();
+  const aboutController = createAboutController(pool);
   const publicController = createPublicContentController(pool);
   const contentController = createAdminContentController(pool);
   const userController = createAdminUserController(pool);
@@ -36,6 +39,8 @@ function createApiRoutes({ pool, authTokenSecret, corsOrigins, isProduction }) {
 
   router.use("/health", healthRoutes);
 
+  publicRouter.get("/about", aboutController.publicGet);
+  publicRouter.get("/team-members", publicController.teamMembers);
   publicRouter.get("/site-settings", publicController.siteSettings);
   publicRouter.get("/competitions", publicController.competitions);
   publicRouter.get("/workshops", publicController.workshops);
@@ -61,11 +66,14 @@ function createApiRoutes({ pool, authTokenSecret, corsOrigins, isProduction }) {
   adminRouter.get("/lookups/competitions", authorize("teams"), lookupController.competitions);
 
   adminRouter.post("/images/:resource", (request, _response, next) => {
-    if (!["competitions", "workshops", "projects", "announcements"].includes(request.params.resource)) {
+    if (!["competitions", "workshops", "projects", "announcements", "about", "team-members"].includes(request.params.resource)) {
       return next(require("../utils/httpError").httpError(404, "Route not found."));
     }
     return authorize(request.params.resource)(request, _response, next);
   }, express.raw({ type: "*/*", limit: "5mb" }), imageController.upload);
+
+  adminRouter.get("/about", authorize("about"), aboutController.get);
+  adminRouter.patch("/about", authorize("about"), aboutController.update);
 
   for (const [resource, scope] of Object.entries(CONTENT_SCOPES)) {
     const resourceRouter = express.Router();

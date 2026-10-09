@@ -21,10 +21,10 @@ function ScrollToTop() {
 export default function App() {
   const { pathname } = useLocation();
   const isDashboard = pathname.startsWith('/dashboard');
-  // Refined Dark is the public site's visual identity (styles/refined-dark.css); the
-  // internal Dashboard keeps its own styling.
+  // Share the approved Refined Dark surface tokens with the dashboard; its
+  // compact forms and navigation retain their own layout.
   useLayoutEffect(() => {
-    document.documentElement.classList.toggle('rt-refined', !isDashboard);
+    document.documentElement.classList.add('rt-refined');
   }, [isDashboard]);
   return (
     <>

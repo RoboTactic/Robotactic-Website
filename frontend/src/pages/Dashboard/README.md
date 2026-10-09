@@ -7,7 +7,7 @@ Sign-in uses a dropdown of active team account login names and a password. A Sup
 ## Admin UI fixes
 
 - A compact dashboard header contains the official shared Logo and the language switch. The desktop sidebar starts directly beneath it, without an extra language toolbar row.
-- Arabic uses the same `--font-arabic` fallback stack as the public site; English uses IBM Plex Sans, including its local regular face. The switch uses the font and direction of its destination language.
+- Arabic headings retain the public `--font-arabic` stack. Controls and navigation use its existing IBM Plex Sans Arabic UI fallback for legibility; English uses IBM Plex Sans, including its local regular face. The switch uses the font and direction of its destination language.
 - Navigation reuses shared Icon components for sections allowed for the signed-in account. Users and logout icons extend the shared 24px line-icon system. Mobile navigation closes on Escape and returns focus to its trigger.
 - Date/time fields use a branded in-page Gregorian calendar, with hour/minute controls, clear/today/done actions, keyboard arrows/Home/End/PageUp/PageDown, Escape dismissal and focus return. Manual entry is validated, including leap dates. The submitted local datetime format is unchanged, preserving existing API conversion. The calendar stays inside the viewport on phones and desktops, so it does not depend on the browser's white native popup.
 - File chooser buttons use green surface/border tokens. Competition, workshop, project, and announcement forms accept either an image URL or a JPEG/PNG/WebP upload. A selected file replaces the URL when the form is saved.
@@ -20,7 +20,7 @@ Workshop managers and super admins see a Speakers section. Create a speaker with
 
 The dashboard keeps its existing session checks and does not add sample credentials. The backend enforces permissions for every admin operation.
 
-The public Navbar and Footer are unchanged. The dashboard keeps its own header, as in the latest integrated layout.
+The dashboard keeps its own compact header and shares the latest Refined Dark surface tokens with public pages. Public Navbar, Footer and motion updates are preserved.
 
 ## Verification
 
@@ -31,3 +31,15 @@ The UI was checked in a real browser across 320, 375, 390 and 1440px and Arabic/
 The compact card/detail layout was additionally checked in 80 displays across 320, 375, 390, 1024 and 1440px, both languages, and competition/workshop/announcement/user listings and details. These checks use long fictional labels, descriptions and URLs and verify column counts, field preservation, and the existing detail/edit links.
 
 Calendar checks cover both languages at these five widths: green panel surfaces, viewport bounds, 44px day targets, valid/invalid leap dates, keyboard date navigation, hour/minute selection, local datetime form payload, language preservation, Escape/focus return and required-field clearing. Computed Arabic font families match the public Navbar and the local English regular face loads successfully.
+
+## About and Team management
+
+Super Admin has new About and event-team sections. About edits update both `/about` and the Home About section. Team profiles populate `/team` after publication and remain separate from sign-in accounts and competition teams. Forms reuse the current image uploader. Apply migration 005 before using these sections. See [setup and verification](../../../../docs/about-team-management.md).
+
+## Dashboard layout polish
+
+Editors and their headings share a centered 960px maximum width; lists use a centered 1280px maximum. About fields are grouped by purpose, with Arabic/English introductions, body text and values paired on desktop and stacked on phones. Introductions now allow multiple lines. Labels connect to their controls and each text field declares its content language and direction.
+
+All management lists share a framed search toolbar with an icon, placeholder, result count and a clear button that returns focus to the input. Empty sections and unmatched searches have distinct messages. Desktop navigation uses 16px text, a proportionally larger official logo, and a separate account card and full-width logout button; long menus scroll while account actions stay visible.
+
+Polish verification: 270 browser displays across 320, 375, 390, 1024, 1440 and 2048px in Arabic/English with fictional intercepted API data. Checks cover all eight lists, search/clear/empty states, editor field grouping, About save payload, desktop card/detail columns, mobile menu keyboard dismissal and horizontal overflow. Production build passes. These checks do not connect to the shared event database.
