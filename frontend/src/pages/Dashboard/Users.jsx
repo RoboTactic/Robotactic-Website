@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { apiRequest } from '../../services/api/client';
+import { useDashboardData } from '../../services/api/useDashboardData';
 import { createDashboardRecord, updateDashboardRecord } from '../../services/api/dashboard';
 
 const labels = {
@@ -28,22 +28,15 @@ const tr = (ar, en, language) => language === 'ar' ? ar : en;
 export function UserEditor({ language, admin, notify, onSessionExpired }) {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [record, setRecord] = useState(null);
-  const [role, setRole] = useState('team_member');
-  const [permissions, setPermissions] = useState([]);
-  const [loading, setLoading] = useState(Boolean(id));
+  const { data: record, loading, error: loadError } = useDashboardData(id ? `/admin/users/${encodeURIComponent(id)}` : null, onSessionExpired, { editable: true });
+  const [role, setRole] = useState(record?.role_code || 'team_member');
+  const [permissions, setPermissions] = useState(record?.permissions || []);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
 
   useEffect(() => {
-    if (!id) return;
-    let active = true;
-    apiRequest(`/admin/users/${encodeURIComponent(id)}`)
-      .then((user) => { if (active) { setRecord(user); setRole(user.role_code); setPermissions(user.permissions || []); } })
-      .catch((issue) => { if (active) { setError(issue.message); if (issue.status === 401) onSessionExpired(); } })
-      .finally(() => { if (active) setLoading(false); });
-    return () => { active = false; };
-  }, [id, onSessionExpired]);
+    if (record) { setRole(record.role_code); setPermissions(record.permissions || []); }
+  }, [record]);
 
   function chooseRole(nextRole) {
     setRole(nextRole);
@@ -81,7 +74,7 @@ export function UserEditor({ language, admin, notify, onSessionExpired }) {
   }
 
   if (loading) return <p role="status">{tr('جارٍ تحميل المستخدم…', 'Loading user…', language)}</p>;
-  if (id && !record) return <div className="dash-empty" role="alert"><p>{error || tr('تعذر تحميل المستخدم.', 'Could not load user.', language)}</p><Link className="dash-action" to="/dashboard/users">{tr('العودة إلى المستخدمين', 'Back to users', language)}</Link></div>;
+  if (id && !record) return <div className="dash-empty" role="alert"><p>{loadError || error || tr('تعذر تحميل المستخدم.', 'Could not load user.', language)}</p><Link className="dash-action" to="/dashboard/users">{tr('العودة إلى المستخدمين', 'Back to users', language)}</Link></div>;
   return <>
     <header className="dash-heading"><div><h1>{tr(id ? 'تعديل المستخدم' : 'إضافة مستخدم', id ? 'Edit user' : 'Add user', language)}</h1><p>{tr('اختر الأقسام التي يستطيع هذا الحساب إدارتها.', 'Choose the sections this account can manage.', language)}</p></div></header>
     <Link className="dash-back" to="/dashboard/users">{tr('العودة إلى المستخدمين', 'Back to users', language)}</Link>

@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, NavLink, Route, Routes, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { apiRequest } from '../../services/api/client';
-import { createDashboardRecord, deleteDashboardRecord, getAdminSession, getDashboardRecords, getDashboardStats, getLoginOptions, loginAdmin, logoutAdmin, updateDashboardRecord, uploadDashboardImage } from '../../services/api/dashboard';
+import { createDashboardRecord, deleteDashboardRecord, getAdminSession, getLoginOptions, loginAdmin, logoutAdmin, updateDashboardRecord, uploadDashboardImage } from '../../services/api/dashboard';
+import { dashboardCache } from '../../services/api/dashboardCache';
+import { useDashboardData } from '../../services/api/useDashboardData';
 import Icon from '../../components/Icon/Icon';
 import Logo from '../../components/Logo/Logo';
 import DateTimeField from './DateTimeField';
@@ -157,39 +158,27 @@ function RecordCard({ resource, record, language, onDelete, canEdit }) {
 }
 function DashboardHome({ language, admin, onSessionExpired }) {
   const allowed = navResources.filter((item)=>canAccess(admin,item.key));
-  const [counts,setCounts]=useState(null);
-  const [loading,setLoading]=useState(true);
-  const [error,setError]=useState('');
-  const [revision,setRevision]=useState(0);
-  useEffect(()=>{
-    let active=true;setLoading(true);setError('');setCounts(null);
-    getDashboardStats().then((data)=>{if(active)setCounts(data);}).catch((issue)=>{if(active){setError(messageForError(issue,language));if(issue.status===401)onSessionExpired();}}).finally(()=>{if(active)setLoading(false);});
-    return()=>{active=false;};
-  },[admin.id,language,revision,onSessionExpired]);
+  const { data: counts, loading, error, reload } = useDashboardData('/admin/stats', onSessionExpired);
   const formatter=new Intl.NumberFormat(language==='ar'?'ar-SA':'en-US');
   return <>
     <Heading title={t(['لوحة التحكم','Dashboard'],language)} description={t(['إجمالي السجلات في الأقسام المتاحة لك.','Total records in the sections available to you.'],language)}/>
     {loading&&<p role="status">{t(['جارٍ تحميل الأعداد…','Loading counts…'],language)}</p>}
-    {error&&<div className="dash-empty" role="alert"><p>{error}</p><Action onClick={()=>setRevision((value)=>value+1)}>{t(['إعادة المحاولة','Retry'],language)}</Action></div>}
+    {error&&<div className="dash-empty" role="alert"><p>{error}</p><Action onClick={reload}>{t(['إعادة المحاولة','Retry'],language)}</Action></div>}
     <div className="dash-stats" aria-busy={loading}>{allowed.map(({key,label})=><Link className="dash-stat" key={key} to={`${BASE}/${key}`}><strong>{counts?.[key] == null ? '—' : formatter.format(counts[key])}</strong><span>{t(label,language)}</span></Link>)}</div>
   </>;
 }
 function Listing({ language, admin, notify, onSessionExpired }) {
   const { section } = useParams(); const [params] = useSearchParams(); const parent = params.get('parent');
-  const [records,setRecords]=useState([]);const [loading,setLoading]=useState(true);const [error,setError]=useState('');const [query,setQuery]=useState('');const [revision,setRevision]=useState(0);
+  const [query,setQuery]=useState('');
   const config=navResources.find((item)=>item.key===section && canAccess(admin,item.key));
+  const { data, loading, error, reload } = useDashboardData(config ? `/admin/${section}${parent ? `?parent=${encodeURIComponent(parent)}` : ''}` : null, onSessionExpired);
+  const records = data || [];
   const searchInput = useRef(null);
   useEffect(() => setQuery(''), [section, parent]);
   const canEdit=true;
-  useEffect(()=>{
-    if(!config){setLoading(false);return;}
-    let active=true;setLoading(true);setError('');
-    getDashboardRecords(section,parent).then((data)=>{if(active)setRecords(data);}).catch((issue)=>{if(active){setError(messageForError(issue,language));if(issue.status===401)onSessionExpired();}}).finally(()=>{if(active)setLoading(false);});
-    return ()=>{active=false;};
-  },[section,parent,revision,language,config,onSessionExpired]);
   async function remove(record) {
     const accepted=window.confirm(t(section==='speakers'?['حذف المتحدث وإزالته من جميع الورش؟','Delete this speaker and remove all workshop assignments?']:['هل تريد حذف هذا السجل؟','Delete this record?'],language));if(!accepted)return;
-    try{await deleteDashboardRecord(section,record.id);setRevision((value)=>value+1);notify(t(['تم حذف السجل.','Record deleted.'],language));}
+    try{await deleteDashboardRecord(section,record.id);notify(t(['تم حذف السجل.','Record deleted.'],language));}
     catch(issue){if(issue.status===401)onSessionExpired();notify(messageForError(issue,language));}
   }
   if(!config)return <Heading title={t(['ليس لديك صلاحية لهذا القسم.','You do not have access to this section.'],language)}/>;
@@ -199,14 +188,15 @@ function Listing({ language, admin, notify, onSessionExpired }) {
     {section==='teams' && parent && <Link className="dash-back" to={`${BASE}/competitions/${parent}`}>{t(['العودة للمسابقة','Back to competition'],language)}</Link>}
     {section==='speakers' && parent && <Link className="dash-back" to={`${BASE}/workshops/${parent}`}>{t(['العودة للورشة','Back to workshop'],language)}</Link>}
     <div className="dash-filters">{!loading&&!error&&<p className="dash-result-count" role="status" aria-live="polite"><span>{t(query.trim()?['نتائج البحث','Search results']:['السجلات','Records'],language)}</span><strong>{new Intl.NumberFormat(language==='ar'?'ar-SA':'en-US').format(filtered.length)}</strong></p>}<div className="dash-search"><label htmlFor="dash-record-search">{t(['بحث في السجلات','Search records'],language)}</label><div className="dash-search-input"><Icon name="search" size={20}/><input ref={searchInput} id="dash-record-search" type="search" placeholder={t(['ابحث بالاسم أو التفاصيل…','Search by name or details…'],language)} value={query} onChange={event=>setQuery(event.target.value)} maxLength="100"/>{query&&<button type="button" aria-label={t(['مسح البحث','Clear search'],language)} onClick={()=>{setQuery('');searchInput.current?.focus();}}><Icon name="close" size={18}/></button>}</div></div></div>
-    {loading?<p role="status">{t(['جارٍ تحميل البيانات…','Loading…'],language)}</p>:error?<div className="dash-empty" role="alert"><p>{error}</p><Action onClick={()=>setRevision((value)=>value+1)}>{t(['إعادة المحاولة','Retry'],language)}</Action></div>:!filtered.length?<div className="dash-empty dash-empty--records" role="status"><Icon name={navIcons[section]} size={32}/><h2>{t(query.trim()?['لا توجد نتائج مطابقة.','No matching results.']:['لا توجد سجلات بعد.','No records yet.'],language)}</h2><p>{t(query.trim()?['جرّب كلمة أخرى أو امسح البحث.','Try another term or clear the search.']:['استخدم زر الإضافة لإنشاء أول سجل في هذا القسم.','Use Add to create the first record in this section.'],language)}</p></div>:<div className="dash-grid">{filtered.map((record)=><RecordCard key={record.id} {...{resource:section,record,language,canEdit}} onDelete={remove}/>)}</div>}
+    {error && data && <div className="dash-empty" role="alert"><p>{error}</p><Action onClick={reload}>{t(['إعادة المحاولة','Retry'],language)}</Action></div>}
+    {loading?<p role="status">{t(['جارٍ تحميل البيانات…','Loading…'],language)}</p>:error&&!data?<div className="dash-empty" role="alert"><p>{error}</p><Action onClick={reload}>{t(['إعادة المحاولة','Retry'],language)}</Action></div>:!filtered.length?<div className="dash-empty dash-empty--records" role="status"><Icon name={navIcons[section]} size={32}/><h2>{t(query.trim()?['لا توجد نتائج مطابقة.','No matching results.']:['لا توجد سجلات بعد.','No records yet.'],language)}</h2><p>{t(query.trim()?['جرّب كلمة أخرى أو امسح البحث.','Try another term or clear the search.']:['استخدم زر الإضافة لإنشاء أول سجل في هذا القسم.','Use Add to create the first record in this section.'],language)}</p></div>:<div className="dash-grid">{filtered.map((record)=><RecordCard key={record.id} {...{resource:section,record,language,canEdit}} onDelete={remove}/>)}</div>}
   </>;
 }
 function Details({ language, admin, onSessionExpired }) {
-  const {section,id}=useParams();const navigate=useNavigate();const [record,setRecord]=useState(null);const [error,setError]=useState('');
-  useEffect(()=>{let active=true;apiRequest(`/admin/${section}/${encodeURIComponent(id)}`).then((value)=>{if(active)setRecord(value);}).catch((issue)=>{if(active){setError(messageForError(issue,language));if(issue.status===401)onSessionExpired();}});return()=>{active=false;};},[section,id,language,onSessionExpired]);
+  const {section,id}=useParams();
+  const { data: record, error } = useDashboardData(`/admin/${section}/${encodeURIComponent(id)}`, onSessionExpired);
   const label=navResources.find((item)=>item.key===section)?.label;const canEdit=true;
-  if(error)return <div className="dash-empty" role="alert">{error}</div>;if(!record)return <p role="status">{t(['جارٍ تحميل السجل…','Loading record…'],language)}</p>;
+  if(error&&!record)return <div className="dash-empty" role="alert">{error}</div>;if(!record)return <p role="status">{t(['جارٍ تحميل السجل…','Loading record…'],language)}</p>;
   const related=section==='competitions'?['teams',record.id]:section==='workshops'?['speakers',record.id]:null;
   const summaryKeys=['team_name','team_leader_name','category_code','project_type','registration_status','status','role_code','is_active','start_at','end_at','registered_at'];
   const entries=Object.entries(record).filter(([key])=>!['id','created_at','updated_at','password_hash'].includes(key));
@@ -216,6 +206,7 @@ function Details({ language, admin, onSessionExpired }) {
   return <>
     <Heading title={<RecordTitle resource={section} record={record} language={language}/>} description={t(label || [section,section],language)}/>
     <Link className="dash-back" to={`${BASE}/${section}`}>{t(['العودة للقائمة','Back to list'],language)}</Link>
+    {error && <p role="alert">{error}</p>}
     <div className="dash-details-layout">
       <article className="dash-card dash-detail-fields">
         <h2>{t(['الملخص','Overview'],language)}</h2>
@@ -233,24 +224,18 @@ function Details({ language, admin, onSessionExpired }) {
   </>;
 }
 function CompetitionSelect({ language, defaultValue, onSessionExpired }) {
-  const [options, setOptions] = useState([]);
-  const [error, setError] = useState('');
+  const { data: options = [], error } = useDashboardData('/admin/lookups/competitions', onSessionExpired);
   const [selected, setSelected] = useState(String(defaultValue || ''));
-  useEffect(() => {
-    let active = true;
-    apiRequest('/admin/lookups/competitions').then((rows) => { if (active) setOptions(rows); })
-      .catch((issue) => { if (active) { setError(messageForError(issue, language)); if (issue.status === 401) onSessionExpired(); } });
-    return () => { active = false; };
-  }, [language, onSessionExpired]);
   return <div className="dash-field"><label htmlFor="dash-competition-id">{t(['المسابقة', 'Competition'],language)}</label><select id="dash-competition-id" name="competition_id" value={selected} onChange={(event)=>setSelected(event.target.value)} required><option value="">{t(['اختر مسابقة…', 'Choose a competition…'],language)}</option>{options.map((item)=><option key={item.id} value={item.id}>{item[`name_${language}`] || item.name_ar || item.name_en}</option>)}</select>{error && <p role="alert">{error}</p>}</div>;
 }
 function Editor({ language, admin, notify, onSessionExpired }) {
   const {section,id}=useParams();const [params]=useSearchParams();const navigate=useNavigate();const config=navResources.find((item)=>item.key===section && canAccess(admin,item.key));
-  const [record,setRecord]=useState(null);const [loading,setLoading]=useState(Boolean(id));const [error,setError]=useState('');const [busy,setBusy]=useState(false);
-  useEffect(()=>{if(!id)return;let active=true;apiRequest(`/admin/${section}/${encodeURIComponent(id)}`).then((value)=>{if(active)setRecord(value);}).catch((issue)=>{if(active){setError(messageForError(issue,language));if(issue.status===401)onSessionExpired();}}).finally(()=>{if(active)setLoading(false);});return()=>{active=false;};},[section,id,language,onSessionExpired]);
+  const { data: record, loading, error: loadError } = useDashboardData(id && config ? `/admin/${section}/${encodeURIComponent(id)}` : null, onSessionExpired, { editable: true });
+  const [error,setError]=useState('');const [busy,setBusy]=useState(false);
   if(!config)return <Heading title={t(['ليس لديك صلاحية لهذا القسم.','You do not have access to this section.'],language)}/>;
   const fields=contentFields[section];
   if(loading)return <p role="status">{t(['جارٍ تحميل السجل…','Loading record…'],language)}</p>;
+  if(id && !record)return <div className="dash-empty" role="alert">{loadError}</div>;
   async function submit(event){event.preventDefault();setBusy(true);setError('');const form=new FormData(event.currentTarget);const payload={};const imageFile=form.get('image_file');
   try { for(const item of fields){const value=form.get(item.name);if(item.type==='checkbox')payload[item.name]=form.get(item.name)==='on';else if(item.name==='password' && !value)continue;else if(value==='' || value==null)payload[item.name]=null;else if(item.type==='number' || item.type==='competition-lookup')payload[item.name]=Number(value);else if(item.type==='datetime-local')payload[item.name]=new Date(value).toISOString();else if(item.type==='members-json')payload.members=JSON.parse(value);else if(item.name==='is_active')payload[item.name]=value==='true';else payload[item.name]=value;} }
     catch { setError(t(['صيغة أعضاء المشروع يجب أن تكون مصفوفة JSON صحيحة.','Project members must be a valid JSON array.'],language));setBusy(false);return; }
@@ -269,9 +254,11 @@ function DashboardContent({ language, admin, notify, onSessionExpired }) {
 }
 export default function Dashboard() {
   const [language,setLanguage]=useState('ar');const [admin,setAdmin]=useState(null);const [checked,setChecked]=useState(false);const [message,setMessage]=useState('');const location=useLocation();
-  const onSessionExpired=useCallback(()=>setAdmin(null),[]);
+  const onSessionExpired=useCallback(()=>{dashboardCache.clear();setAdmin(null);},[]);
+  useEffect(()=>dashboardCache.subscribe((_path,type)=>{if(type==='expired')onSessionExpired();}),[onSessionExpired]);
   useEffect(()=>{const oldLang=document.documentElement.lang;const oldDir=document.documentElement.dir;document.documentElement.lang=language;document.documentElement.dir=language==='ar'?'rtl':'ltr';return()=>{document.documentElement.lang=oldLang;document.documentElement.dir=oldDir;};},[language]);
   useEffect(()=>{let active=true;getAdminSession().then((session)=>{if(active)setAdmin(session);}).catch(()=>{if(active)setAdmin(null);}).finally(()=>{if(active)setChecked(true);});return()=>{active=false;};},[]);
+  useEffect(()=>()=>dashboardCache.clear(),[]);
   useEffect(()=>{setMessage('');},[location.pathname,location.search]);
   async function login(credentials){const session=await loginAdmin(credentials);setAdmin(session);}
   return <div className="dashboard" lang={language} dir={language==='ar'?'rtl':'ltr'}><header className="dash-header"><Link to="/" aria-label="RoboTactic"><Logo layout="horizontal"/></Link><button type="button" className="dash-language" lang={language==='ar'?'en':'ar'} dir={language==='ar'?'ltr':'rtl'} onClick={()=>setLanguage(language==='ar'?'en':'ar')}><Icon name="globe" size={20}/>{language==='ar'?'English':'العربية'}</button></header>{message&&<div className="dash-notice" role="status">{message}<Action onClick={()=>setMessage('')}>{t(['إغلاق','Dismiss'],language)}</Action></div>}{!checked?<p className="api-state" role="status">{t(['جارٍ التحقق من الجلسة…','Checking session…'],language)}</p>:admin?<DashboardContent key={admin.id} {...{language,admin,notify:setMessage,onSessionExpired}}/>:<Login language={language} onLogin={login}/>}</div>;

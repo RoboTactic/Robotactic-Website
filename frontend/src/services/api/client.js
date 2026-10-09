@@ -1,3 +1,5 @@
+import { dashboardCache } from './dashboardCache';
+
 const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api').replace(/\/$/, '');
 
 export class ApiError extends Error {
@@ -8,7 +10,7 @@ export class ApiError extends Error {
   }
 }
 
-export async function apiRequest(path, options = {}) {
+async function request(path, options = {}) {
   const headers = new Headers(options.headers || {});
   if (options.body != null && !headers.has('Content-Type')) headers.set('Content-Type', 'application/json');
   let response;
@@ -34,3 +36,28 @@ export const createAdmin = (resource, value) => apiRequest(`/admin/${resource}`,
 export const updateAdmin = (resource, id, value) => apiRequest(`/admin/${resource}/${encodeURIComponent(id)}`, { method: 'PATCH', body: JSON.stringify(value) });
 export const deleteAdmin = (resource, id) => apiRequest(`/admin/${resource}/${encodeURIComponent(id)}`, { method: 'DELETE' });
 export const apiBaseUrl = API_BASE_URL;
+
+export async function apiRequest(path, options = {}) {
+  const { forceRefresh = false, ...requestOptions } = options;
+  const method = (options.method || 'GET').toUpperCase();
+  const adminRequest = path.startsWith('/admin/');
+  const sessionRequest = adminRequest || path.startsWith('/auth/');
+  if (path === '/auth/logout' || path === '/auth/login') dashboardCache.clear();
+  const token = dashboardCache.token();
+  try {
+    const data = adminRequest && method === 'GET' && !options.signal
+      ? await dashboardCache.read(path, () => request(path, requestOptions), { force: forceRefresh })
+      : await request(path, requestOptions);
+    // A response from a previous account/session must never populate the next one.
+    if (sessionRequest && !dashboardCache.current(token)) throw new DOMException('Request superseded.', 'AbortError');
+    if (path === '/auth/session' || path === '/auth/login') dashboardCache.setSession(data);
+    if (adminRequest && ['POST', 'PATCH', 'PUT', 'DELETE'].includes(method)) dashboardCache.mutation(path, data, method);
+    return data;
+  } catch (issue) {
+    if (dashboardCache.current(token)) {
+      if (sessionRequest && issue.status === 401) dashboardCache.clear({ expired: true });
+      else if (adminRequest && [403, 404].includes(issue.status)) dashboardCache.invalidate(key => key === path, { revalidate: false });
+    }
+    throw issue;
+  }
+}

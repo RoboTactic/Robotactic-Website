@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { apiRequest } from '../../services/api/client';
+import { useDashboardData } from '../../services/api/useDashboardData';
 import { createDashboardRecord, updateDashboardRecord } from '../../services/api/dashboard';
 
 const base = '/dashboard/speakers';
@@ -8,14 +9,7 @@ const tr = (language, ar, en) => language === 'ar' ? ar : en;
 const workshopTitle = (workshop, language) => workshop[`title_${language}`] || workshop.title_ar || workshop.title_en;
 
 function useWorkshops(language, onSessionExpired) {
-  const [workshops, setWorkshops] = useState([]);
-  const [error, setError] = useState('');
-  useEffect(() => {
-    let active = true;
-    apiRequest('/admin/lookups/workshops').then((records) => { if (active) setWorkshops(records); })
-      .catch((issue) => { if (active) { setError(issue.message); if (issue.status === 401) onSessionExpired(); } });
-    return () => { active = false; };
-  }, [language, onSessionExpired]);
+  const { data: workshops = [], error } = useDashboardData('/admin/lookups/workshops', onSessionExpired);
   return { workshops, error };
 }
 
@@ -24,19 +18,10 @@ export function SpeakerEditor({ language, notify, onSessionExpired }) {
   const [params] = useSearchParams();
   const navigate = useNavigate();
   const { workshops, error: workshopsError } = useWorkshops(language, onSessionExpired);
-  const [speaker, setSpeaker] = useState(null);
+  const { data: speaker, loading, error: loadError } = useDashboardData(id ? `/admin/speakers/${encodeURIComponent(id)}` : null, onSessionExpired, { editable: true });
   const [selectedWorkshop, setSelectedWorkshop] = useState(params.get('parent') || '');
-  const [loading, setLoading] = useState(Boolean(id));
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
-  useEffect(() => {
-    if (!id) return;
-    let active = true;
-    apiRequest(`/admin/speakers/${encodeURIComponent(id)}`).then((record) => { if (active) setSpeaker(record); })
-      .catch((issue) => { if (active) { setError(issue.message); if (issue.status === 401) onSessionExpired(); } })
-      .finally(() => { if (active) setLoading(false); });
-    return () => { active = false; };
-  }, [id, onSessionExpired]);
   async function submit(event) {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
@@ -60,6 +45,7 @@ export function SpeakerEditor({ language, notify, onSessionExpired }) {
     } finally { setBusy(false); }
   }
   if (loading) return <p role="status">{tr(language, 'جارٍ تحميل المتحدث…', 'Loading speaker…')}</p>;
+  if (id && !speaker) return <div className="dash-empty" role="alert">{loadError}</div>;
   return <>
     <header className="dash-heading"><div><h1 tabIndex="-1">{tr(language, id ? 'تعديل المتحدث' : 'إضافة متحدث', id ? 'Edit speaker' : 'Add speaker')}</h1><p>{tr(language, 'بيانات الاتصال والملاحظات خاصة بفريق الورش.', 'Contact details and notes are visible only to the workshop team.')}</p></div></header>
     <Link className="dash-back" to={id ? `${base}/${id}` : base}>{tr(language, 'العودة', 'Back')}</Link>
@@ -87,20 +73,13 @@ export function SpeakerEditor({ language, notify, onSessionExpired }) {
 export function SpeakerDetails({ language, admin, onSessionExpired }) {
   const { id } = useParams();
   const { workshops, error: workshopsError } = useWorkshops(language, onSessionExpired);
-  const [speaker, setSpeaker] = useState(null);
+  const { data: speaker, error: loadError } = useDashboardData(`/admin/speakers/${encodeURIComponent(id)}`, onSessionExpired);
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
-  useEffect(() => {
-    let active = true;
-    apiRequest(`/admin/speakers/${encodeURIComponent(id)}`).then((record) => { if (active) setSpeaker(record); })
-      .catch((issue) => { if (active) { setError(issue.message); if (issue.status === 401) onSessionExpired(); } });
-    return () => { active = false; };
-  }, [id, onSessionExpired]);
   async function change(method, path, payload) {
     setBusy(true); setError('');
     try {
-      const updated = await apiRequest(path, { method, ...(payload ? { body: JSON.stringify(payload) } : {}) });
-      setSpeaker(updated);
+      await apiRequest(path, { method, ...(payload ? { body: JSON.stringify(payload) } : {}) });
       return true;
     } catch (issue) {
       setError(issue.message);
@@ -108,7 +87,7 @@ export function SpeakerDetails({ language, admin, onSessionExpired }) {
       return false;
     } finally { setBusy(false); }
   }
-  if (error && !speaker) return <div className="dash-empty" role="alert">{error}</div>;
+  if ((error || loadError) && !speaker) return <div className="dash-empty" role="alert">{error || loadError}</div>;
   if (!speaker) return <p role="status">{tr(language, 'جارٍ تحميل المتحدث…', 'Loading speaker…')}</p>;
   const assigned = new Set(speaker.workshops.map((workshop) => workshop.workshop_id));
   const available = workshops.filter((workshop) => !assigned.has(workshop.id));
@@ -141,6 +120,6 @@ export function SpeakerDetails({ language, admin, onSessionExpired }) {
         </form>
       </article>
     </div>
-    {(error || workshopsError) && <p role="alert">{error || workshopsError}</p>}
+    {(error || loadError || workshopsError) && <p role="alert">{error || loadError || workshopsError}</p>}
   </>;
 }
