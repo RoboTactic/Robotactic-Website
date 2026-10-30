@@ -1,12 +1,14 @@
 const hasValidStart = (value) => value && Number.isFinite(Date.parse(value));
 
-export function buildTimelineEvents(competitions, workshops) {
+// `language` picks each record's title/description, falling back to the other language.
+export function buildTimelineEvents(competitions, workshops, language = 'ar') {
+  const pick = (item, key) => (language === 'en' ? item[`${key}_en`] || item[`${key}_ar`] : item[`${key}_ar`] || item[`${key}_en`]) || '';
   const competitionEvents = (Array.isArray(competitions) ? competitions : [])
     .map((item) => ({
       key: `competition-${item.id}`,
       kind: 'competition',
-      title: item.name_ar || item.name_en,
-      description: item.description_ar || item.description_en || '',
+      title: pick(item, 'name'),
+      description: pick(item, 'description'),
       startAt: hasValidStart(item.start_at) ? item.start_at : null,
       endAt: hasValidStart(item.start_at) ? item.end_at : null,
       speakers: [],
@@ -18,8 +20,8 @@ export function buildTimelineEvents(competitions, workshops) {
     .map((item) => ({
       key: `workshop-${item.id}`,
       kind: 'workshop',
-      title: item.title_ar || item.title_en,
-      description: item.description_ar || item.description_en || '',
+      title: pick(item, 'title'),
+      description: pick(item, 'description'),
       startAt: item.start_at,
       endAt: item.end_at,
       speakers: Array.isArray(item.speakers) ? item.speakers : [],

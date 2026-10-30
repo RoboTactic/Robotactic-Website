@@ -576,3 +576,33 @@ html.rt-refined body { background: var(--color-surface-page); }
 .rt-refined .info-page__panel--empty p { margin: 0; font-size: 16px; }
 .rt-refined .info-page__panel--empty a { margin-block-start: 18px; }
 .rt-refined .project-card__placeholder { padding-block-start: 30px; } /* clear the category badge */
+
+/* ── English (LTR): forward arrows point right and nudge right ───────────── */
+html.rt-public[dir="ltr"] :is(.home .rt-arrow, .hero__actions .button--primary, .home .home-section__action,
+  .info-page__links a, .info-page__panel--empty a)::after,
+html.rt-public[dir="ltr"] .timeline-item__link-arrow { transform: scaleX(-1); }
+html.rt-public[dir="ltr"] .timeline-item__link:focus-visible .timeline-item__link-arrow { transform: scaleX(-1) translateX(-3px); }
+@media (hover: hover) and (pointer: fine) {
+  html.rt-public[dir="ltr"] :is(.hero__actions .button--primary, .home .home-section__action,
+    .info-page__links a, .info-page__panel--empty a):hover::after,
+  html.rt-public[dir="ltr"] .timeline-item__card:hover .timeline-item__link-arrow { transform: scaleX(-1) translateX(-3px); }
+}
+@media (min-width: 1024px) {
+  /* The venue photo is never mirrored, so its dissolve and the circuit mask are physical:
+     in English the copy sits on the left, so both run the other way. */
+  html.rt-public[dir="ltr"].rt-refined .hero__visual::after {
+    background:
+      linear-gradient(90deg, #07111B 0%, rgb(7 17 27 / .7) 8%, rgb(7 17 27 / 0) 26%),
+      linear-gradient(180deg, rgb(7 17 27 / .55) 0%, transparent 18%, transparent 74%, #07111B 100%),
+      linear-gradient(270deg, rgb(7 17 27 / .35) 0%, transparent 12%);
+  }
+  html.rt-public[dir="ltr"].rt-refined .hero__pattern {
+    -webkit-mask-image: linear-gradient(90deg, #000 0%, #000 34%, transparent 46%);
+    mask-image: linear-gradient(90deg, #000 0%, #000 34%, transparent 46%);
+  }
+}
+/* English hero lead is longer than the Arabic two-word lead: balance its lines ("Innovation / driven by"). */
+html.rt-public[lang="en"] .hero__title-lead { text-wrap: balance; }
+/* Timeline header circuit: its dense side belongs behind the empty half of the hero, which is
+   the other side in English (a decorative pattern, so mirroring it is safe). */
+html.rt-public[dir="ltr"] .timeline-hero__pattern--desktop { transform: translateX(-50%) scaleX(-1); }

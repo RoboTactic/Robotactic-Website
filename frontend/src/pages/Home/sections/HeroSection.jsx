@@ -2,6 +2,7 @@ import Chip from '../../../components/Chip/Chip';
 import Button from '../../../components/Button/Button';
 import CircuitPattern from '../../../components/CircuitPattern/CircuitPattern';
 import { hero } from '../../../data/home';
+import { useLanguage } from '../../../services/api/publicContentLanguage';
 
 /* Venue image (public/images): WebP variants for every width, original PNG as fallback. */
 const HERO_IMG = '/images/king-faisal-convention-center-hero';
@@ -14,7 +15,8 @@ function splitTitle(title) {
 }
 
 export default function HeroSection() {
-  const [lead, accent] = splitTitle(hero.title);
+  const { t } = useLanguage();
+  const [lead, accent] = splitTitle(t(hero.title));
   return (
     <section className="hero" aria-labelledby="hero-title">
       <div className="hero__pattern hero__pattern--mobile"><CircuitPattern variant="mobile" /></div>
@@ -22,21 +24,21 @@ export default function HeroSection() {
 
       <div className="container hero__inner">
         <div className="hero__copy">
-          <Chip tone="outline">{hero.eyebrow}</Chip>
+          <Chip tone="outline">{t(hero.eyebrow)}</Chip>
           <h1 id="hero-title" className="hero__title t-display">
             <span className="hero__title-lead">{lead}</span>{accent && ' '}
             {accent && <span className="hero__title-accent">{accent}</span>}
           </h1>
-          <p className="hero__description t-body-lg">{hero.description}</p>
+          <p className="hero__description t-body-lg">{t(hero.description)}</p>
           <div className="hero__actions">
-            <Button to={hero.primaryAction.path}>{hero.primaryAction.label}</Button>
-            <Button to={hero.secondaryAction.path} variant="outline">{hero.secondaryAction.label}</Button>
+            <Button to={hero.primaryAction.path}>{t(hero.primaryAction.label)}</Button>
+            <Button to={hero.secondaryAction.path} variant="outline">{t(hero.secondaryAction.label)}</Button>
           </div>
         </div>
         <div className="hero__visual">
           <picture className="hero__media">
             <source type="image/webp" srcSet={HERO_SRCSET} sizes="100vw" />
-            <img src={`${HERO_IMG}.png`} alt="واجهة مركز الملك فيصل للمؤتمرات" width="1680" height="936"
+            <img src={`${HERO_IMG}.png`} alt={t('واجهة مركز الملك فيصل للمؤتمرات', 'The façade of the King Faisal Convention Center')} width="1680" height="936"
               fetchPriority="high" decoding="async" />
           </picture>
         </div>

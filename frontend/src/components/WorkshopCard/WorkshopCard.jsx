@@ -1,4 +1,5 @@
 import EventRegistrationAction from '../EventUI/EventRegistrationAction';
+import { useLanguage } from '../../services/api/publicContentLanguage';
 import './WorkshopCard.css';
 
 /* Shared workshop card, used by the Workshops page and the Home preview.
@@ -14,12 +15,13 @@ export default function WorkshopCard({
   workshopIcon,
   teamIcon,
   tag,
-  dateLabel = 'اليوم',
+  dateLabel,
   registrationLabel,
   registrationIcon,
   metaIcons = {},
-  helperText = 'سينقلك الزر إلى نموذج Google خارجي في تبويب جديد',
+  helperText,
 }) {
+  const { t } = useLanguage();
   const isOpen = workshop.registrationStatus === 'open';
   const iconNode = src => (typeof src === 'string' ? <img src={src} alt="" width="24" height="24" /> : src);
 
@@ -35,20 +37,20 @@ export default function WorkshopCard({
         {workshop.presenter && (
           <div className="workshop-card__presenter">
             {iconNode(teamIcon)}
-            <span>{document.documentElement.lang === 'en' ? 'Presented by ' : 'يقدمها '}{workshop.presenter}</span>
+            <span>{t('يقدمها ', 'Presented by ')}<bdi>{workshop.presenter}</bdi></span>
           </div>
         )}
         {workshop.description && <p className="workshop-card__description">{workshop.description}</p>}
       </div>
       <dl className="workshop-card__meta">
-        <div><dt>{metaIcons.date}{dateLabel}</dt><dd>{workshop.date}</dd></div>
-        <div><dt>{metaIcons.time}الوقت</dt><dd>{workshop.time}</dd></div>
-        {workshop.availableSeats != null && <div><dt>المقاعد المتاحة</dt><dd>{workshop.availableSeats}</dd></div>}
+        <div><dt>{metaIcons.date}{dateLabel ?? t('اليوم', 'Day')}</dt><dd>{workshop.date}</dd></div>
+        <div><dt>{metaIcons.time}{t('الوقت', 'Time')}</dt><dd>{workshop.time}</dd></div>
+        {workshop.availableSeats != null && <div><dt>{t('المقاعد المتاحة', 'Seats available')}</dt><dd>{workshop.availableSeats}</dd></div>}
       </dl>
       <EventRegistrationAction isOpen={isOpen} url={workshop.registrationUrl}
         {...(registrationLabel ? { openLabel: registrationLabel } : {})}
         icon={registrationIcon}
-        helperText={helperText} />
+        helperText={helperText ?? t('سينقلك الزر إلى نموذج Google خارجي في تبويب جديد', 'Opens an external Google Form in a new tab')} />
     </article>
   );
 }

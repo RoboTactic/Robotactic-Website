@@ -1,12 +1,12 @@
 import SectionHeading from '../../../components/SectionHeading/SectionHeading';
 import Chip from '../../../components/Chip/Chip';
 import { useApiData } from '../../../services/api/useApiData';
-import { translated, contentLanguage } from '../../../services/api/publicContentLanguage';
+import { translated, useContentLanguage } from '../../../services/api/publicContentLanguage';
 import ApiState from '../../../components/ApiState/ApiState';
 
 export default function AboutSection() {
   const { data, loading, error, reload } = useApiData('about');
-  const language = contentLanguage();
+  const language = useContentLanguage();
   const ar = language === 'ar';
   const values = data?.[`values_${language}`] || [];
   return (
@@ -18,7 +18,7 @@ export default function AboutSection() {
           {!loading && !error && data && <p className="about__body info-page__copy">{translated(data, 'body', language)}</p>}
         </div>
         <div className="about__content">
-          <ul className="about__values" aria-label={ar ? 'قيم الملتقى' : 'Event values'}>
+          <ul className="about__values" aria-label={ar ? 'قيم الملتقى' : 'Forum values'}>
             {values.map((value, index) => <li key={`${index}-${value}`}><Chip tone="outline">{value}</Chip></li>)}
           </ul>
         </div>
