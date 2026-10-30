@@ -51,7 +51,7 @@
   display: inline-flex; width: 24px; height: 24px; flex: 0 0 24px;
 }
 .competition-card__icon img { filter: brightness(0) invert(1); }
-.competition-card__title-group { display: flex; min-width: 0; flex-direction: column; gap: 8px; text-align: right; }
+.competition-card__title-group { display: flex; min-width: 0; flex-direction: column; gap: 8px; text-align: start; }
 .competition-card__title-group h2 { width: 100%; margin: 0; font-size: 19px; font-weight: 700; line-height: 30px; overflow-wrap: anywhere; }
 .competition-card__title-group p { display: flex; min-width: 0; flex-wrap: wrap; gap: 6px; margin: 0; font-size: 15px; line-height: 28px; }
 .competition-card__title-group p span { color: var(--color-text-muted); }
@@ -99,3 +99,47 @@
   .competitions-cta__band { min-height: 190px; border-radius: var(--radius-lg); }
   .competitions-cta h2 { font-size: 22px; line-height: 34px; }
 }
+
+/* ── Coming Soon: the arena (CompetitionsComingSoon.jsx) ──────────────────
+   Final state is static; one 6s lap lights each checkpoint (--at = its share of the lap). */
+.cs-arena__grid { opacity: .1; }
+.cs-arena__wall { fill: rgb(16 29 43 / .85); stroke: #16A66A; stroke-width: 1.5; stroke-opacity: .45; }
+.cs-arena__pylon { fill: #0B3D2E; stroke: #B6F23A; stroke-width: 1.25; opacity: .7; }
+.cs-arena__track-edge { stroke: #16A66A; stroke-width: 32; stroke-opacity: .32; }
+.cs-arena__track-bed { stroke: #0B3D2E; stroke-width: 29; }
+.cs-arena__track-lane { stroke: #16A66A; stroke-width: 1.25; stroke-opacity: .45; stroke-dasharray: 7 9; }
+.cs-arena__gate path { stroke: #B6F23A; stroke-width: 2; stroke-linecap: round; }
+.cs-arena__gate rect { fill: #B6F23A; opacity: .85; }
+.cs-arena__spokes path { stroke: #16A66A; stroke-width: 1.5; stroke-opacity: .55; }
+.cs-arena__spokes .cs-arena__spoke-pulse { stroke: #B6F23A; stroke-width: 2.5; stroke-opacity: 1; stroke-dasharray: .3 2; stroke-dashoffset: .3; }
+.cs-arena__lap path { opacity: 0; stroke: #B6F23A; stroke-dasharray: .07 .93; }
+.cs-arena__lap-glow { stroke-width: 14; }
+.cs-arena__lap-core { stroke-width: 5; }
+.cs-arena__checkpoint-halo { fill: #B6F23A; opacity: 0; }
+.cs-arena__checkpoint-core { fill: #101D2B; stroke: #16A66A; stroke-width: 2; }
+.cs-arena__podium { stroke: #16A66A; stroke-width: 1.75; }
+.cs-arena__podium-inner { fill: none; stroke: #B6F23A; stroke-opacity: .35; stroke-dasharray: 3 5; }
+.cs-arena__robot-head { fill: #101D2B; stroke: #B6F23A; stroke-width: 2.25; }
+.cs-arena__robot-ear { fill: #16A66A; }
+.cs-arena__robot-line { stroke: #B6F23A; stroke-width: 2; stroke-linecap: round; }
+.cs-arena__robot-led, .cs-arena__robot-eye { fill: #B6F23A; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .cs-arena__lap path { opacity: 1; animation: cs-arena-lap 6s linear infinite; }
+  .cs-arena__lap .cs-arena__lap-glow { opacity: .22; }
+  .cs-arena__checkpoint-halo { animation: cs-arena-halo 6s ease-out calc(var(--at) * 6s - .35s) infinite; }
+  .cs-arena__checkpoint-core { animation: cs-arena-checkpoint 6s ease-out calc(var(--at) * 6s - .35s) infinite; }
+  .cs-arena__spoke-pulse { animation: cs-arena-spoke 6s cubic-bezier(.4,0,.2,1) 2.6s infinite; }
+  .cs-arena__halo { transform-origin: 280px 180px; animation: cs-arena-breathe 4s ease-in-out infinite alternate; }
+  .cs-arena__robot-eye { animation: cs-arena-blink 6s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+  .cs-arena__robot-led { animation: cs-arena-led 1.6s ease-in-out infinite alternate; }
+  .cs-arena__pylon { animation: cs-arena-pylon 3s ease-in-out calc(var(--i) * .75s) infinite alternate; }
+}
+@keyframes cs-arena-lap { from { stroke-dashoffset: 0; } to { stroke-dashoffset: -1; } }
+@keyframes cs-arena-checkpoint { 0%, 6% { fill: #B6F23A; stroke: #B6F23A; } 18%, to { fill: #101D2B; stroke: #16A66A; } }
+@keyframes cs-arena-halo { 0% { opacity: .35; } 18%, to { opacity: 0; } }
+@keyframes cs-arena-spoke { from { stroke-dashoffset: .3; } 20%, to { stroke-dashoffset: -1; } }
+@keyframes cs-arena-breathe { from { opacity: .7; transform: scale(.94); } to { opacity: 1; transform: scale(1.04); } }
+@keyframes cs-arena-blink { 0%, 46%, 50%, to { transform: scaleY(1); } 48% { transform: scaleY(.15); } }
+@keyframes cs-arena-led { from { opacity: .45; } to { opacity: 1; } }
+@keyframes cs-arena-pylon { from { opacity: .4; } to { opacity: .9; } }

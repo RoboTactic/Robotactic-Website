@@ -62,33 +62,33 @@
 .workshop-card__image { display: block; inline-size: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: var(--radius-md); }
 .workshop-card__content {
   display: flex; width: 100%; flex-direction: column; align-items: flex-start;
-  gap: var(--space-8); min-width: 0; text-align: right;
+  gap: var(--space-8); min-width: 0; text-align: start;
 }
 .workshop-card h3 {
   width: 100%; margin: 0; font-family: 'Thmanyah Serif Text', serif;
-  font-size: 19px; font-weight: 500; line-height: 30px; text-align: right;
+  font-size: 19px; font-weight: 500; line-height: 30px; text-align: start;
 }
 .workshop-card__presenter {
   display: flex; width: 100%; min-height: 24px; flex-direction: row;
   align-items: flex-start; justify-content: flex-start;
   gap: 6px; color: var(--color-text-accent); font-family: 'Thmanyah Serif Text', serif;
-  font-size: 13px; font-weight: 500; line-height: 22px; text-align: right;
+  font-size: 13px; font-weight: 500; line-height: 22px; text-align: start;
 }
 .workshop-card__presenter img { flex: 0 0 auto; }
 .workshop-card__presenter span {
-  flex: 1 1 0; min-width: 0; text-align: right; overflow-wrap: anywhere;
+  flex: 1 1 0; min-width: 0; text-align: start; overflow-wrap: anywhere;
 }
 .workshop-card__description {
   width: 100%; margin: 0; color: var(--color-text-secondary);
   font-family: 'Thmanyah Serif Text', serif;
-  font-size: 15px; font-weight: 500; line-height: 28px; text-align: right; overflow-wrap: anywhere;
+  font-size: 15px; font-weight: 500; line-height: 28px; text-align: start; overflow-wrap: anywhere;
 }
 .workshop-card__meta {
   display: flex; width: 100%; min-width: 0; flex-direction: column;
   margin: 0; padding: 6px 16px;
   border-radius: var(--radius-md); background: var(--color-surface-sunken);
   font-family: 'Thmanyah Serif Text', serif;
-  font-size: 13px; font-weight: 500; line-height: 22px; text-align: right;
+  font-size: 13px; font-weight: 500; line-height: 22px; text-align: start;
 }
 .workshop-card__meta div {
   display: grid; width: 100%; min-width: 0;
@@ -135,3 +135,36 @@
   .workshop-card { min-height: 500px; padding: var(--space-20); }
   .workshops-empty { padding: 32px 24px; }
 }
+
+/* ── Coming Soon: the lab (WorkshopsComingSoon.jsx) ───────────────────────
+   Final state is static; a packet leaves the core for one module every 1.1s (6.6s cycle). */
+.cs-lab__grid { opacity: .1; }
+.cs-lab__orbit { stroke: #16A66A; stroke-opacity: .28; stroke-width: 1; stroke-dasharray: 2 8; }
+.cs-lab__orbit--outer { stroke-opacity: .16; stroke-dasharray: 1 12; }
+.cs-lab__traces path { stroke: #16A66A; stroke-width: 1.5; stroke-opacity: .55; }
+.cs-lab__packet { stroke: #B6F23A; stroke-width: 4; stroke-dasharray: .1 2; stroke-dashoffset: .1; }
+.cs-lab__module-body { fill: #101D2B; stroke: #16A66A; stroke-width: 1.5; }
+.cs-lab__module-ping { fill: none; stroke: #B6F23A; stroke-width: 1.5; opacity: 0; }
+.cs-lab__glyph { stroke: #B6F23A; stroke-width: 1.75; opacity: .85; }
+.cs-lab__glyph-fill { fill: #B6F23A; stroke: none; }
+.cs-lab__pins path { stroke: #16A66A; stroke-width: 2; }
+.cs-lab__core { stroke: #16A66A; stroke-width: 1.75; }
+.cs-lab__core-inner { fill: none; stroke: #B6F23A; stroke-opacity: .3; stroke-dasharray: 3 5; }
+.cs-lab__book path { stroke: #B6F23A; stroke-width: 2.25; }
+.cs-lab__book-spark { stroke-width: 2; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .cs-lab__packet { animation: cs-lab-packet 6.6s cubic-bezier(.45,0,.25,1) calc(var(--i) * 1.1s) infinite; }
+  .cs-lab__module-ping { animation: cs-lab-ping 6.6s ease-out calc(var(--i) * 1.1s) infinite; transform-box: fill-box; transform-origin: center; }
+  .cs-lab__module-body { animation: cs-lab-receive 6.6s ease-out calc(var(--i) * 1.1s) infinite; }
+  .cs-lab__orbits { transform-origin: 280px 180px; animation: cs-lab-orbit 80s linear infinite; }
+  .cs-lab__halo { transform-origin: 280px 180px; animation: cs-lab-breathe 4.4s ease-in-out infinite alternate; }
+  .cs-lab__book-spark { animation: cs-lab-spark 2.2s ease-in-out infinite alternate; }
+}
+/* each packet travels in the first ~14% of its 6.6s slot (≈0.9s), then the module answers */
+@keyframes cs-lab-packet { from { stroke-dashoffset: .1; } 14%, to { stroke-dashoffset: -1; } }
+@keyframes cs-lab-ping { 0%, 12% { opacity: 0; transform: scale(1); } 14% { opacity: .9; transform: scale(1); } 28%, to { opacity: 0; transform: scale(1.7); } }
+@keyframes cs-lab-receive { 0%, 12% { stroke: #16A66A; } 15% { stroke: #B6F23A; } 30%, to { stroke: #16A66A; } }
+@keyframes cs-lab-orbit { to { transform: rotate(360deg); } }
+@keyframes cs-lab-breathe { from { opacity: .65; transform: scale(.95); } to { opacity: 1; transform: scale(1.04); } }
+@keyframes cs-lab-spark { from { opacity: .35; } to { opacity: 1; } }

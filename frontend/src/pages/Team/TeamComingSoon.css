@@ -1,0 +1,39 @@
+/* ── Coming Soon: the team signal (TeamComingSoon.jsx) ─────────────────────
+   Final state is static and complete; one 7.2s lap lights each outline (--at = its share). */
+.team-grid > .coming-soon { grid-column: 1 / -1; }
+
+.cs-team__grid { opacity: .1; }
+.cs-team__spark { fill: #16A66A; opacity: .45; }
+.cs-team__links path { stroke: #16A66A; stroke-width: 1; stroke-opacity: .3; stroke-dasharray: 2 6; }
+.cs-team__ring { stroke: #16A66A; stroke-width: 1.5; stroke-opacity: .55; }
+.cs-team__signal path { opacity: 0; stroke: #B6F23A; stroke-dasharray: .06 .94; }
+.cs-team__signal-glow { stroke-width: 12; }
+.cs-team__signal-core { stroke-width: 3.5; }
+.cs-team__core-orbit { stroke: #B6F23A; stroke-opacity: .3; stroke-dasharray: 3 7; }
+.cs-team__core { stroke: #16A66A; stroke-width: 1.75; }
+.cs-team__core-mark { stroke: #B6F23A; stroke-width: 2; }
+.cs-team__core-mark circle { fill: #101D2B; }
+.cs-team__profile-halo { fill: #B6F23A; opacity: 0; }
+.cs-team__profile-badge { fill: #101D2B; stroke: #16A66A; stroke-width: 1.5; stroke-dasharray: 5 4; }
+.cs-team__profile-figure { stroke: #16A66A; stroke-width: 1.75; opacity: .55; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .cs-team__signal path { opacity: 1; animation: cs-team-lap 7.2s linear infinite; }
+  .cs-team__signal .cs-team__signal-glow { opacity: .2; }
+  .cs-team__profile-halo { animation: cs-team-halo 7.2s ease-out calc(var(--at) * 7.2s - .3s) infinite; }
+  .cs-team__profile-badge { animation: cs-team-badge 7.2s ease-out calc(var(--at) * 7.2s - .3s) infinite; }
+  .cs-team__profile-figure { animation: cs-team-figure 7.2s ease-out calc(var(--at) * 7.2s - .3s) infinite; }
+  .cs-team__links path { animation: cs-team-flow 2.8s linear infinite; }
+  .cs-team__halo { transform-origin: 280px 180px; animation: cs-team-breathe 4.2s ease-in-out infinite alternate; }
+  .cs-team__core-orbit { transform-origin: 280px 180px; animation: cs-team-orbit 40s linear infinite; }
+  .cs-team__spark { animation: cs-team-twinkle 3.2s ease-in-out calc(var(--i) * .55s) infinite alternate; }
+}
+@keyframes cs-team-lap { from { stroke-dashoffset: 0; } to { stroke-dashoffset: -1; } }
+/* an outline "assembles" as the signal reaches it: dashed → solid lime → calm again */
+@keyframes cs-team-badge { 0%, 8% { stroke: #B6F23A; stroke-dasharray: 200 0; } 22%, to { stroke: #16A66A; stroke-dasharray: 5 4; } }
+@keyframes cs-team-figure { 0%, 8% { stroke: #B6F23A; opacity: 1; } 22%, to { stroke: #16A66A; opacity: .55; } }
+@keyframes cs-team-halo { 0% { opacity: .22; } 22%, to { opacity: 0; } }
+@keyframes cs-team-flow { to { stroke-dashoffset: -16; } }
+@keyframes cs-team-breathe { from { opacity: .7; transform: scale(.95); } to { opacity: 1; transform: scale(1.04); } }
+@keyframes cs-team-orbit { to { transform: rotate(360deg); } }
+@keyframes cs-team-twinkle { from { opacity: .2; } to { opacity: .7; } }
