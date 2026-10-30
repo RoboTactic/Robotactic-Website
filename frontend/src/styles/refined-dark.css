@@ -46,7 +46,10 @@ html.rt-refined body { background: var(--color-surface-page); }
 }
 .rt-refined .navbar__menu-button { background: rgb(255 255 255 / .02); }
 .rt-refined .navbar .button { border-radius: var(--radius-full); }
-.rt-refined .mobile-menu { background: var(--color-surface-page); }
+.rt-refined .mobile-menu {
+  background: linear-gradient(180deg, #101D2B 0%, var(--color-surface-page) 55%);
+  border-inline-start-color: rgb(182 242 58 / .22);               /* lime hairline on the open edge */
+}
 
 /* ── Shared "arrow" affordance (forward = ← in RTL) ───────────────────────── */
 .rt-refined .home .rt-arrow::after,
