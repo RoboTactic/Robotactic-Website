@@ -12,6 +12,11 @@ export const messageForError = (error, language) => {
   const status = error?.status;
   if (statusMessages[status]) return t(statusMessages[status], language);
   if (status === 400 && error?.message) return language === 'ar' ? `تحقق من البيانات: ${error.message}` : error.message;
-  if (!status || status >= 500) return t(['تعذّر الاتصال بالخادم. تحقق من الاتصال وحاول مرة أخرى.', 'Could not reach the server. Check the connection and try again.'], language);
+  // No status: raised in the browser, not by a request. A plain Error is a validation message
+  // already written for the user (e.g. an invalid image); other errors (TypeError…) are faults
+  // whose text is not meant for users.
+  if (status == null) return error?.constructor === Error && error.message ? error.message : t(['تعذر إكمال الطلب.', 'The request could not be completed.'], language);
+  // client.js reports an unreachable server as status 0.
+  if (status === 0 || status >= 500) return t(['تعذّر الاتصال بالخادم. تحقق من الاتصال وحاول مرة أخرى.', 'Could not reach the server. Check the connection and try again.'], language);
   return error?.message || t(['تعذر إكمال الطلب.', 'The request could not be completed.'], language);
 };

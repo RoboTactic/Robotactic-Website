@@ -43,9 +43,11 @@
   transition: border-color 200ms ease, color 200ms ease, background-color 200ms ease, box-shadow 200ms ease, transform 200ms cubic-bezier(.2,.8,.2,1);
 }
 .coming-soon[lang="en"] .coming-soon__copy .button { font-family: var(--font-latin); }
-/* reading-direction arrow: points forward in both RTL and LTR */
-.coming-soon__copy .button::after { content: '←'; font-family: var(--font-latin); line-height: 1; transition: transform 200ms cubic-bezier(.2,.8,.2,1); }
-.coming-soon[dir="ltr"] .coming-soon__copy .button::after { content: '→'; }
+/* reading-direction arrow: points forward in both RTL and LTR. Decorative: `/ ''` gives it an
+   empty alternative text so it is not read as part of the link name (the first declaration is
+   the fallback for browsers without CSS alt-text support). */
+.coming-soon__copy .button::after { content: '←'; content: '←' / ''; font-family: var(--font-latin); line-height: 1; transition: transform 200ms cubic-bezier(.2,.8,.2,1); }
+.coming-soon[dir="ltr"] .coming-soon__copy .button::after { content: '→'; content: '→' / ''; }
 .coming-soon__copy .button:focus-visible { outline: 2px solid #B6F23A; outline-offset: 3px; }
 @media (hover: hover) {
   .coming-soon__copy .button:hover {

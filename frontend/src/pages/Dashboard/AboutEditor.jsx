@@ -16,7 +16,7 @@ const fields = [
 export default function AboutEditor({language,admin,notify,onSessionExpired}) {
  const ar=language==='ar';const [error,setError]=useState('');const [busy,setBusy]=useState(false);const [formVersion,setFormVersion]=useState(0);
  const {data:record,failure,reload,setData}=useDashboardData(admin.role_code==='super_admin'?'/admin/about':null,onSessionExpired,{editable:true});
- const loadError=failure?(failure.status ? messageForError(failure, language) : failure.message):'';
+ const loadError=failure?messageForError(failure, language):'';
  const displayError=error||loadError;
  function discard(){setError('');setFormVersion(value=>value+1);reload()}
  if(admin.role_code!=='super_admin')return <h1>{ar?'ليس لديك صلاحية لهذا القسم.':'You do not have access to this section.'}</h1>;
@@ -30,7 +30,7 @@ export default function AboutEditor({language,admin,notify,onSessionExpired}) {
    if(['values_ar','values_en'].some(key=>payload[key].length>20||payload[key].some(item=>item.length>120)))throw new Error(ar?'الحد الأقصى 20 قيمة، وكل قيمة حتى 120 حرفًا.':'Use up to 20 values, each up to 120 characters.');
    if(hasFile){if(!['image/jpeg','image/png','image/webp'].includes(image.type)||image.size>5*1024*1024)throw new Error(ar?'اختر صورة JPEG أو PNG أو WebP حتى 5 ميغابايت.':'Choose a JPEG, PNG or WebP image up to 5 MB.');payload.image_url=(await uploadDashboardImage('about',image)).url}
    const saved=await apiRequest('/admin/about',{method:'PATCH',body:JSON.stringify(payload)});setData(saved);notify(ar?'تم حفظ محتوى عن الملتقى.':'About content saved.');
-  } catch(issue){setError(issue.status ? messageForError(issue, language) : issue.message);if(issue.status===401)onSessionExpired()}
+  } catch(issue){setError(messageForError(issue, language));if(issue.status===401)onSessionExpired()}
   finally{setBusy(false)}
  }
  function renderField(name) {

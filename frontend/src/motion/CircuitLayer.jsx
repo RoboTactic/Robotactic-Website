@@ -1,6 +1,7 @@
 import { useLayoutEffect, useRef, useState } from 'react';
 import { signalBus, motionSupported, prefersReducedMotion } from './signalBus';
 import { makeContext, toD, lengthOf, segLength } from './geometry';
+import { useContentLanguage } from '../services/api/publicContentLanguage';
 import './motion.css';
 
 /*
@@ -94,8 +95,11 @@ export default function CircuitLayer({ rootRef, compose, deps = [], replayKey, s
   const replayRef = useRef(replayKey);
   const composeRef = useRef(compose);
   composeRef.current = compose;
+  // A language switch mirrors the layout in place; when the page keeps the same size the
+  // ResizeObserver below never fires, so the language is a measurement input too.
+  const language = useContentLanguage();
 
-  // Measure (and re-measure on resize / font load).
+  // Measure (and re-measure on resize / font load / language change).
   useLayoutEffect(() => {
     const root = rootRef.current;
     if (!root) { // the parent's ref attaches after this child's layout effect — retry next frame
@@ -120,7 +124,7 @@ export default function CircuitLayer({ rootRef, compose, deps = [], replayKey, s
     document.fonts?.ready.then(update);
     return () => { cancelAnimationFrame(frame); ro.disconnect(); };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [...deps, attempt]);
+  }, [...deps, attempt, language]);
 
   // Motion controller.
   useLayoutEffect(() => {
