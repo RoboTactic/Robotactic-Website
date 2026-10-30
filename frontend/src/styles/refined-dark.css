@@ -97,6 +97,11 @@ html.rt-refined body { background: var(--color-surface-page); }
   color: var(--color-brand-accent);
   background: linear-gradient(90deg, #16A66A 0%, #B6F23A 70%); -webkit-background-clip: text; background-clip: text;
   -webkit-text-fill-color: transparent;
+  /* background-clip:text only paints inside the box. At line-height 1.12 the Arabic font's ink
+     (ascent+descent ≈ 1.25em, more with stacked diacritics) overhangs the line box, cutting
+     descenders such as ر and ي, so the paint area is extended by padding and the layout
+     restored with matching negative margins. */
+  padding-block: .25em; margin-block: -.25em;
 }
 .rt-refined .hero__description { max-inline-size: 34ch; }
 .rt-refined .hero__actions .button { border-radius: var(--radius-full); }
