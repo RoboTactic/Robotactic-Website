@@ -22,7 +22,7 @@ export function useDashboardData(path, onSessionExpired, { editable = false } = 
         if (active) setState({ path, data, error: '' });
       } catch (issue) {
         if (!active || issue.name === 'AbortError') return;
-        setState(previous => ({ path, data: [401, 403, 404].includes(issue.status) ? undefined : previous.data, error: issue.message }));
+        setState(previous => ({ path, data: [401, 403, 404].includes(issue.status) ? undefined : previous.data, error: issue.message, failure: issue }));
         if (issue.status === 401) onSessionExpired();
       }
     }
@@ -50,5 +50,7 @@ export function useDashboardData(path, onSessionExpired, { editable = false } = 
 
   const data = state.path === path ? state.data : dashboardCache.peek(path, { freshOnly: editable });
   const error = state.path === path ? state.error : '';
-  return { data, loading: Boolean(path) && data === undefined && !error, error, reload, setData: value => setState({ path, data: value, error: '' }) };
+  // The original error (with its HTTP status) lets views show a translated message.
+  const failure = state.path === path ? state.failure : undefined;
+  return { data, loading: Boolean(path) && data === undefined && !error, error, failure, reload, setData: value => setState({ path, data: value, error: '' }) };
 }
