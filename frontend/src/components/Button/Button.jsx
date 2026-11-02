@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import Icon from '../Icon/Icon';
+import { useLanguage } from '../../services/api/publicContentLanguage';
 import './Button.css';
 
 /* variant: primary (lime) | secondary (green outline) | outline (neutral outline)
@@ -18,6 +19,7 @@ export default function Button({
   fullWidth = false,
   className = '',
 }) {
+  const { t } = useLanguage();
   const cls = `button button--${variant} button--${size} ${fullWidth ? 'button--full' : ''} t-button ${className}`;
   const content = (
     <>
@@ -33,7 +35,7 @@ export default function Button({
   return (
     <a className={cls} href={href} target={external ? '_blank' : undefined} rel={external ? 'noopener noreferrer' : undefined}>
       {content}
-      {external && <span className="sr-only"> (يفتح في تبويب جديد)</span>}
+      {external && <span className="sr-only">{t(' (يفتح في تبويب جديد)', ' (opens in a new tab)')}</span>}
     </a>
   );
 }

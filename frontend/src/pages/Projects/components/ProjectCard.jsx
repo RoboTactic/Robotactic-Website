@@ -1,3 +1,5 @@
+import { useLanguage } from '../../../services/api/publicContentLanguage';
+
 function SocialIcon({ type, url, memberName }) {
   const label = type === 'linkedin' ? 'LinkedIn' : 'X';
   const content = type === 'linkedin' ? 'in' : 'X';
@@ -20,7 +22,7 @@ function ProjectMember({ member }) {
 
   return (
     <div className="project-card__member">
-      <span>{member.name}</span>
+      <span><bdi>{member.name}</bdi></span>
       {hasAffordance && (
         <span className="project-card__socials">
           {(member.showX || member.xUrl) && <SocialIcon type="x" url={member.xUrl} memberName={member.name} />}
@@ -34,6 +36,7 @@ function ProjectMember({ member }) {
 }
 
 export default function ProjectCard({ project, teamIcon }) {
+  const { t } = useLanguage();
   return (
     <article className="project-card">
       {/* The project's own category, surfaced on the media for scanning; the details list
@@ -44,13 +47,13 @@ export default function ProjectCard({ project, teamIcon }) {
       ) : (
         <div className="project-card__placeholder">
           <img src={teamIcon} alt="" width="24" height="24" />
-          <span>صورة المشروع عند توفرها</span>
+          <span>{t('صورة المشروع عند توفرها', 'Project image coming soon')}</span>
         </div>
       )}
 
       <div className="project-card__heading">
         <h3>{project.title}</h3>
-        <p>{project.teamName}</p>
+        <p><bdi>{project.teamName}</bdi></p>
       </div>
 
       <p className="project-card__description">{project.description}</p>
@@ -60,8 +63,8 @@ export default function ProjectCard({ project, teamIcon }) {
       </div>
 
       <dl className="project-card__details">
-        <div><dt>التصنيف</dt><dd>{project.categoryLabel}</dd></div>
-        <div><dt>مرحلة المشاركة</dt><dd>{project.stage}</dd></div>
+        <div><dt>{t('التصنيف', 'Category')}</dt><dd>{project.categoryLabel}</dd></div>
+        <div><dt>{t('مرحلة المشاركة', 'Participation stage')}</dt><dd>{project.stage}</dd></div>
       </dl>
     </article>
   );

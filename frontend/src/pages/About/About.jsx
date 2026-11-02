@@ -2,7 +2,7 @@ import { useRef } from 'react';
 import { Link } from 'react-router-dom';
 import SectionHeading from '../../components/SectionHeading/SectionHeading';
 import { useApiData } from '../../services/api/useApiData';
-import { contentLanguage, translated } from '../../services/api/publicContentLanguage';
+import { useContentLanguage, translated } from '../../services/api/publicContentLanguage';
 import ApiState from '../../components/ApiState/ApiState';
 import circuitPattern from '../Workshops/assets/circuit-pattern.svg';
 import AboutCircuit from './AboutCircuit';
@@ -11,7 +11,7 @@ import '../InfoPages.css';
 export default function About() {
   const rootRef = useRef(null);
   const {data,loading,error,reload}=useApiData('about');
-  const language=contentLanguage();const ar=language==='ar';
+  const language=useContentLanguage();const ar=language==='ar';
   const values=data?.[`values_${language}`] || [];
   const text=key=>translated(data,key,language);
   return (
@@ -26,7 +26,7 @@ export default function About() {
       <section className="container info-page__body" aria-label={ar?'عن الملتقى':'About RoboTactic'}>
         <ApiState {...{loading,error}} onRetry={reload} empty={!loading&&!error&&!data?(ar?'محتوى عن الملتقى قيد التحديث.':'About content is being updated.'):''}/>
         {!loading&&!error&&data&&<><div className={`info-page__panel ${data.image_url?'info-page__panel--image':''}`}>
-          <div><h2 id="about-purpose">{ar?'فكرة الملتقى':'The event'}</h2><p className="info-page__copy">{text('body')}</p></div>
+          <div><h2 id="about-purpose">{ar?'فكرة الملتقى':'The idea behind the forum'}</h2><p className="info-page__copy">{text('body')}</p></div>
           {data.image_url&&<img className="info-page__photo" src={data.image_url} alt={text('image_alt')} loading="lazy" referrerPolicy="no-referrer"/>}
         </div>
         <div className="info-page__panel">
@@ -35,7 +35,7 @@ export default function About() {
             {values.map((item,index) => <li key={`${index}-${item}`}>{item}</li>)}
           </ul>
         </div>
-        </>}<nav className="info-page__links" aria-label={ar?'استكشف الملتقى':'Explore the event'}>
+        </>}<nav className="info-page__links" aria-label={ar?'استكشف الملتقى':'Explore the forum'}>
           <Link to="/competitions">{ar?'استكشف المسابقات':'Explore competitions'}</Link>
           <Link to="/workshops">{ar?'اطّلع على الورش':'View workshops'}</Link>
           <Link to="/projects">{ar?'شاهد المشاريع':'View projects'}</Link>

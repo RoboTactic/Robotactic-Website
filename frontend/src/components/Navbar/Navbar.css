@@ -31,11 +31,39 @@
   .navbar__menu-button:not(.navbar__menu-button--visible) { display: none; }
 }
 
-/* ── Mobile menu (full screen) ── */
-.mobile-menu {
-  position: fixed; inset: 0; z-index: 100; display: flex; flex-direction: column;
-  background: var(--color-surface-page); overflow-y: auto;
+/* ── Mobile menu: drawer from the trigger's side over a dimmed backdrop ──
+   Mounted in <body> (portal) so position:fixed is relative to the viewport, not the header.
+   Closed = invisible and inert; the transition only describes how it arrives and leaves. */
+.mobile-menu-layer { position: fixed; inset: 0; z-index: 100; visibility: hidden; pointer-events: none; }
+.mobile-menu-layer.is-open { visibility: visible; pointer-events: auto; }
+.mobile-menu__backdrop {
+  position: absolute; inset: 0; background: rgb(3 9 15 / .62);
+  -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px); opacity: 0;
 }
+.mobile-menu-layer.is-open .mobile-menu__backdrop { opacity: 1; }
+.mobile-menu {
+  position: absolute; inset-block: 0; inset-inline-end: 0; inline-size: min(420px, 100%);
+  display: flex; flex-direction: column; overflow-y: auto; overscroll-behavior: contain;
+  background: var(--color-surface-page); border-inline-start: 1px solid var(--color-border-subtle);
+  box-shadow: 0 0 60px rgb(0 0 0 / .5);
+  transform: translateX(-100%);                                   /* RTL: inline-end is the left edge */
+}
+.mobile-menu-layer[dir="ltr"] .mobile-menu { transform: translateX(100%); }
+.mobile-menu-layer.is-open .mobile-menu { transform: none; }
+@media (prefers-reduced-motion: no-preference) {
+  .mobile-menu-layer { transition: visibility 0s linear 280ms; }
+  .mobile-menu-layer.is-open { transition: visibility 0s; }
+  .mobile-menu__backdrop { transition: opacity 240ms ease; }
+  .mobile-menu { transition: transform 280ms cubic-bezier(.2,.8,.2,1); }
+  .mobile-menu-layer:not(.is-open) .mobile-menu { transition-timing-function: cubic-bezier(.4,0,1,1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  /* global.css shortens every transition to 0.01ms rather than removing it, so `visibility`
+     would still read "hidden" in the same tick the menu opens and focus() on the close button
+     would be refused. Instant state changes here keep focus management working. */
+  .mobile-menu-layer, .mobile-menu-layer * { transition: none !important; }
+}
+@media (min-width: 1200px) { .mobile-menu-layer { display: none; } }
 .mobile-menu__top { display: flex; align-items: center; justify-content: space-between; min-block-size: 64px; flex: none; }
 .mobile-menu__list { display: flex; flex-direction: column; padding-block-start: 8px; }
 .mobile-menu__item {
@@ -45,6 +73,9 @@
 }
 .mobile-menu__label { display: inline-flex; align-items: center; gap: 12px; }
 .mobile-menu__chevron { color: var(--color-text-muted); flex: none; }
+.mobile-menu-layer[dir="ltr"] .mobile-menu__chevron { transform: scaleX(-1); } /* forward, not back, in LTR */
+/* English labels use the Latin typeface (the Arabic display face renders Latin as a serif) */
+.mobile-menu-layer[lang="en"] :is(.mobile-menu__item, .mobile-menu__actions .button) { font-family: var(--font-latin); }
 .mobile-menu__item.active { color: var(--color-text-accent); }
 .mobile-menu__item.active .mobile-menu__label::before {
   content: ''; inline-size: 3px; block-size: 22px; border-radius: 2px; background: var(--color-brand-accent);

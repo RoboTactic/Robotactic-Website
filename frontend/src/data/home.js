@@ -2,13 +2,16 @@
 
 import { PLACEHOLDER_FORM_URL } from './competitions';
 
+/* Text fields are [Arabic, English] pairs, resolved with useLanguage().t. */
 export const hero = {
-  eyebrow: 'ملتقى روبوتاكتيك · 2026',
-  title: 'ابتكار يقوده التفكير',
-  description:
+  eyebrow: ['ملتقى روبوتاكتيك · 2026', 'RoboTactic Forum · 2026'],
+  title: ['ابتكار يقوده التفكير', 'Innovation driven by ideas'],
+  description: [
     'ملتقى تقني يجمع بين الابتكار والتقنية والتفكير الاستراتيجي، ويضم مسابقات الروبوتات ومعرض المشاريع لطلاب وطالبات المرحلتين الثانوية والجامعية.',
-  primaryAction: { label: 'استكشف المسابقات', path: '/competitions' },
-  secondaryAction: { label: 'تعرّف على الملتقى', path: '/about' },
+    'A technology forum exploring innovation and strategic thinking through robotics competitions and a student project showcase for secondary-school and university students.',
+  ],
+  primaryAction: { label: ['استكشف المسابقات', 'Explore competitions'], path: '/competitions' },
+  secondaryAction: { label: ['تعرّف على الملتقى', 'About the forum'], path: '/about' },
 };
 
 export const about = {
@@ -22,8 +25,8 @@ export const about = {
 
 export const countdown = {
   overline: 'COUNTDOWN',
-  title: 'انطلاق الملتقى',
-  note: 'الموعد الرسمي يُعلَن لاحقًا — القيم المعروضة توضيحية.',
+  title: ['انطلاق الملتقى', 'Forum launch'],
+  note: ['الموعد الرسمي يُعلَن لاحقًا — القيم المعروضة توضيحية.', 'The official date will be announced later — the values shown are illustrative.'],
   /* The official date isn't announced yet. Set `targetDate` to an ISO date
      (e.g. '2026-11-19T09:00:00+03:00') and the countdown will tick live;
      until then the MOCK values below are shown. */
@@ -32,9 +35,9 @@ export const countdown = {
 };
 
 export const sections = {
-  competitions: { overline: 'COMPETITIONS', title: 'المسابقات', action: { label: 'عرض كل المسابقات', path: '/competitions' } },
-  workshops: { overline: 'WORKSHOPS', title: 'ورش العمل', action: { label: 'عرض كل الورش', path: '/workshops' } },
-  liveNow: { overline: 'LIVE NOW', title: 'مباشر الآن' },
+  competitions: { overline: 'COMPETITIONS', title: ['المسابقات', 'Competitions'], action: { label: ['عرض كل المسابقات', 'View all competitions'], path: '/competitions' } },
+  workshops: { overline: 'WORKSHOPS', title: ['ورش العمل', 'Workshops'], action: { label: ['عرض كل الورش', 'View all workshops'], path: '/workshops' } },
+  liveNow: { overline: 'LIVE NOW', title: ['مباشر الآن', 'Live now'] },
 };
 
 /* Home's Workshops preview shows only the currently confirmed workshop.
@@ -51,7 +54,7 @@ export const confirmedWorkshop = {
 };
 
 export const cta = {
-  title: 'مستعدّ للمنافسة؟',
-  description: 'اختر مسارك وسجّل فريقك عبر نموذج التسجيل الرسمي.',
-  action: { label: 'استعرض المسابقات', path: '/competitions' },
+  title: ['مستعدّ للمنافسة؟', 'Ready to compete?'],
+  description: ['اختر مسارك وسجّل فريقك عبر نموذج التسجيل الرسمي.', 'Choose your track and register your team through the official registration form.'],
+  action: { label: ['استعرض المسابقات', 'Browse competitions'], path: '/competitions' },
 };

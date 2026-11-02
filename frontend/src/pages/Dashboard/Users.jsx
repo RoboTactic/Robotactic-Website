@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useDashboardData } from '../../services/api/useDashboardData';
 import { createDashboardRecord, updateDashboardRecord } from '../../services/api/dashboard';
+import { messageForError } from './errorMessages';
 
 const labels = {
   competitions: ['المسابقات', 'Competitions'],
@@ -28,7 +29,8 @@ const tr = (ar, en, language) => language === 'ar' ? ar : en;
 export function UserEditor({ language, admin, notify, onSessionExpired }) {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { data: record, loading, error: loadError } = useDashboardData(id ? `/admin/users/${encodeURIComponent(id)}` : null, onSessionExpired, { editable: true });
+  const { data: record, loading, failure } = useDashboardData(id ? `/admin/users/${encodeURIComponent(id)}` : null, onSessionExpired, { editable: true });
+  const loadError = failure ? messageForError(failure, language) : '';
   const [role, setRole] = useState(record?.role_code || 'team_member');
   const [permissions, setPermissions] = useState(record?.permissions || []);
   const [busy, setBusy] = useState(false);
@@ -68,7 +70,7 @@ export function UserEditor({ language, admin, notify, onSessionExpired }) {
       if (Number(id) === admin?.id) { onSessionExpired(); navigate('/dashboard'); }
       else navigate(`/dashboard/users/${saved.id}`);
     } catch (issue) {
-      setError(issue.message || tr('تعذر حفظ المستخدم.', 'Could not save user.', language));
+      setError(messageForError(issue, language));
       if (issue.status === 401) onSessionExpired();
     } finally { setBusy(false); }
   }

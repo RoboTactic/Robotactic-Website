@@ -1,0 +1,76 @@
+/* Coming Soon shell (Refined Dark). Default styles are the final state; motion only adds life,
+   and is limited to prefers-reduced-motion: no-preference. Artwork styles live with each page. */
+.coming-soon {
+  position: relative; isolation: isolate; overflow: hidden;
+  display: grid; gap: clamp(20px, 4vw, 32px); align-items: center;
+  padding: clamp(20px, 5vw, 48px);
+  border: 1px solid var(--color-border-default); border-radius: 24px;
+  background:
+    radial-gradient(90% 70% at 50% 30%, rgb(22 166 106 / .14), transparent 70%),
+    linear-gradient(165deg, #101D2B 0%, var(--color-surface-sunken, #0A1520) 100%);
+  box-shadow: inset 0 1px 0 rgb(182 242 58 / .06), 0 30px 60px -40px rgb(0 0 0 / .8);
+  color: var(--color-text-primary);
+}
+.coming-soon::after { /* lime hairline along the top edge */
+  content: ''; position: absolute; inset-block-start: 0; inset-inline: 12% 12%; block-size: 1px; z-index: -1;
+  background: linear-gradient(90deg, transparent, rgb(182 242 58 / .55), transparent);
+}
+
+.coming-soon__art { inline-size: 100%; max-inline-size: 560px; margin-inline: auto; }
+.cs-art { display: block; inline-size: 100%; block-size: auto; overflow: visible; }
+
+.coming-soon__copy { display: flex; flex-direction: column; align-items: flex-start; gap: 16px; text-align: start; min-inline-size: 0; }
+.coming-soon__label {
+  display: inline-flex; align-items: center; gap: 10px; margin: 0;
+  padding: 6px 14px; border: 1px solid rgb(182 242 58 / .35); border-radius: 999px;
+  background: rgb(182 242 58 / .06); color: #B6F23A;
+  font: 600 12px/16px var(--font-latin); letter-spacing: .14em;
+}
+.coming-soon__label [lang="ar"] { font: 700 13px/16px var(--font-arabic); letter-spacing: 0; }
+.coming-soon__pulse {
+  position: relative; inline-size: 8px; block-size: 8px; border-radius: 50%; flex: none;
+  background: #B6F23A; box-shadow: 0 0 10px rgb(182 242 58 / .7);
+}
+.coming-soon h2 {
+  margin: 0; max-inline-size: 18ch; text-wrap: balance;
+  font: 700 clamp(26px, 6.4vw, 40px)/1.4 var(--font-arabic); color: var(--color-text-primary);
+}
+.coming-soon[lang="en"] h2 { font-family: var(--font-latin); line-height: 1.25; letter-spacing: -.01em; }
+.coming-soon__description { margin: 0; max-inline-size: 46ch; color: var(--color-text-secondary); font-size: 17px; font-weight: 500; line-height: 1.9; }
+.coming-soon[lang="en"] .coming-soon__description { font-family: var(--font-latin); line-height: 1.7; }
+.coming-soon__copy .button {
+  margin-block-start: 8px; border-radius: 999px; gap: 10px; background: rgb(255 255 255 / .03);
+  transition: border-color 200ms ease, color 200ms ease, background-color 200ms ease, box-shadow 200ms ease, transform 200ms cubic-bezier(.2,.8,.2,1);
+}
+.coming-soon[lang="en"] .coming-soon__copy .button { font-family: var(--font-latin); }
+/* reading-direction arrow: points forward in both RTL and LTR. Decorative: `/ ''` gives it an
+   empty alternative text so it is not read as part of the link name (the first declaration is
+   the fallback for browsers without CSS alt-text support). */
+.coming-soon__copy .button::after { content: '←'; content: '←' / ''; font-family: var(--font-latin); line-height: 1; transition: transform 200ms cubic-bezier(.2,.8,.2,1); }
+.coming-soon[dir="ltr"] .coming-soon__copy .button::after { content: '→'; content: '→' / ''; }
+.coming-soon__copy .button:focus-visible { outline: 2px solid #B6F23A; outline-offset: 3px; }
+@media (hover: hover) {
+  .coming-soon__copy .button:hover {
+    border-color: rgb(182 242 58 / .7); color: #B6F23A; background: rgb(182 242 58 / .08);
+    box-shadow: 0 10px 28px -14px rgb(182 242 58 / .55);
+  }
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .coming-soon__copy .button:hover { transform: translateY(-1px); }
+  .coming-soon__copy .button:hover::after { transform: translateX(-3px); }
+  .coming-soon[dir="ltr"] .coming-soon__copy .button:hover::after { transform: translateX(3px); }
+}
+
+@media (min-width: 900px) {
+  /* copy at inline-start (right in Arabic), artwork at inline-end — the Home hero composition */
+  .coming-soon { grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); padding: 48px 56px; }
+  .coming-soon__copy { order: -1; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .coming-soon__pulse::after {
+    content: ''; position: absolute; inset: -4px; border-radius: 50%; border: 1.5px solid #B6F23A;
+    animation: coming-soon-ping 2.4s ease-out infinite;
+  }
+}
+@keyframes coming-soon-ping { from { opacity: .8; transform: scale(.6); } 70%, to { opacity: 0; transform: scale(1.8); } }

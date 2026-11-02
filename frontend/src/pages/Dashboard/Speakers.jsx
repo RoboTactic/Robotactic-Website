@@ -3,14 +3,15 @@ import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { apiRequest } from '../../services/api/client';
 import { useDashboardData } from '../../services/api/useDashboardData';
 import { createDashboardRecord, updateDashboardRecord } from '../../services/api/dashboard';
+import { messageForError } from './errorMessages';
 
 const base = '/dashboard/speakers';
 const tr = (language, ar, en) => language === 'ar' ? ar : en;
 const workshopTitle = (workshop, language) => workshop[`title_${language}`] || workshop.title_ar || workshop.title_en;
 
 function useWorkshops(language, onSessionExpired) {
-  const { data: workshops = [], error } = useDashboardData('/admin/lookups/workshops', onSessionExpired);
-  return { workshops, error };
+  const { data: workshops = [], failure } = useDashboardData('/admin/lookups/workshops', onSessionExpired);
+  return { workshops, error: failure ? messageForError(failure, language) : '' };
 }
 
 export function SpeakerEditor({ language, notify, onSessionExpired }) {
@@ -18,7 +19,8 @@ export function SpeakerEditor({ language, notify, onSessionExpired }) {
   const [params] = useSearchParams();
   const navigate = useNavigate();
   const { workshops, error: workshopsError } = useWorkshops(language, onSessionExpired);
-  const { data: speaker, loading, error: loadError } = useDashboardData(id ? `/admin/speakers/${encodeURIComponent(id)}` : null, onSessionExpired, { editable: true });
+  const { data: speaker, loading, failure } = useDashboardData(id ? `/admin/speakers/${encodeURIComponent(id)}` : null, onSessionExpired, { editable: true });
+  const loadError = failure ? messageForError(failure, language) : '';
   const [selectedWorkshop, setSelectedWorkshop] = useState(params.get('parent') || '');
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
@@ -40,7 +42,7 @@ export function SpeakerEditor({ language, notify, onSessionExpired }) {
       notify(tr(language, 'تم حفظ المتحدث.', 'Speaker saved.'));
       navigate(`${base}/${saved.id}`);
     } catch (issue) {
-      setError(issue.message);
+      setError(messageForError(issue, language));
       if (issue.status === 401) onSessionExpired();
     } finally { setBusy(false); }
   }
@@ -73,7 +75,8 @@ export function SpeakerEditor({ language, notify, onSessionExpired }) {
 export function SpeakerDetails({ language, admin, onSessionExpired }) {
   const { id } = useParams();
   const { workshops, error: workshopsError } = useWorkshops(language, onSessionExpired);
-  const { data: speaker, error: loadError } = useDashboardData(`/admin/speakers/${encodeURIComponent(id)}`, onSessionExpired);
+  const { data: speaker, failure } = useDashboardData(`/admin/speakers/${encodeURIComponent(id)}`, onSessionExpired);
+  const loadError = failure ? messageForError(failure, language) : '';
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
   async function change(method, path, payload) {
@@ -82,7 +85,7 @@ export function SpeakerDetails({ language, admin, onSessionExpired }) {
       await apiRequest(path, { method, ...(payload ? { body: JSON.stringify(payload) } : {}) });
       return true;
     } catch (issue) {
-      setError(issue.message);
+      setError(messageForError(issue, language));
       if (issue.status === 401) onSessionExpired();
       return false;
     } finally { setBusy(false); }

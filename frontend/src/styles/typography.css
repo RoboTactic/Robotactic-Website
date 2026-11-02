@@ -19,9 +19,19 @@
 @font-face { font-family: 'Thmanyah Serif Text'; font-weight: 700; font-display: swap; src: local('thmanyah serif text Bold'), local('thmanyahseriftext-Bold'); }
 
 :root {
-  --font-arabic: 'Thmanyah Serif Text', 'IBM Plex Sans Arabic', 'Segoe UI', Tahoma, sans-serif;
+  --font-arabic-base: 'Thmanyah Serif Text', 'IBM Plex Sans Arabic', 'Segoe UI', Tahoma, sans-serif;
+  --font-arabic: var(--font-arabic-base);
   --font-latin: 'IBM Plex Sans', 'Segoe UI', Arial, sans-serif;
 }
+
+/* English public site: IBM Plex Sans throughout, including the page styles that name the
+   Arabic face directly; Arabic-language fragments (e.g. «العربية» on the language switch)
+   keep the Arabic face. Scoped to public pages — the Dashboard keeps its own typography. */
+html.rt-public[lang="en"] { --font-arabic: var(--font-latin); }
+html.rt-public[lang="en"] :is(.workshops-page, .competitions-page, .projects-page, .workshop-card h3,
+  .workshop-card__presenter, .workshop-card__description, .workshop-card__meta,
+  .competitions-cta button, .projects-controls input) { font-family: var(--font-latin); }
+html.rt-public[lang="en"] [lang="ar"] { font-family: var(--font-arabic-base); }
 
 /* Arabic scale (mobile first; desktop sizes from 1024px) */
 .t-display { font: 700 34px/46px var(--font-arabic); letter-spacing: -0.01em; }

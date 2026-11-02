@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Button from '../../components/Button/Button';
-import { contentLanguage } from '../../services/api/publicContentLanguage';
+import { useContentLanguage } from '../../services/api/publicContentLanguage';
 import { prefersReducedMotion } from '../../motion/signalBus';
 import SignalArt from './SignalArt';
 import { destinations, resolveSignal } from './resolveSignal';
@@ -64,7 +64,7 @@ function usePointerNodes(rootRef, artRef) {
 
 export default function NotFound() {
   const location = useLocation(); const navigate = useNavigate();
-  const language = contentLanguage(); const ar = language === 'ar'; const text = copy[language];
+  const language = useContentLanguage(); const ar = language === 'ar'; const text = copy[language];
   const rootRef = useRef(null); const artRef = useRef(null); const timer = useRef(0);
   const [run, setRun] = useState(0); const [attempts, setAttempts] = useState(0);
   const [status, setStatus] = useState({ kind: 'idle' }); // idle | reconnecting | near | none | noBack

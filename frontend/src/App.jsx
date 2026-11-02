@@ -11,6 +11,19 @@ import Team from './pages/Team/Team';
 import Timeline from './pages/Timeline/Timeline';
 import Dashboard from './pages/Dashboard/Dashboard';
 import NotFound from './pages/NotFound/NotFound';
+import { useLanguage } from './services/api/publicContentLanguage';
+
+/* Browser titles for the public routes; the 404 page sets its own, and the Dashboard is left alone. */
+const pageTitles = {
+  '/': ['RoboTactic 2026 — ابتكار يقوده التفكير', 'RoboTactic 2026 — Innovation driven by ideas'],
+  '/about': ['عن الملتقى | RoboTactic', 'About | RoboTactic'],
+  '/competitions': ['المسابقات | RoboTactic', 'Competitions | RoboTactic'],
+  '/workshops': ['ورش العمل | RoboTactic', 'Workshops | RoboTactic'],
+  '/projects': ['معرض المشاريع | RoboTactic', 'Project Showroom | RoboTactic'],
+  '/team': ['الفريق | RoboTactic', 'Team | RoboTactic'],
+  '/timeline': ['الجدول الزمني | RoboTactic', 'Timeline | RoboTactic'],
+};
+const metaDescription = ['RoboTactic 2026 — ابتكار يقوده التفكير', 'RoboTactic 2026 — Innovation driven by ideas'];
 
 // Start each page at the top when navigating between routes
 function ScrollToTop() {
@@ -26,7 +39,16 @@ export default function App() {
   // compact forms and navigation retain their own layout.
   useLayoutEffect(() => {
     document.documentElement.classList.add('rt-refined');
+    // Public-only language styling (English typeface); the Dashboard has its own.
+    document.documentElement.classList.toggle('rt-public', !isDashboard);
   }, [isDashboard]);
+  const { language, t } = useLanguage();
+  useEffect(() => {
+    if (isDashboard) return;
+    const title = pageTitles[pathname.replace(/\/+$/, '') || '/'];
+    if (title) document.title = t(title);
+    document.querySelector('meta[name="description"]')?.setAttribute('content', t(metaDescription));
+  }, [isDashboard, pathname, language]);
   return (
     <>
       <ScrollToTop />
