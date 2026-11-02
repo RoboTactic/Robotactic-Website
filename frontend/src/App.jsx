@@ -16,7 +16,7 @@ import { useLanguage } from './services/api/publicContentLanguage';
 /* Browser titles for the public routes; the 404 page sets its own, and the Dashboard is left alone. */
 const pageTitles = {
   '/': ['RoboTactic 2026 — ابتكار يقوده التفكير', 'RoboTactic 2026 — Innovation driven by ideas'],
-  '/about': ['عن الملتقى | RoboTactic', 'About | RoboTactic'],
+  '/about': ['من نحن | RoboTactic', 'About | RoboTactic'],
   '/competitions': ['المسابقات | RoboTactic', 'Competitions | RoboTactic'],
   '/workshops': ['ورش العمل | RoboTactic', 'Workshops | RoboTactic'],
   '/projects': ['معرض المشاريع | RoboTactic', 'Project Showroom | RoboTactic'],
