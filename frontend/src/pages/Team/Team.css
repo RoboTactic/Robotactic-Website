@@ -1,0 +1,122 @@
+/* Team — leadership tiers and department nodes on one circuit network (TeamCircuit).
+   Mobile first: a rail on the inline-start side; from 768px a centred trunk with buses.
+   Every card has a port (::before) exactly where its connector lands. */
+
+.team-page { --team-rail: 28px; --team-port: 10px; overflow: hidden; }
+.team-section { position: relative; z-index: 2; padding-block: 48px 8px; }
+.team-section__head { display: grid; gap: 6px; margin-block-end: 28px; padding-inline-start: var(--team-rail); }
+.team-section__head h2 { color: var(--color-text-primary); }
+.team-section__head p { color: var(--color-text-secondary); }
+
+/* ── Cards (shared surface) ─────────────────────────────────────────────── */
+.team-person, .team-dept {
+  position: relative; block-size: 100%; border: 1px solid rgb(22 166 106 / .24); border-radius: 18px;
+  background: var(--rt-card, var(--color-surface-card)); box-shadow: var(--rt-shadow, none);
+  transition: border-color 220ms cubic-bezier(.2,.8,.2,1), box-shadow 220ms cubic-bezier(.2,.8,.2,1);
+}
+/* Port: where the connector lands — mobile: on the inline-start edge. */
+.team-person::before, .team-dept::before {
+  content: ''; position: absolute; z-index: 1; inset-block-start: calc(30px - var(--team-port) / 2); inset-inline-start: calc(var(--team-port) / -2);
+  inline-size: var(--team-port); block-size: var(--team-port); border-radius: 50%;
+  border: 1.5px solid var(--color-brand-primary); background: var(--color-surface-page);
+  transition: background-color 220ms ease-out, border-color 220ms ease-out, box-shadow 220ms ease-out;
+}
+/* Lit as the circuit signal reaches the card, and on hover. */
+:is(.team-person, .team-dept).is-active { border-color: rgb(182 242 58 / .55); }
+:is(.team-person, .team-dept).is-active::before {
+  border-color: var(--color-brand-accent); background: var(--color-brand-accent); box-shadow: 0 0 0 4px rgb(182 242 58 / .16), 0 0 14px rgb(182 242 58 / .45);
+}
+
+/* ── Leadership ─────────────────────────────────────────────────────────── */
+.team-tiers, .team-departments { display: grid; gap: 14px; margin: 0; padding: 0; padding-inline-start: var(--team-rail); list-style: none; }
+.team-tier__members { display: grid; gap: 14px; }
+.team-person { display: grid; gap: 4px; padding: 18px 20px; }
+.team-person__role { font: 600 13px/20px var(--font-arabic); color: var(--color-text-brand); }
+.team-person__name { font: 700 20px/30px var(--font-arabic); color: var(--color-text-primary); overflow-wrap: anywhere; }
+.team-page[lang="en"] .team-person__role { font-family: var(--font-latin); letter-spacing: .08em; text-transform: uppercase; font-size: 12px; }
+
+/* Director: the primary node — restrained lime. */
+.team-person--director {
+  padding: 22px 24px; border-color: rgb(182 242 58 / .38);
+  background: radial-gradient(90% 120% at 50% 0%, rgb(182 242 58 / .1), transparent 60%), var(--rt-card, var(--color-surface-card));
+}
+.team-person--director::after {
+  content: ''; position: absolute; inset-inline: 24px; inset-block-start: -1px; block-size: 2px; border-radius: 2px;
+  background: linear-gradient(90deg, transparent, var(--color-brand-accent), transparent); opacity: .7;
+}
+.team-person--director .team-person__role { color: var(--color-text-accent); }
+.team-person--director .team-person__name { font-size: 26px; line-height: 38px; }
+.team-person--director::before { border-color: var(--color-brand-accent); }
+
+/* ── Departments ────────────────────────────────────────────────────────── */
+.team-dept { display: flex; flex-direction: column; gap: 6px; padding: 20px; }
+.team-dept__head { display: flex; align-items: center; justify-content: space-between; margin-block-end: 8px; }
+.team-dept__icon {
+  display: inline-grid; place-items: center; inline-size: 44px; block-size: 44px; border-radius: 12px;
+  border: 1px solid rgb(22 166 106 / .4); background: var(--color-surface-sunken); color: var(--color-brand-primary);
+  transition: color 220ms ease-out, border-color 220ms ease-out;
+}
+.team-dept__index { font: 600 12px/16px var(--font-latin); letter-spacing: .12em; color: var(--color-text-muted); }
+.team-dept__name { font: 700 19px/30px var(--font-arabic); color: var(--color-text-primary); }
+.team-dept__alt { font: 500 13px/20px var(--font-latin); color: var(--color-text-muted); }
+.team-dept__alt[lang="ar"] { font-family: var(--font-arabic-base); font-size: 14px; }
+.team-dept__people { display: grid; gap: 12px; margin: 10px 0 0; padding-block-start: 14px; border-block-start: 1px solid rgb(22 166 106 / .16); margin-block-start: auto; }
+.team-dept__member { display: grid; gap: 2px; }
+.team-dept__member dt { font: 500 13px/20px var(--font-arabic); color: var(--color-text-muted); }
+.team-dept__member dd { margin: 0; font: 600 16px/26px var(--font-arabic); color: var(--color-text-primary); overflow-wrap: anywhere; }
+.team-dept__member--leader dt { display: flex; align-items: center; gap: 8px; color: var(--color-text-brand); }
+.team-dept__member--leader dt::before { content: ''; inline-size: 6px; block-size: 6px; border-radius: 50%; background: var(--color-brand-accent); }
+.team-dept__name { margin-block-start: 2px; }
+.team-dept__alt + .team-dept__people { margin-block-start: 10px; }
+
+/* ── Closing ────────────────────────────────────────────────────────────── */
+.team-section--closing { padding-block: 56px 96px; }
+.team-closing {
+  position: relative; display: grid; gap: 10px; justify-items: center; padding: 36px 24px; text-align: center;
+  border: 1px solid rgb(22 166 106 / .24); border-radius: 24px;
+  background: radial-gradient(60% 110% at 50% 0%, rgb(22 166 106 / .16), transparent 70%), var(--rt-panel, var(--color-surface-card));
+}
+.team-closing__slogan { font: 700 15px/22px var(--font-arabic-base); color: var(--color-text-accent); }
+.team-page[lang="en"] .team-closing__slogan { font: 600 12px/16px var(--font-latin); letter-spacing: .12em; text-transform: uppercase; }
+.team-closing h2 { color: var(--color-text-primary); }
+.team-closing .t-body-lg { max-inline-size: 620px; color: var(--color-text-secondary); }
+
+/* ── ≥768px: centred trunk, buses above each row ───────────────────────── */
+@media (min-width: 768px) {
+  .team-page { --team-rail: 0px; }
+  .team-section { padding-block: 72px 8px; }
+  .team-section__head { justify-items: center; text-align: center; margin-block-end: 64px; }
+  .team-tiers { gap: 56px; }
+  .team-tier__members { display: flex; justify-content: center; gap: 72px; }
+  .team-tier__members > li { inline-size: min(100%, 300px); }
+  .team-tier--director .team-tier__members > li { inline-size: min(100%, 420px); }
+  .team-person { justify-items: center; padding: 22px 24px; text-align: center; }
+  .team-person--director { padding: 30px 32px; }
+  .team-person--director .team-person__name { font-size: 32px; line-height: 44px; }
+
+  /* Ports move to the top centre (the Director's to the bottom, where the trunk leaves). */
+  .team-person::before, .team-dept::before { inset-block-start: calc(var(--team-port) / -2); inset-inline-start: calc(50% - var(--team-port) / 2); }
+  .team-person--director::before { inset-block-start: auto; inset-block-end: calc(var(--team-port) / -2); }
+
+  .team-departments { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 56px 24px; }
+  .team-departments > li { grid-column: span 2; }
+  .team-departments > li:last-child:nth-child(odd) { grid-column: 2 / span 2; }
+  .team-dept { padding: 24px; }
+  .team-closing { padding: 48px 40px; }
+}
+@media (min-width: 1100px) {
+  .team-departments { grid-template-columns: repeat(8, minmax(0, 1fr)); }
+  .team-departments > li:last-child:nth-child(odd) { grid-column: span 2; }
+  .team-departments > li:nth-child(5) { grid-column: 2 / span 2; }
+}
+
+/* ── Response (pointer only; content never depends on it) ──────────────── */
+@media (hover: hover) and (pointer: fine) {
+  :is(.team-person, .team-dept):hover { border-color: rgb(22 166 106 / .7); box-shadow: inset 0 1px 0 rgb(255 255 255 / .05), 0 28px 56px -30px rgb(22 166 106 / .45); }
+  :is(.team-person, .team-dept):hover::before { border-color: var(--color-brand-accent); background: var(--color-brand-accent); box-shadow: 0 0 0 4px rgb(182 242 58 / .14), 0 0 12px rgb(182 242 58 / .4); }
+  .team-dept:hover .team-dept__icon { color: var(--color-brand-accent); border-color: rgb(182 242 58 / .45); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .team-person, .team-dept, .team-person::before, .team-dept::before, .team-dept__icon { transition: none; }
+}

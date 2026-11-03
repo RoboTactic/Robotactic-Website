@@ -6,3 +6,5 @@
 .section-heading__tick { inline-size: 22px; block-size: 2px; background: var(--color-brand-accent); border-radius: 2px; }
 .section-heading__title { color: var(--color-text-primary); }
 .section-heading__description { color: var(--color-text-secondary); }
+/* An Arabic overline keeps the Arabic face: no tracking or uppercase. */
+.section-heading__overline .t-overline[lang="ar"] { font-family: var(--font-arabic-base); font-size: 14px; letter-spacing: 0; text-transform: none; }
