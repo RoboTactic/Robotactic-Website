@@ -27,7 +27,7 @@ const resources = {
     fields: {
       name_ar: { type: "string", required: true }, name_en: { type: "string", required: true },
       description_ar: { type: "string", required: true }, description_en: { type: "string", required: true },
-      category_code: { type: "enum", values: ["combat", "simulation", "sensing", "other"] },
+      category_code: { type: "enum", values: ["drones", "controller", "sensing", "combat", "simulation", "other"] },
       requirements_ar: { type: "string", nullable: true }, requirements_en: { type: "string", nullable: true },
       audience_type: { type: "string", nullable: true }, team_size_min: { type: "positiveInteger", nullable: true },
       team_size_max: { type: "positiveInteger", nullable: true }, max_teams: { type: "positiveInteger", nullable: true },

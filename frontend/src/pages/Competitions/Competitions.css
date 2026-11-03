@@ -34,7 +34,10 @@
 }
 
 .competitions-tracks { padding-block: 32px 72px; }
-.competitions-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; align-items: stretch; }
+.competitions-grid { display: grid; grid-template-columns: 1fr; gap: 16px; align-items: stretch; }
+@media (min-width: 768px) {
+  .competitions-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+}
 .competition-card {
   display: flex; min-width: 0; min-height: 426px; height: 100%; flex-direction: column; gap: 22px;
   padding: 24px; border: 1px solid var(--color-border-default); border-radius: var(--radius-lg);
@@ -56,13 +59,14 @@
 .competition-card__title-group p { display: flex; min-width: 0; flex-wrap: wrap; gap: 6px; margin: 0; font-size: 15px; line-height: 28px; }
 .competition-card__title-group p span { color: var(--color-text-muted); }
 .competition-card__title-group p strong { color: var(--color-text-accent); font-weight: 700; overflow-wrap: anywhere; }
+.competition-card__description { margin: 0; color: var(--color-text-secondary); font-size: 15px; line-height: 1.9; overflow-wrap: anywhere; }
 .competition-card__meta {
   display: flex; min-width: 0; flex-direction: column; margin: 0; padding: 6px 16px;
   border-radius: var(--radius-md); background: var(--color-surface-sunken);
   font-size: 13px; font-weight: 500; line-height: 22px;
 }
 .competition-card__meta div {
-  display: grid; min-width: 0; grid-template-columns: minmax(0, 42%) minmax(0, 58%);
+  display: grid; min-width: 0; grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
   align-items: start; gap: 12px; padding-block: 12px;
   border-block-end: 1px solid var(--color-border-subtle);
 }
@@ -94,7 +98,6 @@
   .competitions-tracks { padding-block: 24px 48px; }
   .competitions-grid { grid-template-columns: 1fr; gap: 16px; }
   .competition-card { min-height: 0; gap: 20px; padding: 20px; }
-  .competition-card__meta div { grid-template-columns: minmax(0, 44%) minmax(0, 56%); }
   .competitions-cta { padding-block-end: 48px; }
   .competitions-cta__band { min-height: 190px; border-radius: var(--radius-lg); }
   .competitions-cta h2 { font-size: 22px; line-height: 34px; }

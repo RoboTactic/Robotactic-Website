@@ -8,6 +8,7 @@ import LanguageSwitcher from '../LanguageSwitcher/LanguageSwitcher';
 import { navLinks, registerCta } from '../../data/site';
 import { useLanguage } from '../../services/api/publicContentLanguage';
 import './Navbar.css';
+import { useSectionVisibility } from '../../services/api/SectionVisibility';
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -17,6 +18,8 @@ export default function Navbar() {
   const closeButton = useRef(null);
   const closeMenu = () => { setMenuOpen(false); menuButton.current?.focus(); }; // return focus to the trigger
   const { dir, language, t } = useLanguage();
+  const { isPathVisible } = useSectionVisibility();
+  const links = navLinks.filter(({ path }) => isPathVisible(path));
 
   useEffect(() => setMenuOpen(false), [pathname]);                 // close on navigation
   useEffect(() => {                                                // desktop nav takes over at 1200px
@@ -50,7 +53,7 @@ export default function Navbar() {
             <Logo layout="horizontal" markHeight={44} />
           </Link>
           <nav className="navbar__links" aria-label={t('التنقل الرئيسي', 'Main navigation')}>
-            {navLinks.map(({ label, labelEn, path }) => (
+            {links.map(({ label, labelEn, path }) => (
               <NavLink key={path} to={path} end={path === '/'} className="navbar__link t-nav">{t(label, labelEn)}</NavLink>
             ))}
           </nav>
@@ -87,7 +90,7 @@ export default function Navbar() {
               </button>
             </div>
             <nav className="mobile-menu__list" aria-label={t('التنقل الرئيسي', 'Main navigation')}>
-              {navLinks.map(({ label, labelEn, path }) => (
+              {links.map(({ label, labelEn, path }) => (
                 // Closes on every tap, including the current page (no route change to react to).
                 <NavLink key={path} to={path} end={path === '/'} className="mobile-menu__item t-h3" onClick={() => setMenuOpen(false)}>
                   <span className="mobile-menu__label">{t(label, labelEn)}</span>

@@ -93,6 +93,27 @@
 .dash-back { display: inline-flex; align-items: center; min-block-size: 44px; color: var(--color-text-accent); margin-block-end: 16px; }
 .dash-empty { padding: 32px; border: 1px solid var(--color-border-default); border-radius: 16px; }
 .dash-notice { background: var(--color-surface-raised); border: 1px solid var(--color-border-brand); border-radius: 12px; padding: 16px; margin-block-end: 20px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+.dash-visibility { margin-block: 20px 24px; padding: 16px; border: 1px solid var(--color-border-default); border-radius: var(--radius-lg); background: var(--color-surface-card); min-inline-size: 0; }
+.dash-event-start { display: grid; gap: 12px; inline-size: 100%; margin-block: 20px 24px; padding: clamp(14px, 2.5vw, 24px); border: 1px solid var(--color-border-brand); border-radius: var(--radius-lg); background: var(--color-surface-card); min-inline-size: 0; }
+.dash-event-start h2, .dash-event-start p { margin: 0; }
+.dash-event-start > p, .dash-event-start__form > p { color: var(--color-text-secondary); }
+.dash-event-start__form { display: grid; gap: 14px; inline-size: 100%; max-inline-size: 640px; margin-inline: auto; }
+.dash-event-start__form .dash-action { inline-size: 100%; min-inline-size: 0; white-space: normal; }
+@media (min-width: 700px) {
+  .dash-event-start__form .dash-action { inline-size: auto; min-inline-size: 200px; justify-self: start; }
+}
+.dash-visibility > p { margin-block: 0 16px; }
+.dash-visibility__list { display: grid; gap: 16px; }
+.dash-visibility__row { display: flex; flex-direction: column; align-items: stretch; gap: 12px; min-inline-size: 0; padding-block-end: 16px; border-block-end: 1px solid var(--color-border-subtle); }
+.dash-visibility__row:last-child { padding-block-end: 0; border-block-end: 0; }
+.dash-visibility__row h2 { font-size: 16px; margin: 0; overflow-wrap: anywhere; }
+.dash-visibility__row p { margin-block: 4px 0; color: var(--color-text-secondary); }
+.dash-visibility__row .dash-action { min-block-size: 44px; white-space: normal; }
+@media (min-width: 700px) {
+  .dash-visibility__row { flex-direction: row; justify-content: space-between; align-items: center; }
+  .dash-visibility__row > div { min-inline-size: 0; }
+  .dash-visibility__row .dash-action { flex-shrink: 0; }
+}
 .dash-skip { position: absolute; inset-block-start: -100px; padding: 12px; z-index: 5; background: var(--color-surface-card); }
 .dash-skip:focus { inset-block-start: 10px; }
 @media(min-width:700px) {

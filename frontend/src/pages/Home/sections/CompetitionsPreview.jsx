@@ -9,9 +9,6 @@ import { sections } from '../../../data/home';
 import { useLanguage } from '../../../services/api/publicContentLanguage';
 import '../../Competitions/Competitions.css'; // shared CompetitionCard base styles
 
-// Database category codes map to the existing visual track icons.
-const ICONS = { sensor: 'sensor', controller: 'controller', simulation: 'simulation' };
-
 export default function CompetitionsPreview() {
   const s = sections.competitions;
   const { t } = useLanguage();
@@ -27,7 +24,7 @@ export default function CompetitionsPreview() {
             <li key={c.id}>
               <CompetitionCard
                 competition={c}
-                icon={<Icon name={ICONS[c.icon] ?? 'competition'} />}
+                icon={<Icon name={c.icon} />}
                 registrationLabel={t('سجّل عبر نموذج Google', 'Register via Google Form')}
                 registrationIcon={<Icon name="externalLink" size={18} strokeWidth={2} />}
                 helperText={t('سينقلك الزر إلى نموذج Google خارجي في تبويب جديد', 'Opens an external Google Form in a new tab')}

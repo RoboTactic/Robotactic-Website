@@ -4,6 +4,7 @@ import { apiRequest } from '../../services/api/client';
 import { uploadDashboardImage } from '../../services/api/dashboard';
 import { useDashboardData } from '../../services/api/useDashboardData';
 import ImageUploadField from './ImageUploadField';
+import SectionVisibilityPanel from './SectionVisibilityPanel';
 import { messageForError } from './errorMessages';
 
 const fields = [
@@ -29,7 +30,7 @@ export default function AboutEditor({language,admin,notify,onSessionExpired}) {
    if((payload.image_url||hasFile)&&(!payload.image_alt_ar||!payload.image_alt_en))throw new Error(ar?'أضف وصف الصورة بالعربية والإنجليزية.':'Add image alternative text in both languages.');
    if(['values_ar','values_en'].some(key=>payload[key].length>20||payload[key].some(item=>item.length>120)))throw new Error(ar?'الحد الأقصى 20 قيمة، وكل قيمة حتى 120 حرفًا.':'Use up to 20 values, each up to 120 characters.');
    if(hasFile){if(!['image/jpeg','image/png','image/webp'].includes(image.type)||image.size>5*1024*1024)throw new Error(ar?'اختر صورة JPEG أو PNG أو WebP حتى 5 ميغابايت.':'Choose a JPEG, PNG or WebP image up to 5 MB.');payload.image_url=(await uploadDashboardImage('about',image)).url}
-   const saved=await apiRequest('/admin/about',{method:'PATCH',body:JSON.stringify(payload)});setData(saved);notify(ar?'تم حفظ محتوى عن الملتقى.':'About content saved.');
+   const saved=await apiRequest('/admin/about',{method:'PATCH',body:JSON.stringify(payload)});setData(saved);notify(ar?'تم حفظ محتوى من نحن.':'About content saved.');
   } catch(issue){setError(messageForError(issue, language));if(issue.status===401)onSessionExpired()}
   finally{setBusy(false)}
  }
@@ -49,7 +50,7 @@ export default function AboutEditor({language,admin,notify,onSessionExpired}) {
   {key:'values',label:ar?'قيم الملتقى':'Event values',hint:ar?'اكتب كل قيمة في سطر مستقل.':'Write one value per line.',names:['values_ar','values_en']},
   {key:'image',label:ar?'الصورة ووصفها':'Image and alternative text',names:['image_url','image_alt_ar','image_alt_en']},
  ];
- return <><header className="dash-heading"><div><span className="dash-overline" lang="en">ABOUT</span><h1 tabIndex="-1">{ar?'إدارة عن الملتقى':'About page management'}</h1><p>{ar?'المحتوى المنشور يظهر في صفحة عن الملتقى وفي الصفحة الرئيسية.':'Published content appears on the About page and Home page.'}</p></div><Link className="dash-action" to="/about" target="_blank" rel="noopener noreferrer">{ar?'عرض الصفحة العامة':'View public page'}</Link></header>
+ return <><header className="dash-heading"><div><span className="dash-overline" lang="en">ABOUT</span><h1 tabIndex="-1">{ar?'إدارة من نحن':'About page management'}</h1><p>{ar?'المحتوى المنشور يظهر في صفحة من نحن وفي الصفحة الرئيسية.':'Published content appears on the About page and Home page.'}</p></div><Link className="dash-action" to="/about" target="_blank" rel="noopener noreferrer">{ar?'عرض الصفحة العامة':'View public page'}</Link></header><SectionVisibilityPanel resource="about" {...{language,admin,notify,onSessionExpired}}/>
  {!record?displayError?<div className="dash-empty" role="alert"><p>{displayError}</p><button className="dash-action" onClick={discard}>{ar?'إعادة المحاولة':'Retry'}</button></div>:<p role="status">{ar?'جارٍ تحميل المحتوى…':'Loading content…'}</p>:<form key={formVersion} className="dash-form dash-about-form" onSubmit={submit}>
   {groups.map(group=><fieldset className={`dash-editor-group dash-about-${group.key}`} key={group.key}><legend>{group.label}</legend>{group.hint&&<p className="dash-secondary">{group.hint}</p>}<div className="dash-form-grid">{group.names.map(renderField)}{group.key==='image'&&<ImageUploadField language={language} currentUrl={record.image_url}/>}</div></fieldset>)}
   <fieldset className="dash-editor-group"><legend>{ar?'نشر المحتوى':'Publication'}</legend><div className="dash-field"><label htmlFor="dash-about-status">{ar?'حالة النشر':'Publication status'}</label><select id="dash-about-status" name="status" defaultValue={record.status}><option value="draft">{ar?'مسودة':'Draft'}</option><option value="published">{ar?'منشور':'Published'}</option><option value="hidden">{ar?'مخفي':'Hidden'}</option></select></div></fieldset>

@@ -14,6 +14,9 @@ const { requireTrustedOrigin } = require("../middleware/requireTrustedOrigin");
 const { rateLimitAdminWrites } = require("../middleware/rateLimitAdminWrites");
 
 const { createAboutController } = require("../controllers/aboutController");
+const { createSectionVisibilityController } = require("../controllers/sectionVisibilityController");
+const { requirePublicSection } = require("../middleware/requirePublicSection");
+const { createEventSettingsController } = require("../controllers/eventSettingsController");
 
 const CONTENT_SCOPES = {
   competitions: "competitions", teams: "teams", workshops: "workshops",
@@ -26,6 +29,8 @@ function createApiRoutes({ pool, authTokenSecret, corsOrigins, isProduction }) {
   const adminRouter = express.Router();
   const authRouter = express.Router();
   const aboutController = createAboutController(pool);
+  const visibilityController = createSectionVisibilityController(pool);
+  const eventSettingsController = createEventSettingsController(pool);
   const publicController = createPublicContentController(pool);
   const contentController = createAdminContentController(pool);
   const userController = createAdminUserController(pool);
@@ -39,14 +44,15 @@ function createApiRoutes({ pool, authTokenSecret, corsOrigins, isProduction }) {
 
   router.use("/health", healthRoutes);
 
-  publicRouter.get("/about", aboutController.publicGet);
-  publicRouter.get("/team-members", publicController.teamMembers);
+  publicRouter.get("/section-visibility", visibilityController.get);
+  publicRouter.get("/about", requirePublicSection(pool, "about"), aboutController.publicGet);
+  publicRouter.get("/team-members", requirePublicSection(pool, "team"), publicController.teamMembers);
   publicRouter.get("/site-settings", publicController.siteSettings);
-  publicRouter.get("/competitions", publicController.competitions);
-  publicRouter.get("/workshops", publicController.workshops);
-  publicRouter.get("/projects", publicController.projects);
-  publicRouter.get("/announcements", publicController.announcements);
-  publicRouter.get("/timeline-events", publicController.timelineEvents);
+  publicRouter.get("/competitions", requirePublicSection(pool, "competitions"), publicController.competitions);
+  publicRouter.get("/workshops", requirePublicSection(pool, "workshops"), publicController.workshops);
+  publicRouter.get("/projects", requirePublicSection(pool, "projects"), publicController.projects);
+  publicRouter.get("/announcements", requirePublicSection(pool, "announcements"), publicController.announcements);
+  publicRouter.get("/timeline-events", requirePublicSection(pool, "timeline"), publicController.timelineEvents);
   publicRouter.get("/sponsors", publicController.sponsors);
   publicRouter.get("/faqs", publicController.faqs);
   router.use("/public", publicRouter);
@@ -62,6 +68,10 @@ function createApiRoutes({ pool, authTokenSecret, corsOrigins, isProduction }) {
   adminRouter.use(rateLimitAdminWrites);
 
   adminRouter.get("/stats", authorize("dashboard"), statsController.get);
+  adminRouter.get("/section-visibility", authorize("dashboard"), visibilityController.get);
+  adminRouter.patch("/section-visibility/:section", authorize("dashboard"), visibilityController.update);
+  adminRouter.get("/site-settings", authorize("site-visibility"), eventSettingsController.getStart);
+  adminRouter.patch("/site-settings/event-start", authorize("site-visibility"), eventSettingsController.updateStart);
   adminRouter.get("/lookups/workshops", authorize("speakers"), lookupController.workshops);
   adminRouter.get("/lookups/competitions", authorize("teams"), lookupController.competitions);
 

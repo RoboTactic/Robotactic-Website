@@ -161,6 +161,8 @@ CREATE TABLE competitions (
     CONSTRAINT competitions_category_check
         CHECK (
             category_code IN (
+                'drones',
+                'controller',
                 'combat',
                 'simulation',
                 'sensing',
@@ -669,4 +671,15 @@ CREATE TABLE IF NOT EXISTS event_team_members (
     updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-INSERT INTO about_page (id,title_ar,title_en,subtitle_ar,subtitle_en,body_ar,body_en,values_ar,values_en,status) VALUES (1,'عن الملتقى','About RoboTactic','تجربة متكاملة تجمع بين التنافس والتعلّم واستعراض الابتكارات في بيئة تفاعلية ملهمة.','A robotics event bringing competition, learning and innovation together.','يرتكز الملتقى على مسابقات الروبوتات التي تستهدف طلاب وطالبات المرحلتين الثانوية والجامعية، بهدف تنمية مهارات التصميم والبرمجة وحل المشكلات والعمل الجماعي والتفكير الاستراتيجي من خلال تحديات عملية تحاكي مواقف واقعية. ويصاحب الملتقى معرض للمشاريع والابتكارات ذات العلاقة بالقطاعات الدفاعية في المملكة.','RoboTactic brings together robotics competitions for secondary-school and university students, developing design, programming, problem-solving, teamwork and strategic thinking. The event also features a showcase of projects and innovations related to defense sectors in Saudi Arabia.','["الابتكار والإبداع", "التفكير الاستراتيجي", "التميّز والجودة", "الاحترافية", "التعاون والعمل الجماعي"]'::jsonb,'["Innovation and creativity","Strategic thinking","Excellence and quality","Professionalism","Collaboration and teamwork"]'::jsonb,'published') ON CONFLICT (id) DO NOTHING;
+INSERT INTO about_page (id,title_ar,title_en,subtitle_ar,subtitle_en,body_ar,body_en,values_ar,values_en,status) VALUES (1,'من نحن','About Us','تجربة متكاملة تجمع بين التنافس والتعلّم واستعراض الابتكارات في بيئة تفاعلية ملهمة.','A robotics event bringing competition, learning and innovation together.','يرتكز الملتقى على مسابقات الروبوتات التي تستهدف طلاب وطالبات المرحلتين الثانوية والجامعية، بهدف تنمية مهارات التصميم والبرمجة وحل المشكلات والعمل الجماعي والتفكير الاستراتيجي من خلال تحديات عملية تحاكي مواقف واقعية. ويصاحب الملتقى معرض للمشاريع والابتكارات ذات العلاقة بالقطاعات الدفاعية في المملكة.','RoboTactic brings together robotics competitions for secondary-school and university students, developing design, programming, problem-solving, teamwork and strategic thinking. The event also features a showcase of projects and innovations related to defense sectors in Saudi Arabia.','["الابتكار والإبداع", "التفكير الاستراتيجي", "التميّز والجودة", "الاحترافية", "التعاون والعمل الجماعي"]'::jsonb,'["Innovation and creativity","Strategic thinking","Excellence and quality","Professionalism","Collaboration and teamwork"]'::jsonb,'published') ON CONFLICT (id) DO NOTHING;
+
+CREATE TABLE IF NOT EXISTS public_section_visibility (
+    section_key VARCHAR(30) PRIMARY KEY
+        CHECK (section_key IN ('competitions', 'workshops', 'projects', 'announcements', 'about', 'team', 'timeline')),
+    is_visible BOOLEAN NOT NULL DEFAULT TRUE,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+INSERT INTO public_section_visibility (section_key)
+VALUES ('competitions'), ('workshops'), ('projects'), ('announcements'), ('about'), ('team'), ('timeline')
+ON CONFLICT (section_key) DO NOTHING;

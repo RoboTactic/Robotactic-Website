@@ -11,7 +11,7 @@ export const hero = {
     'A technology forum exploring innovation and strategic thinking through robotics competitions and a student project showcase for secondary-school and university students.',
   ],
   primaryAction: { label: ['استكشف المسابقات', 'Explore competitions'], path: '/competitions' },
-  secondaryAction: { label: ['تعرّف على الملتقى', 'About the forum'], path: '/about' },
+  secondaryAction: { label: ['من نحن', 'About Us'], path: '/about' },
 };
 
 export const about = {

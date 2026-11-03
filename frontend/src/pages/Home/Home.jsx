@@ -8,22 +8,24 @@ import CtaSection from './sections/CtaSection';
 import HomeCircuit from './HomeCircuit';
 import { useRef } from 'react';
 import './Home.css';
+import { useSectionVisibility } from '../../services/api/SectionVisibility';
 
 /* Home — section order follows the approved Figma Home:
    Hero → About → Countdown → Competitions → Workshops → Live Now → CTA
    (Navbar and Footer come from the app shell). */
 export default function Home() {
   const rootRef = useRef(null);
+  const { isVisible } = useSectionVisibility();
   return (
     <div className="home" ref={rootRef}>
       <HomeCircuit rootRef={rootRef} />
       <HeroSection />
-      <AboutSection />
+      {isVisible('about') && <AboutSection />}
       <CountdownSection />
-      <CompetitionsPreview />
-      <WorkshopsPreview />
-      <LiveNowSection />
-      <CtaSection />
+      {isVisible('competitions') && <CompetitionsPreview />}
+      {isVisible('workshops') && <WorkshopsPreview />}
+      {isVisible('timeline') && <LiveNowSection />}
+      {isVisible('competitions') && <CtaSection />}
       <div className="home__end" aria-hidden="true" />
     </div>
   );

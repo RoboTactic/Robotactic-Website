@@ -7,9 +7,11 @@ import ApiState from '../../components/ApiState/ApiState';
 import circuitPattern from '../Workshops/assets/circuit-pattern.svg';
 import AboutCircuit from './AboutCircuit';
 import '../InfoPages.css';
+import { useSectionVisibility } from '../../services/api/SectionVisibility';
 
 export default function About() {
   const rootRef = useRef(null);
+  const { isPathVisible } = useSectionVisibility();
   const {data,loading,error,reload}=useApiData('about');
   const language=useContentLanguage();const ar=language==='ar';
   const values=data?.[`values_${language}`] || [];
@@ -20,11 +22,11 @@ export default function About() {
       <header className="info-page__hero">
         <img className="info-page__pattern" src={circuitPattern} alt="" />
         <div className="container">
-          <SectionHeading as="h1" size="h1" overline="ABOUT ROBOTACTIC" title={text('title')||(ar?'عن الملتقى':'About RoboTactic')} description={text('subtitle')} />
+          <SectionHeading as="h1" size="h1" overline="ABOUT ROBOTACTIC" title={text('title')||(ar?'من نحن':'About Us')} description={text('subtitle')} />
         </div>
       </header>
-      <section className="container info-page__body" aria-label={ar?'عن الملتقى':'About RoboTactic'}>
-        <ApiState {...{loading,error}} onRetry={reload} empty={!loading&&!error&&!data?(ar?'محتوى عن الملتقى قيد التحديث.':'About content is being updated.'):''}/>
+      <section className="container info-page__body" aria-label={ar?'من نحن':'About Us'}>
+        <ApiState {...{loading,error}} onRetry={reload} empty={!loading&&!error&&!data?(ar?'محتوى من نحن قيد التحديث.':'About content is being updated.'):''}/>
         {!loading&&!error&&data&&<><div className={`info-page__panel ${data.image_url?'info-page__panel--image':''}`}>
           <div><h2 id="about-purpose">{ar?'فكرة الملتقى':'The idea behind the forum'}</h2><p className="info-page__copy">{text('body')}</p></div>
           {data.image_url&&<img className="info-page__photo" src={data.image_url} alt={text('image_alt')} loading="lazy" referrerPolicy="no-referrer"/>}
@@ -36,9 +38,9 @@ export default function About() {
           </ul>
         </div>
         </>}<nav className="info-page__links" aria-label={ar?'استكشف الملتقى':'Explore the forum'}>
-          <Link to="/competitions">{ar?'استكشف المسابقات':'Explore competitions'}</Link>
-          <Link to="/workshops">{ar?'اطّلع على الورش':'View workshops'}</Link>
-          <Link to="/projects">{ar?'شاهد المشاريع':'View projects'}</Link>
+          {isPathVisible('/competitions') && <Link to="/competitions">{ar?'استكشف المسابقات':'Explore competitions'}</Link>}
+          {isPathVisible('/workshops') && <Link to="/workshops">{ar?'اطّلع على الورش':'View workshops'}</Link>}
+          {isPathVisible('/projects') && <Link to="/projects">{ar?'شاهد المشاريع':'View projects'}</Link>}
         </nav>
       </section>
     </div>

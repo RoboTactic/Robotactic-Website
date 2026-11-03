@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import Icon from '../Icon/Icon';
 import { useLanguage } from '../../services/api/publicContentLanguage';
+import { useSectionVisibility } from '../../services/api/SectionVisibility';
 import './Button.css';
 
 /* variant: primary (lime) | secondary (green outline) | outline (neutral outline)
@@ -20,6 +21,8 @@ export default function Button({
   className = '',
 }) {
   const { t } = useLanguage();
+  const { isPathVisible } = useSectionVisibility();
+  if (to && !isPathVisible(to)) return null;
   const cls = `button button--${variant} button--${size} ${fullWidth ? 'button--full' : ''} t-button ${className}`;
   const content = (
     <>

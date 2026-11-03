@@ -21,7 +21,7 @@ test('New scopes are limited to Super Admin even with forged section permissions
  for(const scope of ['about','team-members']){assert.ok(hasScope({role_code:'super_admin'},scope));for(const role_code of ['team_member','workshop_manager','competition_manager'])assert.equal(hasScope({role_code,permissions:[scope]},scope),false)}
 });
 test('HTTP routes preserve authentication, role checks and trusted Origin on all new operations',async()=>{
- let role='super_admin';const pool={async query(sql){if(sql.includes('FROM admin_users'))return {rowCount:1,rows:[{id:90000,role_code:role,permissions:[]}]};return {rowCount:0,rows:[]}}};
+ let role='super_admin';const pool={async query(sql){if(sql.includes('FROM public_section_visibility'))return {rows:[{is_visible:true}]};if(sql.includes('FROM admin_users'))return {rowCount:1,rows:[{id:90000,role_code:role,permissions:[]}]};return {rowCount:0,rows:[]}}};
  const app=express();app.use(express.json());app.use((req,_res,next)=>{req.cookies=Object.fromEntries((req.headers.cookie||'').split(';').filter(Boolean).map(p=>p.trim().split('=')));next()});app.use('/api',createApiRoutes({pool,authTokenSecret:process.env.AUTH_TOKEN_SECRET,corsOrigins:['http://localhost:5173'],isProduction:false}));app.use(errorHandler);
  const server=app.listen(0);await new Promise(r=>server.once('listening',r));const base=`http://127.0.0.1:${server.address().port}/api`;const cookie=`${COOKIE_NAME}=${createToken({id:90000,role_code:'super_admin'},process.env.AUTH_TOKEN_SECRET)}`;
  try{for(const [method,path] of [['GET','about'],['PATCH','about'],['GET','team-members'],['GET','team-members/1'],['POST','team-members'],['PATCH','team-members/1'],['DELETE','team-members/1'],['POST','images/about'],['POST','images/team-members']]){

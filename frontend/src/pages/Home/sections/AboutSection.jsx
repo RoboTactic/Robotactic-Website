@@ -13,8 +13,8 @@ export default function AboutSection() {
     <section className="home-section about" aria-labelledby="about-title" lang={language} dir={ar ? 'rtl' : 'ltr'}>
       <div className="container about__inner">
         <div className="about__heading">
-          <SectionHeading overline="ABOUT ROBOTACTIC" title={<span id="about-title">{translated(data, 'title', language) || (ar ? 'عن الملتقى' : 'About RoboTactic')}</span>} description={translated(data, 'subtitle', language)} />
-          <ApiState {...{ loading, error }} onRetry={reload} empty={!loading && !error && !data ? (ar ? 'محتوى عن الملتقى قيد التحديث.' : 'About content is being updated.') : ''} />
+          <SectionHeading overline="ABOUT ROBOTACTIC" title={<span id="about-title">{translated(data, 'title', language) || (ar ? 'من نحن' : 'About Us')}</span>} description={translated(data, 'subtitle', language)} />
+          <ApiState {...{ loading, error }} onRetry={reload} empty={!loading && !error && !data ? (ar ? 'محتوى من نحن قيد التحديث.' : 'About content is being updated.') : ''} />
           {!loading && !error && data && <p className="about__body info-page__copy">{translated(data, 'body', language)}</p>}
         </div>
         <div className="about__content">

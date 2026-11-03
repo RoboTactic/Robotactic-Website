@@ -6,6 +6,7 @@ import { prefersReducedMotion } from '../../motion/signalBus';
 import SignalArt from './SignalArt';
 import { destinations, resolveSignal } from './resolveSignal';
 import './NotFound.css';
+import { useSectionVisibility } from '../../services/api/SectionVisibility';
 
 const copy = {
   ar: {
@@ -64,6 +65,7 @@ function usePointerNodes(rootRef, artRef) {
 
 export default function NotFound() {
   const location = useLocation(); const navigate = useNavigate();
+  const { isPathVisible } = useSectionVisibility();
   const language = useContentLanguage(); const ar = language === 'ar'; const text = copy[language];
   const rootRef = useRef(null); const artRef = useRef(null); const timer = useRef(0);
   const [run, setRun] = useState(0); const [attempts, setAttempts] = useState(0);
@@ -89,7 +91,8 @@ export default function NotFound() {
     timer.current = setTimeout(() => {
       const result = resolveSignal(location.pathname);
       setAttempts((value) => value + 1);
-      if (result.kind === 'exact') navigate(`${result.path}${location.search}${location.hash}`, { replace: true });
+      if (result.path && !isPathVisible(result.path)) setStatus({ kind: 'none' });
+      else if (result.kind === 'exact') navigate(`${result.path}${location.search}${location.hash}`, { replace: true });
       else setStatus(result);
     }, prefersReducedMotion() ? 250 : 1350);
   };
@@ -134,14 +137,14 @@ export default function NotFound() {
           <div id="nf-status" className={`nf-status nf-status--${status.kind}`} role="status" aria-live="polite">
             {status.kind === 'reconnecting' && <p>{text.retrying}</p>}
             {status.kind === 'noBack' && <p>{text.noBack}</p>}
-            {status.kind === 'near' && <>
+            {status.kind === 'near' && isPathVisible(status.path) && <>
               <p>{text.found(status.label[ar ? 0 : 1])}</p>
               <Link className="nf-suggest" to={status.path}>{text.go(status.label[ar ? 0 : 1])}<span aria-hidden="true" className="nf-arrow" /></Link>
             </>}
             {(status.kind === 'none' || status.kind === 'noBack') && <>
               {status.kind === 'none' && <p>{text.none(attempts)}</p>}
               <nav aria-label={text.sections}><ul className="nf-sections">
-                {destinations.filter(({ path }) => path !== '/').map(({ path, label }) => <li key={path}><Link to={path}>{label[ar ? 0 : 1]}</Link></li>)}
+                {destinations.filter(({ path }) => path !== '/' && isPathVisible(path)).map(({ path, label }) => <li key={path}><Link to={path}>{label[ar ? 0 : 1]}</Link></li>)}
               </ul></nav>
             </>}
           </div>

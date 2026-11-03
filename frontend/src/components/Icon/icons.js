@@ -1,6 +1,7 @@
-/* Line icons exported from the Figma `Icon / *` components (24px grid,
-   1.75 stroke, round caps). Each path is placed at its Figma offset. */
+/* Figma line icons and matching additions (24px grid, 1.75 stroke, round caps).
+   Each path is placed at its component offset. */
 export const ICONS = {
+  drone: [{ d: 'M 9 9 H 15 V 15 H 9 Z M 9 9 L 6 6 M 15 9 L 18 6 M 9 15 L 6 18 M 15 15 L 18 18 M 8 5 A 3 3 0 1 0 2 5 A 3 3 0 1 0 8 5 M 22 5 A 3 3 0 1 0 16 5 A 3 3 0 1 0 22 5 M 8 19 A 3 3 0 1 0 2 19 A 3 3 0 1 0 8 19 M 22 19 A 3 3 0 1 0 16 19 A 3 3 0 1 0 22 19', x: 0, y: 0 }],
   search: [{ d: 'M 18 10.5 A 7.5 7.5 0 1 0 3 10.5 A 7.5 7.5 0 1 0 18 10.5 Z M 16 16 L 21 21', x: 0, y: 0 }],
   eye: [{ d: 'M 0 7.5 C 2.5 2.5 6.5 0 11 0 C 15.5 0 19.5 2.5 22 7.5 C 19.5 12.5 15.5 15 11 15 C 6.5 15 2.5 12.5 0 7.5 Z', x: 1, y: 4.5 }, { d: 'M 6 3 A 3 3 0 1 1 0 3 A 3 3 0 1 1 6 3 Z', x: 9, y: 9 }],
   eyeOff: [{ d: 'M 0 7.5 C 2.5 2.5 6.5 0 11 0 C 15.5 0 19.5 2.5 22 7.5 C 19.5 12.5 15.5 15 11 15 C 6.5 15 2.5 12.5 0 7.5 Z', x: 1, y: 4.5 }, { d: 'M 0 0 L 18 18', x: 3, y: 3 }],

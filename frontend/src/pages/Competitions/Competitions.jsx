@@ -3,21 +3,13 @@ import { useApiData } from '../../services/api/useApiData';
 import { presentCompetition } from '../../services/api/presentRecords';
 import ApiState from '../../components/ApiState/ApiState';
 import CompetitionCard from '../../components/CompetitionCard/CompetitionCard';
-import cansatIcon from './assets/cansat.svg';
+import Icon from '../../components/Icon/Icon';
 import circuitPattern from '../Workshops/assets/circuit-pattern.svg';
-import controllerIcon from './assets/controller.svg';
 import ctaPattern from './assets/cta-pattern.svg';
-import sensorIcon from './assets/sensor.svg';
 import CompetitionsCircuit from './CompetitionsCircuit';
 import CompetitionsComingSoon from './CompetitionsComingSoon';
 import { useLanguage } from '../../services/api/publicContentLanguage';
 import './Competitions.css';
-
-const competitionIcons = {
-  cansat: cansatIcon,
-  controller: controllerIcon,
-  sensor: sensorIcon,
-};
 
 export default function Competitions() {
   const { data, loading, error, reload } = useApiData('competitions');
@@ -52,7 +44,7 @@ export default function Competitions() {
             <ApiState loading={loading} error={error} onRetry={reload} />
             {competitions.map((competition) => (
               <CompetitionCard key={competition.id} competition={competition}
-                icon={competitionIcons[competition.icon]} />
+                icon={<Icon name={competition.icon} />} />
             ))}
           </div>
         )}

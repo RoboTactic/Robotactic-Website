@@ -12,11 +12,12 @@ import Timeline from './pages/Timeline/Timeline';
 import Dashboard from './pages/Dashboard/Dashboard';
 import NotFound from './pages/NotFound/NotFound';
 import { useLanguage } from './services/api/publicContentLanguage';
+import { PublicVisibilityState, useSectionVisibility } from './services/api/SectionVisibility';
 
 /* Browser titles for the public routes; the 404 page sets its own, and the Dashboard is left alone. */
 const pageTitles = {
   '/': ['RoboTactic 2026 — ابتكار يقوده التفكير', 'RoboTactic 2026 — Innovation driven by ideas'],
-  '/about': ['من نحن | RoboTactic', 'About | RoboTactic'],
+  '/about': ['من نحن | RoboTactic', 'About Us | RoboTactic'],
   '/competitions': ['المسابقات | RoboTactic', 'Competitions | RoboTactic'],
   '/workshops': ['ورش العمل | RoboTactic', 'Workshops | RoboTactic'],
   '/projects': ['معرض المشاريع | RoboTactic', 'Project Showroom | RoboTactic'],
@@ -32,9 +33,16 @@ function ScrollToTop() {
   return null;
 }
 
+function PublicPage({ children }) {
+  const { pathname } = useLocation();
+  const { isPathVisible } = useSectionVisibility();
+  return isPathVisible(pathname) ? children : <NotFound />;
+}
+
 export default function App() {
   const { pathname } = useLocation();
   const isDashboard = pathname.startsWith('/dashboard');
+  const { isPathVisible } = useSectionVisibility();
   // Share the approved Refined Dark surface tokens with the dashboard; its
   // compact forms and navigation retain their own layout.
   useLayoutEffect(() => {
@@ -44,30 +52,34 @@ export default function App() {
   }, [isDashboard]);
   const { language, t } = useLanguage();
   useEffect(() => {
-    if (isDashboard) return;
+    if (isDashboard || !isPathVisible(pathname)) return;
     const title = pageTitles[pathname.replace(/\/+$/, '') || '/'];
     if (title) document.title = t(title);
     document.querySelector('meta[name="description"]')?.setAttribute('content', t(metaDescription));
-  }, [isDashboard, pathname, language]);
+  }, [isDashboard, pathname, language, isPathVisible]);
   return (
     <>
       <ScrollToTop />
       {!isDashboard && <Navbar />}
-      <main>
+      <main><PublicVisibilityShell isDashboard={isDashboard}>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/competitions" element={<Competitions />} />
-          <Route path="/workshops" element={<Workshops />} />
-          <Route path="/projects" element={<Projects />} />
-          <Route path="/team" element={<Team />} />
-          <Route path="/timeline" element={<Timeline />} />
+          <Route path="/about" element={<PublicPage><About /></PublicPage>} />
+          <Route path="/competitions" element={<PublicPage><Competitions /></PublicPage>} />
+          <Route path="/workshops" element={<PublicPage><Workshops /></PublicPage>} />
+          <Route path="/projects" element={<PublicPage><Projects /></PublicPage>} />
+          <Route path="/team" element={<PublicPage><Team /></PublicPage>} />
+          <Route path="/timeline" element={<PublicPage><Timeline /></PublicPage>} />
           <Route path="/dashboard/*" element={<Dashboard />} />
           {/* Unknown public URLs only; /dashboard/* is matched above and keeps its own auth/access states. */}
           <Route path="*" element={<NotFound />} />
         </Routes>
-      </main>
+      </PublicVisibilityShell></main>
       {!isDashboard && <Footer />}
     </>
   );
+}
+
+function PublicVisibilityShell({ isDashboard, children }) {
+  return isDashboard ? children : <PublicVisibilityState>{children}</PublicVisibilityState>;
 }

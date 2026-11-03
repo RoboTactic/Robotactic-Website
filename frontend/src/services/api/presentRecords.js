@@ -1,6 +1,7 @@
 const categoryLabels = {
+  drones: ['الدرون', 'Drones'], controller: ['وحدة التحكم', 'Controller'],
   combat: ['قتال آلي', 'Combat'], simulation: ['محاكاة', 'Simulation'],
-  sensing: ['استشعار', 'Sensing'], other: ['أخرى', 'Other'],
+  sensing: ['المستشعرات', 'Sensors'], other: ['أخرى', 'Other'],
   defense: ['دفاعي', 'Defense'], invention: ['ابتكاري', 'Invention'],
 };
 
@@ -11,23 +12,28 @@ const dateOf = (value, options) => value ? new Intl.DateTimeFormat(locale(), opt
 
 export function presentCompetition(row) {
   const category = categoryLabels[row.category_code] || categoryLabels.other;
-  const size = row.team_size_min == null && row.team_size_max == null ? '—'
+  const pending = localized('يُحدَّد لاحقًا', 'To be announced');
+  const size = row.team_size_min == null && row.team_size_max == null ? pending
     : row.team_size_min != null && row.team_size_max != null ? `${row.team_size_min}–${row.team_size_max}`
       : String(row.team_size_min ?? row.team_size_max);
-  const date = row.start_at ? dateOf(row.start_at, { dateStyle: 'medium' }) : '—';
+  const formatter = new Intl.DateTimeFormat(locale(), { dateStyle: 'medium', timeZone: 'Asia/Riyadh' });
+  const date = row.start_at
+    ? row.end_at ? formatter.formatRange(new Date(row.start_at), new Date(row.end_at)) : formatter.format(new Date(row.start_at))
+    : pending;
   return {
     id: row.id,
     title: localized(row.name_ar, row.name_en),
+    description: localized(row.description_ar, row.description_en),
     imageUrl: row.image_url || '',
     level: row.audience_type || null,
     focus: category[isEnglish() ? 1 : 0],
     categoryLabel: category[isEnglish() ? 1 : 0],
-    audience: row.audience_type || '—',
+    audience: row.audience_type || pending,
     teamSize: size,
     date,
     registrationStatus: row.registration_status,
     registrationUrl: row.registration_url,
-    icon: row.category_code === 'sensing' ? 'sensor' : row.category_code === 'combat' ? 'controller' : 'simulation',
+    icon: ({ drones: 'drone', controller: 'controller', sensing: 'sensor', combat: 'controller', simulation: 'simulation' })[row.category_code] || 'competition',
   };
 }
 

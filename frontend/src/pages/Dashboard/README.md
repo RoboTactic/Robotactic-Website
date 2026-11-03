@@ -1,5 +1,13 @@
 # Dashboard frontend
 
+## Public section visibility
+
+Apply `npm run db:migrate` from `backend` before using the visibility controls (migration 007). Each public content section has a **Hide this section / Show this section** control above its listing; About has the same control above its editor. The dashboard home also groups the available controls, including Timeline for Super Admin.
+
+Hiding a section removes its navigation links, footer links, Home previews and related calls to action. Its direct public page and public API return unavailable; the admin editor and saved records remain accessible so the section can be restored. Server-side permissions match the section editor; About, Team and Timeline are restricted to Super Admin. Visibility is stored in PostgreSQL and applies to Arabic and English together. Public pages refresh it on navigation, focus and every 30 seconds while visible. Initial loading or an unavailable configuration never shows optional sections.
+
+The Super Admin dashboard home also has a **RoboTactic start date and time** control. Saving it updates `site_settings.event_start_at`, which drives the live countdown on the public Home page. The date editor uses local time and sends the matching UTC timestamp; date and time are both required before saving.
+
 Open `/dashboard` after starting the frontend with `npm run dev`. The current dashboard uses the admin API and requires an approved team account. Configure the frontend/backend as described in their existing setup documentation; authentication and database setup remain owned by the event administrator.
 
 Sign-in uses a dropdown of active team account login names and a password. A Super Admin can create and edit accounts under Users and permissions, assign one or more dashboard sections, and disable accounts. Email is optional. The server checks permissions on every request.

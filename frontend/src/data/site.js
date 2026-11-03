@@ -3,13 +3,15 @@
 
 export const navLinks = [
   { label: 'الرئيسية', path: '/', labelEn: 'Home' },
-  { label: 'عن الملتقى', path: '/about', labelEn: 'About' },
   { label: 'المسابقات', path: '/competitions', labelEn: 'Competitions' },
   { label: 'ورش العمل', path: '/workshops', labelEn: 'Workshops' },
   { label: 'المشاريع', path: '/projects', labelEn: 'Projects' },
   { label: 'الفريق', path: '/team', labelEn: 'Team' },
   { label: 'الجدول الزمني', path: '/timeline', labelEn: 'Timeline' },
+  { label: 'من نحن', path: '/about', labelEn: 'About Us' },
 ];
+
+export const eventVenue = ['مركز الملك فيصل للمؤتمرات', 'King Faisal Convention Center'];
 
 export const brand = {
   name: 'RoboTactic',

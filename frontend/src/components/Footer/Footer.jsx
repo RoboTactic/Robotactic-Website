@@ -4,11 +4,13 @@ import LanguageSwitcher from '../LanguageSwitcher/LanguageSwitcher';
 import { brand, navLinks } from '../../data/site';
 import { useLanguage } from '../../services/api/publicContentLanguage';
 import './Footer.css';
+import { useSectionVisibility } from '../../services/api/SectionVisibility';
 
 export default function Footer() {
   const { t } = useLanguage();
+  const { isPathVisible } = useSectionVisibility();
   // Home is reached through the logo, so the footer lists the other six pages (as in Figma)
-  const links = navLinks.filter(l => l.path !== '/');
+  const links = navLinks.filter(l => l.path !== '/' && isPathVisible(l.path));
   return (
     <footer className="footer">
       <div className="container footer__inner">

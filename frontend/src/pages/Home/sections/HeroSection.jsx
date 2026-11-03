@@ -2,6 +2,8 @@ import Chip from '../../../components/Chip/Chip';
 import Button from '../../../components/Button/Button';
 import CircuitPattern from '../../../components/CircuitPattern/CircuitPattern';
 import { hero } from '../../../data/home';
+import { eventVenue } from '../../../data/site';
+import { useSectionVisibility } from '../../../services/api/SectionVisibility';
 import { useLanguage } from '../../../services/api/publicContentLanguage';
 
 /* Venue image (public/images): WebP variants for every width, original PNG as fallback. */
@@ -16,6 +18,7 @@ function splitTitle(title) {
 
 export default function HeroSection() {
   const { t } = useLanguage();
+  const { isPathVisible } = useSectionVisibility();
   const [lead, accent] = splitTitle(t(hero.title));
   return (
     <section className="hero" aria-labelledby="hero-title">
@@ -30,10 +33,11 @@ export default function HeroSection() {
             {accent && <span className="hero__title-accent">{accent}</span>}
           </h1>
           <p className="hero__description t-body-lg">{t(hero.description)}</p>
-          <div className="hero__actions">
+          <p className="hero__venue t-body-lg">{t('المكان:', 'Venue:')} {t(eventVenue)}</p>
+          {(isPathVisible(hero.primaryAction.path) || isPathVisible(hero.secondaryAction.path)) && <div className="hero__actions">
             <Button to={hero.primaryAction.path}>{t(hero.primaryAction.label)}</Button>
             <Button to={hero.secondaryAction.path} variant="outline">{t(hero.secondaryAction.label)}</Button>
-          </div>
+          </div>}
         </div>
         <div className="hero__visual">
           <picture className="hero__media">
