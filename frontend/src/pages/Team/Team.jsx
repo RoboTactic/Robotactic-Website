@@ -1,40 +1,94 @@
 import { useRef } from 'react';
 import SectionHeading from '../../components/SectionHeading/SectionHeading';
+import Icon from '../../components/Icon/Icon';
 import circuitPattern from '../Workshops/assets/circuit-pattern.svg';
 import TeamCircuit from './TeamCircuit';
-import TeamComingSoon from './TeamComingSoon';
+import { ROLES, departments, leadershipTiers } from '../../data/team';
+import { useLanguage } from '../../services/api/publicContentLanguage';
 import '../InfoPages.css';
-import { useApiData } from '../../services/api/useApiData';
-import { useContentLanguage, translated } from '../../services/api/publicContentLanguage';
-import ApiState from '../../components/ApiState/ApiState';
+import './Team.css';
 
+/*
+  Team — the organizing structure as one circuit network: a single leadership trunk
+  (Director → Co-Directors → General Management) that feeds seven department nodes.
+  Content comes from data/team.js; TeamCircuit draws the connectors from the real layout.
+*/
 export default function Team() {
   const rootRef = useRef(null);
-  const {data,loading,error,reload}=useApiData('team-members');
-  const members=data||[];const language=useContentLanguage();const ar=language==='ar';
+  const { language, en, dir, t } = useLanguage();
+  const other = en ? 'ar' : 'en';
   return (
-    <div ref={rootRef} className="info-page" lang={language} dir={ar?'rtl':'ltr'}>
+    <div ref={rootRef} className="info-page team-page" lang={language} dir={dir}>
       <TeamCircuit rootRef={rootRef} />
       <header className="info-page__hero">
         <img className="info-page__pattern" src={circuitPattern} alt="" />
         <div className="container">
-          <SectionHeading as="h1" size="h1" overline="TEAM" title={ar?'الفريق':'Team'}
-            description={ar?'تعرّف على فريق تنظيم RoboTactic.':'Meet the RoboTactic organizing team.'} />
+          <SectionHeading as="h1" size="h1" overline={t(['الفريق', 'TEAM'])} overlineLang={language}
+            title={t(['العقول خلف الابتكار', 'The People Behind the Innovation'])}
+            description={t([
+              'إدارة واحدة وسبعة أقسام مترابطة، تعمل معًا لتصنع تجربة RoboTactic.',
+              'One leadership team and seven connected departments, working together to bring RoboTactic to life.',
+            ])} />
         </div>
       </header>
-      <section className="container info-page__body team-grid" aria-label={ar?'فريق التنظيم':'Organizing team'}>
-        <ApiState {...{loading,error}} onRetry={reload}/>
-        {/* Coming Soon only for a successful, empty response — loading and errors stay with ApiState. */}
-        {!loading&&!error&&Array.isArray(data)&&!data.length&&<TeamComingSoon/>}
-        {!loading&&!error&&members.map(member=><article className="info-page__panel team-card" key={member.id}>
-          {member.image_url&&<img className="team-card__photo" src={member.image_url} alt={translated(member,'name',language)} loading="lazy" referrerPolicy="no-referrer"/>}
-          <h2>{translated(member,'name',language)}</h2><p className="team-card__role">{translated(member,'role',language)}</p>
-          {translated(member,'bio',language)&&<p className="info-page__copy">{translated(member,'bio',language)}</p>}
-          <nav className="team-card__contacts" aria-label={`${ar?'التواصل مع':'Contact'} ${translated(member,'name',language)}`}>
-            {member.public_email&&<a href={`mailto:${member.public_email}`}>{ar?'بريد التواصل':'Email'}</a>}
-            {[['contact_url',ar?'تواصل':'Contact'],['linkedin_url','LinkedIn'],['x_url','X']].map(([key,label])=>member[key]&&<a href={member[key]} key={key} target="_blank" rel="noopener noreferrer">{label}</a>)}
-          </nav>
-        </article>)}
+
+      <section className="container team-section team-section--leadership" aria-labelledby="team-leadership-title">
+        <div className="team-section__head">
+          <h2 id="team-leadership-title" className="t-h2">{t(['الإدارة العليا', 'Executive Leadership'])}</h2>
+          <p className="t-body">{t(['ترسم الاتجاه وتربط عمل الأقسام ببعضها.', 'Setting the direction and connecting every department.'])}</p>
+        </div>
+        <ol className="team-tiers">
+          {leadershipTiers.map((tier) => (
+            <li key={tier.key} className={`team-tier team-tier--${tier.key}`}>
+              <ul className="team-tier__members">
+                {tier.members.map((member) => (
+                  <li key={member.name[1]}>
+                    <article className={`team-person${tier.key === 'director' ? ' team-person--director' : ''}`}>
+                      <p className="team-person__role">{t(member.role)}</p>
+                      <h3 className="team-person__name">{t(member.name)}</h3>
+                    </article>
+                  </li>
+                ))}
+              </ul>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      <section className="container team-section team-section--departments" aria-labelledby="team-departments-title">
+        <div className="team-section__head">
+          <h2 id="team-departments-title" className="t-h2">{t(['الأقسام', 'Departments'])}</h2>
+          <p className="t-body">{t(['سبعة أقسام، كل منها عقدة في شبكة واحدة.', 'Seven departments, each one a node in a single network.'])}</p>
+        </div>
+        <ul className="team-departments">
+          {departments.map((dept, i) => (
+            <li key={dept.key}>
+              <article className="team-dept" aria-labelledby={`team-dept-${dept.key}`}>
+                <div className="team-dept__head">
+                  <span className="team-dept__icon"><Icon name={dept.icon} size={22} /></span>
+                  <span className="team-dept__index" lang="en" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                </div>
+                <h3 id={`team-dept-${dept.key}`} className="team-dept__name">{t(dept.name)}</h3>
+                <p className="team-dept__alt" lang={other}>{en ? dept.name[0] : dept.name[1]}</p>
+                <dl className="team-dept__people">
+                  <div className="team-dept__member team-dept__member--leader"><dt>{t(ROLES.leader)}</dt><dd>{t(dept.leader)}</dd></div>
+                  <div className="team-dept__member"><dt>{t(ROLES.viceLeader)}</dt><dd>{t(dept.viceLeader)}</dd></div>
+                </dl>
+              </article>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section className="container team-section team-section--closing" aria-labelledby="team-closing-title">
+        <div className="team-closing">
+          <p className="team-closing__slogan">{t(['ابتكار يقوده التفكير', 'Innovation driven by ideas'])}</p>
+          <h2 id="team-closing-title" className="t-h2">{t(['نبنيها معًا', 'Built together'])}</h2>
+          <p className="t-body-lg">{t([
+            'الابتكار عمل جماعي؛ كل قسم يضيف حلقة إلى الشبكة، ومعًا نصنع تجربة RoboTactic.',
+            'Innovation is a team effort. Every department adds a link to the network, and together we build RoboTactic.',
+          ])}</p>
+        </div>
       </section>
     </div>
   );

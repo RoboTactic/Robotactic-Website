@@ -57,4 +57,9 @@ export const ICONS = {
     { d: 'M 0 0 L 16 0 L 16 11 L 0 11 Z', x: 4, y: 4 }, { d: 'M 2 0 L 0 5', x: 7, y: 15 }, { d: 'M 0 0 L 2 5', x: 15, y: 15 },
     { d: 'M 0 2 L 0 0', x: 8, y: 10 }, { d: 'M 0 5 L 0 0', x: 12, y: 7 }, { d: 'M 0 3 L 0 0', x: 16, y: 9 },
   ],
+  // Team departments (drawn on the same 24px grid, 1.75 stroke)
+  chip: [{ d: 'M 7 7 H 17 V 17 H 7 Z M 10 10 H 14 V 14 H 10 Z M 9.5 3 V 7 M 14.5 3 V 7 M 9.5 17 V 21 M 14.5 17 V 21 M 3 9.5 H 7 M 3 14.5 H 7 M 17 9.5 H 21 M 17 14.5 H 21', x: 0, y: 0 }],
+  megaphone: [{ d: 'M 3 10 V 14 H 7 L 16 19 V 5 L 7 10 H 3 M 7 14 L 8.5 20 H 11 L 10 15.5 M 19.5 9.5 A 3 3 0 0 1 19.5 14.5', x: 0, y: 0 }],
+  route: [{ d: 'M 4 6 A 2 2 0 1 0 8 6 A 2 2 0 1 0 4 6 Z M 16 18 A 2 2 0 1 0 20 18 A 2 2 0 1 0 16 18 Z M 6 8 V 10 L 8 12 H 16 L 18 14 V 16 M 13 4 H 20 M 13 8 H 17', x: 0, y: 0 }],
+  chat: [{ d: 'M 3 4 H 15 V 13 H 8 L 4 16.5 V 13 H 3 Z M 15 8 H 21 V 17 H 20 V 20.5 L 16 17 H 9 V 13', x: 0, y: 0 }],
 };
