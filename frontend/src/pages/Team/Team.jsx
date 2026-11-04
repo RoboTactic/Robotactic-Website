@@ -1,9 +1,9 @@
-import { useRef } from 'react';
+import { Fragment, useRef } from 'react';
 import SectionHeading from '../../components/SectionHeading/SectionHeading';
 import Icon from '../../components/Icon/Icon';
 import circuitPattern from '../Workshops/assets/circuit-pattern.svg';
 import TeamCircuit from './TeamCircuit';
-import { ROLES, departments, leadershipTiers } from '../../data/team';
+import { ROLES, departments, leadershipTiers, websiteCommittee } from '../../data/team';
 import { useLanguage } from '../../services/api/publicContentLanguage';
 import '../InfoPages.css';
 import './Team.css';
@@ -62,8 +62,9 @@ export default function Team() {
         </div>
         <ul className="team-departments">
           {departments.map((dept, i) => (
-            <li key={dept.key}>
-              <article className="team-dept" aria-labelledby={`team-dept-${dept.key}`}>
+            <Fragment key={dept.key}>
+            <li className={dept.key === 'public-relations' ? 'team-department-item--last' : undefined}>
+              <article className={`team-dept${dept.key === websiteCommittee.department ? ' team-dept--technical' : ''}`} aria-labelledby={`team-dept-${dept.key}`}>
                 <div className="team-dept__head">
                   <span className="team-dept__icon"><Icon name={dept.icon} size={22} /></span>
                   <span className="team-dept__index" lang="en" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
@@ -76,6 +77,24 @@ export default function Team() {
                 </dl>
               </article>
             </li>
+            {dept.key === websiteCommittee.department && <li className="team-committee-item">
+              <section className="team-committee" aria-labelledby="team-committee-title" aria-describedby="team-committee-parent">
+                <div className="team-committee__head">
+                  <h3 id="team-committee-title" className="team-committee__title">{t(websiteCommittee.name)}</h3>
+                  <p id="team-committee-parent" className="team-committee__parent">{t(['تابعة للقسم التقني', 'Part of the Technical Department'])}</p>
+                </div>
+                <div className="team-committee__branches">
+                  {websiteCommittee.branches.map(branch => <section className="team-committee__branch" key={branch.key} aria-labelledby={`team-branch-${branch.key}`}>
+                    <h4 id={`team-branch-${branch.key}`}>{t(branch.name)}</h4>
+                    <p className="team-committee__lead"><span>{t(ROLES.leader)}</span><strong>{t(branch.lead)}</strong></p>
+                    <ul className="team-committee__members" aria-label={t(['أعضاء الفريق', 'Team members'])}>
+                      {branch.members.map(member => <li key={member[1]}>{t(member)}</li>)}
+                    </ul>
+                  </section>)}
+                </div>
+              </section>
+            </li>}
+            </Fragment>
           ))}
         </ul>
       </section>

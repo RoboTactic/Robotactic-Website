@@ -81,6 +81,34 @@
 .team-dept__name { margin-block-start: 2px; }
 .team-dept__alt + .team-dept__people { margin-block-start: 10px; }
 
+/* Website committee: one subordinate node, with two clearly labelled branches. */
+.team-committee-item { inline-size: 100%; justify-self: center; margin-block-start: 20px; }
+.team-committee {
+  position: relative; padding: 16px; border: 1px solid rgb(22 166 106 / .24); border-radius: 18px;
+  background: var(--rt-card, var(--color-surface-card));
+  box-shadow: var(--rt-shadow, none);
+}
+.team-committee::before {
+  content: ''; position: absolute; inset-block-start: calc(var(--team-port) / -2); inset-inline-start: calc(50% - var(--team-port) / 2);
+  inline-size: var(--team-port); block-size: var(--team-port); border-radius: 50%;
+  border: 1.5px solid var(--color-brand-primary); background: var(--color-surface-page);
+}
+.team-committee.is-active::before, .team-committee.is-done::before {
+  border-color: var(--color-brand-accent); background: var(--color-brand-accent); box-shadow: 0 0 0 4px rgb(182 242 58 / .14), 0 0 12px rgb(182 242 58 / .4);
+}
+.team-committee__head { display: grid; gap: 2px; margin-block-end: 12px; padding-block-end: 10px; border-block-end: 1px solid rgb(22 166 106 / .16); }
+.team-committee__parent { font: 500 12px/20px var(--font-arabic-base); color: var(--color-text-secondary); }
+.team-committee__title { font: 700 18px/28px var(--font-arabic); color: var(--color-text-primary); }
+.team-committee__branches { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.team-committee__branch + .team-committee__branch { padding-inline-start: 12px; border-inline-start: 1px solid rgb(22 166 106 / .16); }
+.team-committee__branch h4 { margin: 0 0 6px; font: 600 13px/20px var(--font-arabic); color: var(--color-text-brand); overflow-wrap: anywhere; }
+.team-committee__lead { display: grid; gap: 2px; margin: 0; }
+.team-committee__lead span { color: var(--color-text-secondary); font: 500 12px/20px var(--font-arabic-base); }
+.team-committee__lead strong { color: var(--color-text-primary); font: 600 14px/22px var(--font-arabic); overflow-wrap: anywhere; }
+.team-committee__members { display: grid; gap: 4px; margin: 8px 0 0; padding: 0; padding-inline-start: 8px; border-inline-start: 1px solid var(--color-border-brand); list-style: none; }
+.team-committee__members li { color: var(--color-text-secondary); font: 500 13px/22px var(--font-arabic); overflow-wrap: anywhere; }
+.team-page[lang="en"] :is(.team-committee__parent, .team-committee__title, .team-committee__branch h4, .team-committee__lead span, .team-committee__lead strong, .team-committee__members li) { font-family: var(--font-latin); }
+
 /* ── Closing ────────────────────────────────────────────────────────────── */
 .team-section--closing { padding-block: 56px 96px; }
 .team-closing {
@@ -117,14 +145,16 @@
 
   .team-departments { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 56px 24px; }
   .team-departments > li { grid-column: span 2; }
-  .team-departments > li:last-child:nth-child(odd) { grid-column: 2 / span 2; }
+  .team-departments > .team-department-item--last { grid-column: 2 / span 2; }
+  .team-departments > .team-committee-item { grid-column: 2 / span 2; margin-block-start: 0; }
   .team-dept { padding: 24px; }
   .team-closing { padding: 48px 40px; }
 }
 @media (min-width: 1100px) {
   .team-departments { grid-template-columns: repeat(8, minmax(0, 1fr)); }
-  .team-departments > li:last-child:nth-child(odd) { grid-column: span 2; }
+  .team-departments > .team-department-item--last { grid-column: span 2; }
   .team-departments > li:nth-child(5) { grid-column: 2 / span 2; }
+  .team-departments > .team-committee-item { grid-column: 4 / span 2; order: 1; }
 }
 
 /* ── Response (pointer only; content never depends on it) ──────────────── */

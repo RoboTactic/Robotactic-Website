@@ -90,10 +90,19 @@ function desktopNetwork(ctx) {
   // Departments: resume below the heading, one bus per row.
   const rows = branch(x, deptEls, rect);
   const start = [x, head.bottom + 14];
-  const deptTrunk = [start, [x, rows[rows.length - 1].y]];
+  const committee = rect(q('.team-committee'));
+  // When the committee occupies its own row, keep the department trunk in the gaps.
+  const trunkParts = (fromY, toY) => {
+    if (!committee || toY <= committee.top || fromY >= committee.bottom) return [[[x, fromY], [x, toY]]];
+    return [
+      fromY < committee.top - 10 && [[x, fromY], [x, committee.top - 10]],
+      toY > committee.bottom + 10 && [[x, committee.bottom + 10], [x, toY]],
+    ].filter(Boolean);
+  };
+  const deptTrunk = trunkParts(start[1], rows[rows.length - 1].y);
   const deptSignals = [];
   let y = start[1];
-  rows.forEach((row) => { deptSignals.push([[x, y], [x, row.y]], ...row.drops.map((d) => d.half)); y = row.y; });
+  rows.forEach((row) => { deptSignals.push(...trunkParts(y, row.y), ...row.drops.map((d) => d.half)); y = row.y; });
 
   const junctions = (list) => list.map((row) => ({ at: [x, row.y], r: 3.5, mark: 'auto' }));
   return [
@@ -107,7 +116,7 @@ function desktopNetwork(ctx) {
     },
     {
       key: 'departments', trigger: q('.team-departments'),
-      paths: [{ pts: deptTrunk }, ...rows.flatMap((r) => [{ pts: r.bus }, ...r.drops.map((d) => ({ pts: d.pts }))])],
+      paths: [...deptTrunk.map((pts) => ({ pts })), ...rows.flatMap((r) => [{ pts: r.bus }, ...r.drops.map((d) => ({ pts: d.pts }))])],
       nodes: [{ at: start, r: 4.5, kind: 'ring', mark: 0 }, ...junctions(rows)],
       signals: deptSignals,
       domNodes: rows.flatMap((r) => r.drops.map((d) => ({ el: d.el, at: d.pts[1], mark: 'auto' }))),
@@ -115,6 +124,23 @@ function desktopNetwork(ctx) {
       dur: 1100,
     },
   ];
+}
+
+/* A dedicated branch leaves the Technical Department and lands on the committee's port. */
+function websiteBranch({ q, rect }) {
+  const technical = rect(q('.team-dept--technical'));
+  const el = q('.team-committee');
+  const committee = rect(el);
+  if (!technical || !committee || committee.top <= technical.bottom) return null;
+  const y = technical.bottom + (committee.top - technical.bottom) / 2;
+  const pts = [[technical.cx, technical.bottom], [technical.cx, y], [committee.cx, y], [committee.cx, committee.top]];
+  return {
+    key: 'website-committee', trigger: el,
+    paths: [{ pts }], signals: [pts],
+    nodes: [{ at: [technical.cx, technical.bottom], r: 3, kind: 'dot', mark: 0 }],
+    domNodes: [{ el, at: pts[pts.length - 1], mark: 'auto' }],
+    reveal: [{ el }],
+  };
 }
 
 /* Mobile: one rail on the inline-start side, a stub into each card's port. */
@@ -166,7 +192,7 @@ function ending({ q, rect, vw }) {
 function compose(ctx) {
   const network = ctx.vw >= DESKTOP_MIN ? desktopNetwork(ctx) : mobileRail(ctx);
   if (!network.length) return null;
-  return { stations: [heroMesh(ctx, ctx.q('.info-page__hero')), ...network, ending(ctx)].filter(Boolean) };
+  return { stations: [heroMesh(ctx, ctx.q('.info-page__hero')), ...network, websiteBranch(ctx), ending(ctx)].filter(Boolean) };
 }
 
 export default function TeamCircuit({ rootRef }) {

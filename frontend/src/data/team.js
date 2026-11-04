@@ -9,6 +9,7 @@ export const ROLES = {
   viceGeneralManager: ['نائب المدير العام', 'Vice General Manager'],
   leader: ['القائد', 'Leader'],
   viceLeader: ['نائب القائد', 'Vice-Leader'],
+  member: ['عضو الفريق', 'Team member'],
 };
 
 /* Executive leadership, top tier first. */
@@ -32,14 +33,24 @@ export const leadershipTiers = [
 
 /* `icon` names come from components/Icon/icons.js. */
 export const departments = [
-  { key: 'technical', icon: 'chip', name: ['القسم التقني', 'Technical Department'], leader: ['ريماس محمود', 'Rimas Mahmoud'], viceLeader: ['ليان المتعب', 'Layan Al Meteb'] },
+  { key: 'programs', icon: 'calendar', name: ['قسم البرامج', 'Programs Department'], leader: ['عبدالله السلمي', 'Abdullah Alsulami'], viceLeader: ['موضي القرعاوي', 'Moudi Algarawi'] },
   { key: 'media-marketing', icon: 'megaphone', name: ['قسم التسويق', 'Media & Marketing'], leader: ['أسماء وهيب', 'Asmaa Waheeb'], viceLeader: ['رزان السلمي', 'Razan Alsulami'] },
   { key: 'planning', icon: 'route', name: ['قسم التخطيط', 'Planning Department'], leader: ['زينب عبدالحليم', 'Zainab Abdulhalim'], viceLeader: ['جوري الغامدي', 'Juri Alghamdi'] },
   { key: 'ambassadors', icon: 'globe', name: ['قسم السفراء', 'Ambassadors Department'], leader: ['عبدالعزيز الزهراني', 'Abdulaziz Alzahrani'], viceLeader: ['حلا عسيري', 'Hala Asiri'] },
   { key: 'human-resources', icon: 'users', name: ['قسم الموارد البشرية', 'Human Resources'], leader: ['رنده بخاري', 'Randa Bukhari'], viceLeader: ['تالا جبريل', 'Tala Jabril'] },
-  { key: 'programs', icon: 'calendar', name: ['قسم البرامج', 'Programs Department'], leader: ['عبدالله السلمي', 'Abdullah Alsulami'], viceLeader: ['موضي القرعاوي', 'Moudi Algarawi'] },
+  { key: 'technical', icon: 'chip', name: ['القسم التقني', 'Technical Department'], leader: ['ريماس محمود', 'Rimas Mahmoud'], viceLeader: ['ليان المتعب', 'Layan Al Meteb'] },
   { key: 'public-relations', icon: 'chat', name: ['قسم العلاقات العامة', 'Public Relations'], leader: ['عبدالرحمن رجب', 'Abdulrahman Rajab'], viceLeader: ['وليد زكي', 'Waleed Zaki'] },
 ];
+
+/* Website committee: a branch of the Technical Department, not a separate department. */
+export const websiteCommittee = {
+  department: 'technical',
+  name: ['لجنة الموقع', 'Website Committee'],
+  branches: [
+    { key: 'backend', name: ['الباك إند', 'Back-end'], lead: ['عبد الله السيروان', 'Abdullah Alseyrawan'], members: [['صالح باحكيم', 'Saleh Bahakim']] },
+    { key: 'frontend', name: ['الفرونت إند', 'Front-end'], lead: ['ليان الحربي', 'Layan Alharbi'], members: [['معتز', 'Moataz'], ['شيماء وهيب', 'Shaima Waheeb']] },
+  ],
+};
 
 /* Every person once, with their role — used by tests and anything that needs a flat list. */
 export const allMembers = () => [
@@ -47,5 +58,9 @@ export const allMembers = () => [
   ...departments.flatMap((d) => [
     { role: ROLES.leader, name: d.leader, department: d.key },
     { role: ROLES.viceLeader, name: d.viceLeader, department: d.key },
+  ]),
+  ...websiteCommittee.branches.flatMap((branch) => [
+    { role: ROLES.leader, name: branch.lead, department: websiteCommittee.department, committee: websiteCommittee.name, branch: branch.key },
+    ...branch.members.map((name) => ({ role: ROLES.member, name, department: websiteCommittee.department, committee: websiteCommittee.name, branch: branch.key })),
   ]),
 ];

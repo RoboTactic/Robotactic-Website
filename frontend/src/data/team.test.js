@@ -1,16 +1,26 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { ROLES, allMembers, departments, leadershipTiers } from './team.js';
+import { ROLES, allMembers, departments, leadershipTiers, websiteCommittee } from './team.js';
 import { ICONS } from '../components/Icon/icons.js';
 
 const pair = (value) => Array.isArray(value) && value.length === 2 && value.every((s) => typeof s === 'string' && s.trim());
 
-test('the structure has 5 leaders, 7 departments and 19 people, each exactly once', () => {
+test('the structure includes the website committee without adding a department', () => {
   assert.equal(leadershipTiers.flatMap((t) => t.members).length, 5);
   assert.equal(departments.length, 7);
   const members = allMembers();
-  assert.equal(members.length, 19);
-  for (const lang of [0, 1]) assert.equal(new Set(members.map((m) => m.name[lang])).size, 19);
+  assert.equal(members.length, 24);
+  for (const lang of [0, 1]) assert.equal(new Set(members.map((m) => m.name[lang])).size, 24);
+});
+
+test('the website committee belongs to the technical department, which swaps places with Programs', () => {
+  assert.equal(departments[0].key, 'programs');
+  assert.equal(departments[5].key, 'technical');
+  assert.equal(websiteCommittee.department, 'technical');
+  assert.deepEqual(websiteCommittee.branches.map(branch => [branch.key, branch.lead[0], branch.members.map(member => member[0])]), [
+    ['backend', 'عبد الله السروان', ['صالح باحكيم']],
+    ['frontend', 'ليان الحربي', ['معتز صفر', 'شيماء وهيب']],
+  ]);
 });
 
 test('every name, role and department label is a complete Arabic/English pair', () => {
