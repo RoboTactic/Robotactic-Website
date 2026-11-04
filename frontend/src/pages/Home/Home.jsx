@@ -9,17 +9,21 @@ import HomeCircuit from './HomeCircuit';
 import { useRef } from 'react';
 import './Home.css';
 import { useSectionVisibility } from '../../services/api/SectionVisibility';
+import ApiState from '../../components/ApiState/ApiState';
+import LoadingScreen from '../../components/LoadingScreen/LoadingScreen';
 
 /* Home — section order follows the approved Figma Home:
    Hero → About → Countdown → Competitions → Workshops → Live Now → CTA
    (Navbar and Footer come from the app shell). */
 export default function Home() {
   const rootRef = useRef(null);
-  const { isVisible } = useSectionVisibility();
+  const { isVisible, loading, error, reload } = useSectionVisibility();
   return (
     <div className="home" ref={rootRef}>
       <HomeCircuit rootRef={rootRef} />
       <HeroSection />
+      {loading && <LoadingScreen compact />}
+      {error && <div className="container"><ApiState error={error} onRetry={() => reload({ force: true })} /></div>}
       {isVisible('about') && <AboutSection />}
       <CountdownSection />
       {isVisible('competitions') && <CompetitionsPreview />}

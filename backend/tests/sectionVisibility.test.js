@@ -101,6 +101,20 @@ test('unknown and missing visibility settings never expose optional sections', a
   assert.ok(Object.values(result).every(value => value === false));
 });
 
+test('warm public caches still check visibility and successful admin writes invalidate content', async () => fixture(async ({ request, patch, counts }) => {
+  assert.equal((await request('/public/competitions')).status, 200);
+  const reads = counts().contentReads;
+  assert.equal((await request('/public/competitions')).status, 200);
+  assert.equal(counts().contentReads, reads, 'Published content should be reused');
+  assert.equal((await patch('workshops', { visible: false })).status, 200);
+  assert.equal((await request('/public/competitions')).status, 200);
+  assert.equal(counts().contentReads, reads + 1, 'Successful writes must invalidate public responses');
+  assert.equal((await patch('competitions', { visible: false })).status, 200);
+  const beforeHidden = counts().contentReads;
+  assert.equal((await request('/public/competitions')).status, 404);
+  assert.equal(counts().contentReads, beforeHidden, 'A warm cache must never bypass a hidden section');
+}));
+
 test('a visibility database failure returns a safe error before any content is served', async () => {
   const { requirePublicSection } = require('../middleware/requirePublicSection');
   const app = express();

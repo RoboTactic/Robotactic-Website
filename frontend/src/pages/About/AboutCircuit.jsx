@@ -2,8 +2,8 @@ import CircuitLayer, { REST } from '../../motion/CircuitLayer';
 
 /*
   About — identity / system story, the calmest page:
-  Header → Idea (signal leaves the header, lands in the gap above the panels) →
-  Values (chips light one after another) → Actions → open endpoint before the Footer.
+  Header → Idea (signal leaves the header, lands above the panel) →
+  Actions → open endpoint before the Footer.
   Circuits stay in negative space; nothing outlines the panels.
 */
 const DESKTOP_MIN = 768; // InfoPages.css breakpoint
@@ -13,51 +13,21 @@ function compose(ctx) {
   const hero = rect(q('.info-page__hero'));
   const panels = qa('.info-page__panel');
   const linksEl = q('.info-page__links');
-  if (!hero || panels.length < 2 || !linksEl) return null;
-  const [idea, values] = panels.map(rect);
+  if (!hero || !panels.length || !linksEl) return null;
+  const idea = rect(panels[0]);
   const desktop = ctx.vw >= DESKTOP_MIN;
   const heroB = hero.bottom;
   const stations = [];
   const container = rect(q('.info-page__body'));
 
   // Header → Idea
-  if (desktop && idea.left > values.right) {
-    const gapX = (idea.left + values.right) / 2;
-    const x0 = container.left + 40;
-    const pts = [[x0, heroB - 30], [x0, heroB + 20], [gapX - 16, heroB + 20], [gapX, heroB + 36]];
-    stations.push({
-      key: 'idea', trigger: panels[0],
-      paths: [{ pts, op: REST.continuity }],
-      nodes: [{ at: pts[0], r: 3, kind: 'dot' }, { at: [gapX, heroB + 40], r: 4.5, mark: 'auto' }],
-      signals: [pts],
-    });
-  } else {
-    const pts = [[0, heroB - 20], [44, heroB - 20], [64, heroB], [64, idea.top - 20]];
-    stations.push({
-      key: 'idea', trigger: panels[0],
-      paths: [{ pts, op: REST.continuity }],
-      nodes: [{ at: [64, idea.top - 16], r: 4, mark: 'auto' }],
-      signals: [pts],
-    });
-  }
-
-  // Values — a short inlet from the page margin (when there is one), then the chips light in reading order.
-  const chips = qa('.info-page__values li');
-  const valuesTitle = rect(panels[1].querySelector('h2'));
-  const margin = values.left;
-  const chipNodes = chips.map((el, i) => ({ el, mark: 1 + i * 0.28 }));
-  if (desktop && margin >= 72 && valuesTitle) {
-    const y = valuesTitle.cy;
-    const pts = [[margin - 72, y], [margin - 20, y]];
-    stations.push({
-      key: 'values', trigger: panels[1],
-      paths: [{ pts }], nodes: [{ at: pts[0], r: 2.5, kind: 'dot' }, { at: [margin - 16, y], r: 4, mark: 'auto' }],
-      signals: [pts], domNodes: chipNodes, dur: 450,
-    });
-  } else {
-    // No trace room: the chips still light in order, but only after the idea has had the stage.
-    stations.push({ key: 'values', trigger: panels[1], domNodes: chips.map((el, i) => ({ el, mark: 1.2 + i * 0.3 })) });
-  }
+  const pts = [[0, heroB - 20], [44, heroB - 20], [64, heroB], [64, idea.top - 20]];
+  stations.push({
+    key: 'idea', trigger: panels[0],
+    paths: [{ pts, op: REST.continuity }],
+    nodes: [{ at: [64, idea.top - 16], r: 4, mark: 'auto' }],
+    signals: [pts],
+  });
 
   // Actions → endpoint
   const links = qa('.info-page__links a').map(rect);

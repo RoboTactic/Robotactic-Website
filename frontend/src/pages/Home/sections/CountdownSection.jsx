@@ -11,7 +11,7 @@ export default function CountdownSection() {
   return (
     <section className="band home-countdown" aria-label={t('العد التنازلي لانطلاق الملتقى', 'Countdown to the forum launch')}>
       <div className="container">
-        <Countdown {...countdown} title={t(countdown.title)} targetDate={targetDate} note={targetDate ? '' : t('موعد الملتقى سيعلن لاحقًا.', 'The forum date will be announced soon.')} />
+        {!loading && !error && <Countdown {...countdown} title={t(countdown.title)} targetDate={targetDate} note={targetDate ? '' : t('موعد الملتقى سيعلن لاحقًا.', 'The forum date will be announced soon.')} />}
         <ApiState loading={loading} error={error} onRetry={reload} />
       </div>
     </section>

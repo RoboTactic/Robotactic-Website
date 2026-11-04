@@ -1,4 +1,5 @@
 const repository = require('../database/aboutRepository');
+const { publicContentCache } = require('./publicContentCache');
 const { httpError } = require('../utils/httpError');
 const nullable = new Set(['subtitle_ar','subtitle_en','image_url','image_alt_ar','image_alt_en']);
 function validate(body) {
@@ -44,4 +45,4 @@ async function update(pool, body) {
   } catch (error) { await client.query('ROLLBACK'); throw error; }
   finally { client.release(); }
 }
-module.exports = { get, update, validate, publicGet: pool=>repository.get(pool,true) };
+module.exports = { get, update, validate, publicGet: pool=>publicContentCache(pool).read('about', () => repository.get(pool,true)) };

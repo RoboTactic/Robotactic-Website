@@ -21,9 +21,9 @@
   border: 1.5px solid var(--color-brand-primary); background: var(--color-surface-page);
   transition: background-color 220ms ease-out, border-color 220ms ease-out, box-shadow 220ms ease-out;
 }
-/* Lit as the circuit signal reaches the card, and on hover. */
-:is(.team-person, .team-dept).is-active { border-color: rgb(182 242 58 / .55); }
-:is(.team-person, .team-dept).is-active::before {
+/* Leadership stays lit after the signal arrives; department nodes settle normally. */
+.team-person:is(.is-active, .is-done), .team-dept.is-active { border-color: rgb(182 242 58 / .55); }
+.team-person:is(.is-active, .is-done)::before, .team-dept.is-active::before {
   border-color: var(--color-brand-accent); background: var(--color-brand-accent); box-shadow: 0 0 0 4px rgb(182 242 58 / .16), 0 0 14px rgb(182 242 58 / .45);
 }
 
@@ -35,15 +35,27 @@
 .team-person__name { font: 700 20px/30px var(--font-arabic); color: var(--color-text-primary); overflow-wrap: anywhere; }
 .team-page[lang="en"] .team-person__role { font-family: var(--font-latin); letter-spacing: .08em; text-transform: uppercase; font-size: 12px; }
 
+/* Co-Directors sit between the Director and General Management in visual size. */
+.team-tier--co-directors .team-person { padding: 19px 21px; }
+.team-tier--co-directors .team-person__name { font-size: 22px; line-height: 32px; }
+
 /* Director: the primary node — restrained lime. */
 .team-person--director {
   padding: 22px 24px; border-color: rgb(182 242 58 / .38);
+}
+/* The Director and Co-Directors share the same upper glow and highlight. */
+.team-person--director, .team-tier--co-directors .team-person {
   background: radial-gradient(90% 120% at 50% 0%, rgb(182 242 58 / .1), transparent 60%), var(--rt-card, var(--color-surface-card));
 }
-.team-person--director::after {
+.team-person--director::after, .team-tier--co-directors .team-person::after, .team-tier--management .team-person::after {
   content: ''; position: absolute; inset-inline: 24px; inset-block-start: -1px; block-size: 2px; border-radius: 2px;
   background: linear-gradient(90deg, transparent, var(--color-brand-accent), transparent); opacity: .7;
 }
+/* A quieter version of the same glow for General Management. */
+.team-tier--management .team-person {
+  background: radial-gradient(90% 120% at 50% 0%, rgb(182 242 58 / .055), transparent 60%), var(--rt-card, var(--color-surface-card));
+}
+.team-tier--management .team-person::after { opacity: .38; }
 .team-person--director .team-person__role { color: var(--color-text-accent); }
 .team-person--director .team-person__name { font-size: 26px; line-height: 38px; }
 .team-person--director::before { border-color: var(--color-brand-accent); }
@@ -89,8 +101,13 @@
   .team-tiers { gap: 56px; }
   .team-tier__members { display: flex; justify-content: center; gap: 72px; }
   .team-tier__members > li { inline-size: min(100%, 300px); }
+  .team-tier--management .team-tier__members { align-items: flex-start; }
+  .team-tier__member--deputy { margin-block-start: 40px; }
+  .team-tier--co-directors .team-tier__members > li { inline-size: min(100%, 340px); }
   .team-tier--director .team-tier__members > li { inline-size: min(100%, 420px); }
   .team-person { justify-items: center; padding: 22px 24px; text-align: center; }
+  .team-tier--co-directors .team-person { padding: 24px 26px; }
+  .team-tier--co-directors .team-person__name { font-size: 24px; line-height: 36px; }
   .team-person--director { padding: 30px 32px; }
   .team-person--director .team-person__name { font-size: 32px; line-height: 44px; }
 
@@ -119,4 +136,8 @@
 
 @media (prefers-reduced-motion: reduce) {
   .team-person, .team-dept, .team-person::before, .team-dept::before, .team-dept__icon { transition: none; }
+  .team-person { border-color: rgb(182 242 58 / .55); }
+  .team-person::before {
+    border-color: var(--color-brand-accent); background: var(--color-brand-accent); box-shadow: 0 0 0 4px rgb(182 242 58 / .16), 0 0 14px rgb(182 242 58 / .45);
+  }
 }

@@ -42,7 +42,7 @@ Calendar checks cover both languages at these five widths: green panel surfaces,
 
 ## About and Team management
 
-Super Admin has new About and event-team sections. About edits update both `/about` and the Home About section. Team profiles populate `/team` after publication and remain separate from sign-in accounts and competition teams. Forms reuse the current image uploader. Apply migration 005 before using these sections. See [setup and verification](../../../../docs/about-team-management.md).
+Super Admin can edit About content shown on `/about` and the Home page. The public Team page uses the static list in `src/data/team.js`; its former member-management section is no longer offered in the dashboard. Section visibility controls remain available. See [setup and verification](../../../../docs/about-team-management.md).
 
 ## Dashboard layout polish
 

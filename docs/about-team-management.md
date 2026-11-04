@@ -1,5 +1,7 @@
 # About and event-team management
 
+> Historical implementation notes: the public Team page now uses the static list in `frontend/src/data/team.js`, and event-team member management is no longer available in the dashboard. The legacy API and stored records remain in place. The patch installation and Team UI instructions below describe the earlier implementation and should not be followed for the current project.
+
 This feature targets `8c939af`, the latest Refined Dark public design and accessible motion updates. The administrator's final scope is About and the organizing team only. The existing automatic timeline is unchanged. Do not combine this patch with the earlier About/Team/Timeline patch.
 
 ## Local setup before committing

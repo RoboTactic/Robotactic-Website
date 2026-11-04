@@ -12,7 +12,7 @@ import Timeline from './pages/Timeline/Timeline';
 import Dashboard from './pages/Dashboard/Dashboard';
 import NotFound from './pages/NotFound/NotFound';
 import { useLanguage } from './services/api/publicContentLanguage';
-import { PublicVisibilityState, useSectionVisibility } from './services/api/SectionVisibility';
+import { PublicSectionState, useSectionVisibility } from './services/api/SectionVisibility';
 
 /* Browser titles for the public routes; the 404 page sets its own, and the Dashboard is left alone. */
 const pageTitles = {
@@ -36,7 +36,7 @@ function ScrollToTop() {
 function PublicPage({ children }) {
   const { pathname } = useLocation();
   const { isPathVisible } = useSectionVisibility();
-  return isPathVisible(pathname) ? children : <NotFound />;
+  return <PublicSectionState>{isPathVisible(pathname) ? children : <NotFound />}</PublicSectionState>;
 }
 
 export default function App() {
@@ -61,7 +61,7 @@ export default function App() {
     <>
       <ScrollToTop />
       {!isDashboard && <Navbar />}
-      <main><PublicVisibilityShell isDashboard={isDashboard}>
+      <main>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<PublicPage><About /></PublicPage>} />
@@ -74,12 +74,8 @@ export default function App() {
           {/* Unknown public URLs only; /dashboard/* is matched above and keeps its own auth/access states. */}
           <Route path="*" element={<NotFound />} />
         </Routes>
-      </PublicVisibilityShell></main>
+      </main>
       {!isDashboard && <Footer />}
     </>
   );
-}
-
-function PublicVisibilityShell({ isDashboard, children }) {
-  return isDashboard ? children : <PublicVisibilityState>{children}</PublicVisibilityState>;
 }

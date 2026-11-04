@@ -1,4 +1,5 @@
 import { dashboardCache } from './dashboardCache';
+import { publicCache } from './publicCache';
 
 const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api').replace(/\/$/, '');
 
@@ -30,7 +31,10 @@ async function request(path, options = {}) {
   return Object.hasOwn(payload, 'data') ? payload.data : payload;
 }
 
-export const getPublic = (resource, options = {}) => apiRequest(`/public/${resource}${options.query || ''}`, { signal: options.signal });
+export const getPublic = (resource, options = {}) => {
+  const key = `${resource}${options.query || ''}`;
+  return publicCache.read(key, signal => request(`/public/${key}`, { signal }), { force: options.forceRefresh });
+};
 export const getAdmin = (resource, options = {}) => apiRequest(`/admin/${resource}${options.query || ''}`, { signal: options.signal });
 export const createAdmin = (resource, value) => apiRequest(`/admin/${resource}`, { method: 'POST', body: JSON.stringify(value) });
 export const updateAdmin = (resource, id, value) => apiRequest(`/admin/${resource}/${encodeURIComponent(id)}`, { method: 'PATCH', body: JSON.stringify(value) });
@@ -51,7 +55,10 @@ export async function apiRequest(path, options = {}) {
     // A response from a previous account/session must never populate the next one.
     if (sessionRequest && !dashboardCache.current(token)) throw new DOMException('Request superseded.', 'AbortError');
     if (path === '/auth/session' || path === '/auth/login') dashboardCache.setSession(data);
-    if (adminRequest && ['POST', 'PATCH', 'PUT', 'DELETE'].includes(method)) dashboardCache.mutation(path, data, method);
+    if (adminRequest && ['POST', 'PATCH', 'PUT', 'DELETE'].includes(method)) {
+      dashboardCache.mutation(path, data, method);
+      publicCache.invalidate();
+    }
     return data;
   } catch (issue) {
     if (dashboardCache.current(token)) {

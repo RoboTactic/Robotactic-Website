@@ -12,6 +12,7 @@ const { authenticate } = require("../middleware/authenticate");
 const { authorize } = require("../middleware/authorize");
 const { requireTrustedOrigin } = require("../middleware/requireTrustedOrigin");
 const { rateLimitAdminWrites } = require("../middleware/rateLimitAdminWrites");
+const { invalidatePublicContent } = require('../middleware/invalidatePublicContent');
 
 const { createAboutController } = require("../controllers/aboutController");
 const { createSectionVisibilityController } = require("../controllers/sectionVisibilityController");
@@ -66,6 +67,7 @@ function createApiRoutes({ pool, authTokenSecret, corsOrigins, isProduction }) {
   adminRouter.use(requireAuth);
   adminRouter.use(checkOriginOnWrite(corsOrigins));
   adminRouter.use(rateLimitAdminWrites);
+  adminRouter.use(invalidatePublicContent(pool));
 
   adminRouter.get("/stats", authorize("dashboard"), statsController.get);
   adminRouter.get("/section-visibility", authorize("dashboard"), visibilityController.get);

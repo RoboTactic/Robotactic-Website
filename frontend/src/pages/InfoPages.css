@@ -24,7 +24,7 @@
   .info-page__hero { padding-block: 64px 72px; }
   .info-page__body { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; padding-block: 48px 96px; }
   .info-page__panel { padding: 32px; }
-  .info-page__panel--empty, .info-page__links { grid-column: 1 / -1; }
+  .info-page__panel--empty, .info-page__panel--idea, .info-page__links { grid-column: 1 / -1; }
 }
 
 @media (hover: hover) and (pointer: fine) {

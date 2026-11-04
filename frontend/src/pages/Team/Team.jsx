@@ -34,7 +34,7 @@ export default function Team() {
 
       <section className="container team-section team-section--leadership" aria-labelledby="team-leadership-title">
         <div className="team-section__head">
-          <h2 id="team-leadership-title" className="t-h2">{t(['الإدارة العليا', 'Executive Leadership'])}</h2>
+          <h2 id="team-leadership-title" className="t-h2">{t(['فريق روبوتاكتيك', 'RoboTactic Team'])}</h2>
           <p className="t-body">{t(['ترسم الاتجاه وتربط عمل الأقسام ببعضها.', 'Setting the direction and connecting every department.'])}</p>
         </div>
         <ol className="team-tiers">
@@ -42,7 +42,7 @@ export default function Team() {
             <li key={tier.key} className={`team-tier team-tier--${tier.key}`}>
               <ul className="team-tier__members">
                 {tier.members.map((member) => (
-                  <li key={member.name[1]}>
+                  <li key={member.name[1]} className={member.role === ROLES.viceGeneralManager ? 'team-tier__member--deputy' : undefined}>
                     <article className={`team-person${tier.key === 'director' ? ' team-person--director' : ''}`}>
                       <p className="team-person__role">{t(member.role)}</p>
                       <h3 className="team-person__name">{t(member.name)}</h3>
