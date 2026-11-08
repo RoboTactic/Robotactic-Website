@@ -6,9 +6,11 @@ import { eventVenue } from '../../../data/site';
 import { useSectionVisibility } from '../../../services/api/SectionVisibility';
 import { useLanguage } from '../../../services/api/publicContentLanguage';
 
-/* Venue image (public/images): WebP variants for every width, original PNG as fallback. */
-const HERO_IMG = '/images/king-faisal-convention-center-hero';
-const HERO_SRCSET = [640, 960, 1280, 1680].map((w) => `${HERO_IMG}-${w}.webp ${w}w`).join(', ');
+/* RoboTactic hero artwork (public/images): WebP variants for every width (1672 is the source
+   file, unchanged), JPEG as fallback. The previous venue photo stays in public/images as
+   king-faisal-convention-center-hero-*; restoring it means pointing these constants back. */
+const HERO_IMG = '/images/robotactic-hero';
+const HERO_SRCSET = [640, 960, 1280, 1672].map((w) => `${HERO_IMG}-${w}.webp ${w}w`).join(', ');
 
 /* Two-tone display title (Refined Dark): the last word carries the accent line. */
 function splitTitle(title) {
@@ -42,7 +44,7 @@ export default function HeroSection() {
         <div className="hero__visual">
           <picture className="hero__media">
             <source type="image/webp" srcSet={HERO_SRCSET} sizes="100vw" />
-            <img src={`${HERO_IMG}.png`} alt={t('واجهة مركز الملك فيصل للمؤتمرات', 'The façade of the King Faisal Convention Center')} width="1680" height="936"
+            <img src={`${HERO_IMG}.jpg`} alt={t('روبوت RoboTactic يتأمل رقعة شطرنج مضيئة، ومعه طائرة مسيّرة وروبوت جوّال أمام مبنى حديث', 'The RoboTactic robot considers a glowing chessboard, with a drone and a rover in front of a modern building')} width="1672" height="941"
               fetchPriority="high" decoding="async" />
           </picture>
         </div>
