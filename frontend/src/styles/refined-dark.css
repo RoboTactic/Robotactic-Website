@@ -64,9 +64,9 @@ html.rt-refined body { background: var(--color-surface-page); }
   .rt-refined .home .home-section__action:hover::after { transform: translateX(-3px); }
 }
 
-/* ── Hero: the RoboTactic artwork — never mirrored ────────────────────────────
-   Mobile: a compact full-bleed band framed on the mascot, chess pieces, drone and rover; the
-   headline rises into its navy fade so image and copy read as one hero. Desktop: two columns (below). */
+/* ── Hero: the event venue (King Faisal Convention Center) — never mirrored ─────
+   Mobile: a compact full-bleed band framed on the entrance; the headline rises into its
+   navy fade so photo and copy read as one hero. Desktop: two columns (below). */
 .rt-refined .hero { background: var(--color-surface-page); }
 .rt-refined .hero__pattern { opacity: .35; }
 .rt-refined .hero .circuit__fade { display: none; } /* its fade rectangle would sit on the signage */
@@ -77,7 +77,7 @@ html.rt-refined body { background: var(--color-surface-page); }
   margin-inline: -20px; block-size: clamp(220px, 60vw, 340px); overflow: hidden;
 }
 .rt-refined .hero__media, .rt-refined .hero__media img { display: block; inline-size: 100%; block-size: 100%; }
-.rt-refined .hero__media img { object-fit: cover; object-position: 30% 40%; }
+.rt-refined .hero__media img { object-fit: cover; object-position: 64% 42%; }
 .rt-refined .hero__visual::after { /* from the navbar, then a long navy dissolve under the headline */
   content: ''; position: absolute; inset: 0; pointer-events: none;
   background: linear-gradient(180deg, rgb(7 17 27 / .45) 0%, transparent 18%, transparent 48%, rgb(7 17 27 / .72) 76%, #07111B 100%);
@@ -112,9 +112,9 @@ html.rt-refined body { background: var(--color-surface-page); }
 .rt-refined .hero__actions .button--outline { background: rgb(255 255 255 / .03); }
 
 @media (min-width: 1024px) {
-  /* RTL two-column composition: copy on the right (inline-start); the artwork fills the left
+  /* RTL two-column composition: copy on the right (inline-start); the venue fills the left
      column, bleeding to the screen edge and dissolving into navy toward the copy. The crop is
-     anchored on the artwork's left edge so the mascot and chess pieces stay clear of the dissolve. */
+     framed on the entrance so both signs sit fully inside the photo and clear of the text. */
   .rt-refined .hero { display: flex; min-block-size: clamp(580px, 44vw, 680px); padding: 0; }
   .rt-refined .home .hero__inner { position: static; flex: none; inline-size: min(1200px, 100% - 40px); margin-inline: auto; justify-content: flex-start; padding-block: 72px 96px; }
   .rt-refined .hero__copy { flex: 0 1 520px; margin: 0; gap: 24px; position: relative; z-index: 2; isolation: isolate; }
@@ -125,7 +125,7 @@ html.rt-refined body { background: var(--color-surface-page); }
   .rt-refined .hero__visual {
     position: absolute; inset-block: 0; inset-inline-end: 0; inline-size: 58%; z-index: 0; margin: 0; block-size: auto;
   }
-  .rt-refined .hero__media img { object-position: 0% 42%; }
+  .rt-refined .hero__media img { object-position: 88% 42%; }
   .rt-refined .hero__visual::after { /* physical directions: the photo itself is never mirrored */
     background:
       linear-gradient(270deg, #07111B 0%, rgb(7 17 27 / .7) 8%, rgb(7 17 27 / 0) 26%),
@@ -588,10 +588,8 @@ html.rt-public[dir="ltr"] .timeline-item__link:focus-visible .timeline-item__lin
   html.rt-public[dir="ltr"] .timeline-item__card:hover .timeline-item__link-arrow { transform: scaleX(-1) translateX(-3px); }
 }
 @media (min-width: 1024px) {
-  /* The hero artwork is never mirrored, so its dissolve and the circuit mask are physical:
-     in English the copy sits on the left, so both run the other way, and the crop moves in
-     just enough to keep the mascot's face clear of the dissolve. */
-  html.rt-public[dir="ltr"].rt-refined .hero__media img { object-position: 13% 42%; }
+  /* The venue photo is never mirrored, so its dissolve and the circuit mask are physical:
+     in English the copy sits on the left, so both run the other way. */
   html.rt-public[dir="ltr"].rt-refined .hero__visual::after {
     background:
       linear-gradient(90deg, #07111B 0%, rgb(7 17 27 / .7) 8%, rgb(7 17 27 / 0) 26%),
