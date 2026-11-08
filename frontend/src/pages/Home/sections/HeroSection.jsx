@@ -2,6 +2,7 @@ import Chip from '../../../components/Chip/Chip';
 import Button from '../../../components/Button/Button';
 import CircuitPattern from '../../../components/CircuitPattern/CircuitPattern';
 import { hero } from '../../../data/home';
+import { eventVenue } from '../../../data/site';
 import { useSectionVisibility } from '../../../services/api/SectionVisibility';
 import { useLanguage } from '../../../services/api/publicContentLanguage';
 
@@ -34,6 +35,7 @@ export default function HeroSection() {
             {accent && <span className="hero__title-accent">{accent}</span>}
           </h1>
           <p className="hero__description t-body-lg">{t(hero.description)}</p>
+          <p className="hero__venue t-body-lg">{t('المكان:', 'Venue:')} {t(eventVenue)}</p>
           {(isPathVisible(hero.primaryAction.path) || isPathVisible(hero.secondaryAction.path)) && <div className="hero__actions">
             <Button to={hero.primaryAction.path}>{t(hero.primaryAction.label)}</Button>
             <Button to={hero.secondaryAction.path} variant="outline">{t(hero.secondaryAction.label)}</Button>
