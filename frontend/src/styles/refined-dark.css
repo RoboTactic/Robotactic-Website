@@ -5,7 +5,7 @@
    other public pages. Rolling out = enabling the class on another page.
 
    Composition follows the approved reference: cinematic hero (two-tone display title over
-   the event venue — King Faisal Convention Center, public/images), a floating countdown instrument that overlaps the hero, boxed panels,
+   the hero artwork — robot, chessboard and drone, public/images), a floating countdown instrument that overlaps the hero, boxed panels,
    media-headed cards with the "view all" link in the section header row, and a wide
    cinematic CTA band. Brand hexes unchanged; lime stays a restrained highlight.
    All text/surface pairs checked for WCAG AA (secondary ≥ 8.5:1, muted ≥ 5.2:1).
@@ -64,12 +64,12 @@ html.rt-refined body { background: var(--color-surface-page); }
   .rt-refined .home .home-section__action:hover::after { transform: translateX(-3px); }
 }
 
-/* ── Hero: the event venue (King Faisal Convention Center) — never mirrored ─────
-   Mobile: a compact full-bleed band framed on the entrance; the headline rises into its
-   navy fade so photo and copy read as one hero. Desktop: two columns (below). */
+/* ── Hero: artwork (robot at the chessboard, drone, rover) ─────────────────────
+   Mobile: a compact full-bleed band framed on the robot; the headline rises into its
+   navy fade so artwork and copy read as one hero. Desktop: two columns (below). */
 .rt-refined .hero { background: var(--color-surface-page); }
 .rt-refined .hero__pattern { opacity: .35; }
-.rt-refined .hero .circuit__fade { display: none; } /* its fade rectangle would sit on the signage */
+.rt-refined .hero .circuit__fade { display: none; } /* its fade rectangle would sit on the artwork */
 .rt-refined .hero__inner { padding-block: 0 32px; }
 
 .rt-refined .hero__visual {
@@ -77,7 +77,7 @@ html.rt-refined body { background: var(--color-surface-page); }
   margin-inline: -20px; block-size: clamp(220px, 60vw, 340px); overflow: hidden;
 }
 .rt-refined .hero__media, .rt-refined .hero__media img { display: block; inline-size: 100%; block-size: 100%; }
-.rt-refined .hero__media img { object-fit: cover; object-position: 64% 42%; }
+.rt-refined .hero__media img { object-fit: cover; object-position: 30% 50%; }
 .rt-refined .hero__visual::after { /* from the navbar, then a long navy dissolve under the headline */
   content: ''; position: absolute; inset: 0; pointer-events: none;
   background: linear-gradient(180deg, rgb(7 17 27 / .45) 0%, transparent 18%, transparent 48%, rgb(7 17 27 / .72) 76%, #07111B 100%);
@@ -112,9 +112,9 @@ html.rt-refined body { background: var(--color-surface-page); }
 .rt-refined .hero__actions .button--outline { background: rgb(255 255 255 / .03); }
 
 @media (min-width: 1024px) {
-  /* RTL two-column composition: copy on the right (inline-start); the venue fills the left
-     column, bleeding to the screen edge and dissolving into navy toward the copy. The crop is
-     framed on the entrance so both signs sit fully inside the photo and clear of the text. */
+  /* RTL two-column composition: copy on the right (inline-start); the artwork fills the left
+     column, bleeding to the screen edge and dissolving into navy toward the copy. The crop
+     keeps the robot, drone and rover; the empty dark sky dissolves under the copy. */
   .rt-refined .hero { display: flex; min-block-size: clamp(580px, 44vw, 680px); padding: 0; }
   .rt-refined .home .hero__inner { position: static; flex: none; inline-size: min(1200px, 100% - 40px); margin-inline: auto; justify-content: flex-start; padding-block: 72px 96px; }
   .rt-refined .hero__copy { flex: 0 1 520px; margin: 0; gap: 24px; position: relative; z-index: 2; isolation: isolate; }
@@ -125,14 +125,14 @@ html.rt-refined body { background: var(--color-surface-page); }
   .rt-refined .hero__visual {
     position: absolute; inset-block: 0; inset-inline-end: 0; inline-size: 58%; z-index: 0; margin: 0; block-size: auto;
   }
-  .rt-refined .hero__media img { object-position: 88% 42%; }
-  .rt-refined .hero__visual::after { /* physical directions: the photo itself is never mirrored */
+  .rt-refined .hero__media img { object-position: 0% 50%; }
+  .rt-refined .hero__visual::after { /* physical directions (RTL: copy on the right) */
     background:
       linear-gradient(270deg, #07111B 0%, rgb(7 17 27 / .7) 8%, rgb(7 17 27 / 0) 26%),
       linear-gradient(180deg, rgb(7 17 27 / .55) 0%, transparent 18%, transparent 74%, #07111B 100%),
       linear-gradient(90deg, rgb(7 17 27 / .35) 0%, transparent 12%);
   }
-  /* circuit motion stays, on the copy side only — never across the photo or its signage */
+  /* circuit motion stays, on the copy side only — never across the artwork */
   .rt-refined .hero__pattern { z-index: 1; opacity: .4;
     -webkit-mask-image: linear-gradient(270deg, #000 0%, #000 34%, transparent 46%);
     mask-image: linear-gradient(270deg, #000 0%, #000 34%, transparent 46%); }
@@ -588,8 +588,9 @@ html.rt-public[dir="ltr"] .timeline-item__link:focus-visible .timeline-item__lin
   html.rt-public[dir="ltr"] .timeline-item__card:hover .timeline-item__link-arrow { transform: scaleX(-1) translateX(-3px); }
 }
 @media (min-width: 1024px) {
-  /* The venue photo is never mirrored, so its dissolve and the circuit mask are physical:
-     in English the copy sits on the left, so both run the other way. */
+  /* English: the copy sits on the left, so the dissolve and circuit mask run the other way, and
+     the artwork (no text in it) is mirrored so the robot stays on the outer edge, clear of the copy. */
+  html.rt-public[dir="ltr"].rt-refined .hero__media img { transform: scaleX(-1); }
   html.rt-public[dir="ltr"].rt-refined .hero__visual::after {
     background:
       linear-gradient(90deg, #07111B 0%, rgb(7 17 27 / .7) 8%, rgb(7 17 27 / 0) 26%),

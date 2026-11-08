@@ -81,15 +81,16 @@
 .team-dept__name { margin-block-start: 2px; }
 .team-dept__alt + .team-dept__people { margin-block-start: 10px; }
 
-/* Website committee: one subordinate node, with two clearly labelled branches. */
-.team-committee-item { inline-size: 100%; justify-self: center; margin-block-start: 20px; }
+/* Website committee: one subordinate node, with two clearly labelled branches.
+   Mobile: last node in the list (after every department), on the rail like a card. */
+.team-committee-item { inline-size: 100%; justify-self: center; order: 1; margin-block-start: 6px; }
 .team-committee {
   position: relative; padding: 16px; border: 1px solid rgb(22 166 106 / .24); border-radius: 18px;
   background: var(--rt-card, var(--color-surface-card));
   box-shadow: var(--rt-shadow, none);
 }
-.team-committee::before {
-  content: ''; position: absolute; inset-block-start: calc(var(--team-port) / -2); inset-inline-start: calc(50% - var(--team-port) / 2);
+.team-committee::before { /* mobile: port on the inline-start edge, like the cards; ≥768px: top centre */
+  content: ''; position: absolute; inset-block-start: calc(30px - var(--team-port) / 2); inset-inline-start: calc(var(--team-port) / -2);
   inline-size: var(--team-port); block-size: var(--team-port); border-radius: 50%;
   border: 1.5px solid var(--color-brand-primary); background: var(--color-surface-page);
 }
@@ -146,7 +147,8 @@
   .team-departments { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 56px 24px; }
   .team-departments > li { grid-column: span 2; }
   .team-departments > .team-department-item--last { grid-column: 2 / span 2; }
-  .team-departments > .team-committee-item { grid-column: 2 / span 2; margin-block-start: 0; }
+  .team-departments > .team-committee-item { grid-column: 2 / span 2; order: 0; margin-block-start: 0; }
+  .team-committee::before { inset-block-start: calc(var(--team-port) / -2); inset-inline-start: calc(50% - var(--team-port) / 2); }
   .team-dept { padding: 24px; }
   .team-closing { padding: 48px 40px; }
 }

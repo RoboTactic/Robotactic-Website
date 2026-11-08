@@ -6,9 +6,9 @@ import { eventVenue } from '../../../data/site';
 import { useSectionVisibility } from '../../../services/api/SectionVisibility';
 import { useLanguage } from '../../../services/api/publicContentLanguage';
 
-/* Venue image (public/images): WebP variants for every width, original PNG as fallback. */
-const HERO_IMG = '/images/king-faisal-convention-center-hero';
-const HERO_SRCSET = [640, 960, 1280, 1680].map((w) => `${HERO_IMG}-${w}.webp ${w}w`).join(', ');
+/* Hero artwork (public/images, 1600×900): WebP variants for every width, original JPG as fallback. */
+const HERO_IMG = '/images/robotactic-hero';
+const HERO_SRCSET = [640, 960, 1280, 1600].map((w) => `${HERO_IMG}-${w}.webp ${w}w`).join(', ');
 
 /* Two-tone display title (Refined Dark): the last word carries the accent line. */
 function splitTitle(title) {
@@ -42,7 +42,7 @@ export default function HeroSection() {
         <div className="hero__visual">
           <picture className="hero__media">
             <source type="image/webp" srcSet={HERO_SRCSET} sizes="100vw" />
-            <img src={`${HERO_IMG}.png`} alt={t('واجهة مركز الملك فيصل للمؤتمرات', 'The façade of the King Faisal Convention Center')} width="1680" height="936"
+            <img src={`${HERO_IMG}.jpg`} alt={t('روبوت يفكر بجانب رقعة شطرنج، مع طائرة مسيّرة وروبوت متحرك ومبنى المؤتمرات في الخلفية', 'A robot thinking beside a chessboard, with a drone, a rover and the convention center in the background')} width="1600" height="900"
               fetchPriority="high" decoding="async" />
           </picture>
         </div>

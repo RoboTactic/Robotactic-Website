@@ -3,8 +3,8 @@
    the source of truth for role assignments. No photos, bios or contact details by design. */
 
 export const ROLES = {
-  director: ['المدير', 'Director'],
-  coDirector: ['المدير المشارك', 'Co-Director'],
+  director: ['الرئيس', 'Director'],
+  coDirector: ['نائب الرئيس', 'Co-Director'],
   generalManager: ['المدير العام', 'General Manager'],
   viceGeneralManager: ['نائب المدير العام', 'Vice General Manager'],
   leader: ['القائد', 'Leader'],
@@ -48,7 +48,7 @@ export const websiteCommittee = {
   name: ['لجنة الموقع', 'Website Committee'],
   branches: [
     { key: 'backend', name: ['الباك إند', 'Back-end'], lead: ['عبد الله السيروان', 'Abdullah Alseyrawan'], members: [['صالح باحكيم', 'Saleh Bahakim']] },
-    { key: 'frontend', name: ['الفرونت إند', 'Front-end'], lead: ['ليان الحربي', 'Layan Alharbi'], members: [['معتز', 'Moataz'], ['شيماء وهيب', 'Shaima Waheeb']] },
+    { key: 'frontend', name: ['الفرونت إند', 'Front-end'], lead: ['ليان الحربي', 'Layan Alharbi'], members: [['معتز السيد', 'Motaz Alsayed'], ['شيماء وهيب', 'Shaima Waheeb']] },
   ],
 };
 

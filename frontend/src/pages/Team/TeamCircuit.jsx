@@ -148,7 +148,8 @@ function mobileRail(ctx) {
   const { q, qa, rect, root } = ctx;
   const rtl = root.dir === 'rtl';
   const lead = qa('.team-person');
-  const depts = qa('.team-dept');
+  // The website committee is the last node on mobile (CSS order), so it joins the rail like a card.
+  const depts = [...qa('.team-dept'), ...qa('.team-committee')];
   const tiers = rect(q('.team-tiers'));
   if (!lead.length || !depts.length || !tiers) return [];
   const x = rtl ? tiers.right - 10 : tiers.left + 10;
@@ -190,9 +191,10 @@ function ending({ q, rect, vw }) {
 }
 
 function compose(ctx) {
-  const network = ctx.vw >= DESKTOP_MIN ? desktopNetwork(ctx) : mobileRail(ctx);
+  const desktop = ctx.vw >= DESKTOP_MIN;
+  const network = desktop ? desktopNetwork(ctx) : mobileRail(ctx);
   if (!network.length) return null;
-  return { stations: [heroMesh(ctx, ctx.q('.info-page__hero')), ...network, websiteBranch(ctx), ending(ctx)].filter(Boolean) };
+  return { stations: [heroMesh(ctx, ctx.q('.info-page__hero')), ...network, desktop && websiteBranch(ctx), ending(ctx)].filter(Boolean) };
 }
 
 export default function TeamCircuit({ rootRef }) {
