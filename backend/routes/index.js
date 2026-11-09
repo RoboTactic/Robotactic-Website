@@ -24,7 +24,7 @@ const CONTENT_SCOPES = {
   projects: "projects", announcements: "announcements", "team-members": "team-members",
 };
 
-function createApiRoutes({ pool, authTokenSecret, corsOrigins, isProduction }) {
+function createApiRoutes({ pool, authTokenSecret, corsOrigins, isProduction, storage }) {
   const router = express.Router();
   const publicRouter = express.Router();
   const adminRouter = express.Router();
@@ -36,7 +36,7 @@ function createApiRoutes({ pool, authTokenSecret, corsOrigins, isProduction }) {
   const contentController = createAdminContentController(pool);
   const userController = createAdminUserController(pool);
   const speakerController = createSpeakerController(pool);
-  const imageController = createImageController();
+  const imageController = createImageController(storage);
   const statsController = createDashboardStatsController(pool);
   const lookupController = createDashboardLookupController(pool);
   const authController = createAuthController({ pool, tokenSecret: authTokenSecret, isProduction });

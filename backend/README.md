@@ -2,7 +2,7 @@
 
 ## Local configuration
 
-Copy `.env.example` to `.env` and set `DATABASE_URL`, `AUTH_TOKEN_SECRET`, and the trusted browser origins in `CORS_ORIGINS`. Keep `.env` local; it is ignored by Git. The browser app also accepts `VITE_API_BASE_URL` in `frontend/.env` and defaults to `http://localhost:3000/api`.
+Copy `.env.example` to `.env` and set `DATABASE_URL`, `AUTH_TOKEN_SECRET`, and the trusted browser origins in `CORS_ORIGINS`. Keep `.env` local; it is ignored by Git. The browser app defaults to `/api`, with the Vite development proxy forwarding it to `http://localhost:3000`. For Cloudflare Workers, follow [the deployment guide](../docs/cloudflare-deployment.md).
 
 `AUTH_TOKEN_SECRET` must be a random value of at least 32 bytes. Generate a value with a local password manager or cryptographic random generator; do not commit it. Set `DATABASE_SSL=true` when the PostgreSQL provider requires TLS. If Node.js does not trust the provider's CA, download the database CA certificate and set `DATABASE_SSL_CA_PATH` to its local path; certificate verification stays enabled.
 

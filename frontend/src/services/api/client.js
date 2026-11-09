@@ -1,7 +1,7 @@
 import { dashboardCache } from './dashboardCache';
 import { publicCache } from './publicCache';
 
-const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api').replace(/\/$/, '');
+const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || '/api').replace(/\/$/, '');
 
 export class ApiError extends Error {
   constructor(message, status) {

@@ -1,6 +1,5 @@
 const { randomUUID } = require("node:crypto");
 const { httpError } = require("../utils/httpError");
-const { supabaseUrl, supabaseSecretKey } = require("../config/env");
 
 const BUCKET = "robotactic-images";
 const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
@@ -10,7 +9,7 @@ const IMAGE_TYPES = {
   "image/webp": "webp",
 };
 
-function configuredStorage() {
+function configuredStorage({ supabaseUrl, supabaseSecretKey } = {}) {
   const projectUrl = supabaseUrl;
   const serviceKey = supabaseSecretKey;
   if (!projectUrl || !serviceKey) throw httpError(503, "Image storage is not configured. Contact the site administrator.");
@@ -46,14 +45,14 @@ function matchesSignature(buffer, mime) {
   return false;
 }
 
-async function uploadImage(resource, buffer, contentType) {
+async function uploadImage(resource, buffer, contentType, storage) {
   const mime = String(contentType || "").split(";", 1)[0].trim().toLowerCase();
   if (!IMAGE_TYPES[mime]) throw httpError(415, "Upload a JPEG, PNG, or WebP image.");
   if (!Buffer.isBuffer(buffer) || buffer.length === 0) throw httpError(400, "Choose an image to upload.");
   if (buffer.length > MAX_IMAGE_BYTES) throw httpError(413, "Image must be 5 MB or smaller.");
   if (!matchesSignature(buffer, mime)) throw httpError(400, "The file does not match a valid supported image format.");
 
-  const { base, serviceKey } = configuredStorage();
+  const { base, serviceKey } = configuredStorage(storage);
   const objectPath = `${resource}/${randomUUID()}.${IMAGE_TYPES[mime]}`;
   const uploadUrl = new URL(`/storage/v1/object/${BUCKET}/${objectPath}`, base);
   let result;
