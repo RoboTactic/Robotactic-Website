@@ -9,6 +9,8 @@
     "dev": "nodemon server.js",
     "schema": "node scripts/applySchema.js",
     "db:migrate": "node scripts/migrateDatabase.js",
+    "db:role:audit": "node scripts/auditRuntimeRole.js",
+    "db:neon:prepare": "node scripts/prepareNeonDatabase.js",
     "seed": "node scripts/seedDatabase.js",
     "seed:publish": "node scripts/seedDatabase.js --publish",
     "seed:full": "node scripts/seedDatabase.js --full --publish",

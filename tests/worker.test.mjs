@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { randomBytes, scryptSync } from "node:crypto";
+import { gzipSync } from "node:zlib";
 import { fileURLToPath } from "node:url";
 import { Miniflare, convertV4MiniflareOptions } from "miniflare";
 
@@ -53,6 +54,18 @@ test("Workers HTTP adapter preserves API routing, authorization, body limits and
     assert.equal((await mf.dispatchFetch("https://robotactic.example.com/api/auth/login", {
       method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ value: "x".repeat(110_000) }),
     })).status, 413);
+    const compressed = gzipSync("{}");
+    for (const [body, status] of [
+      [compressed, 404],
+      [Buffer.concat([compressed, Buffer.from("invalid-trailing-bytes")]), 400],
+    ]) {
+      const response = await mf.dispatchFetch("https://robotactic.example.com/api/missing", {
+        method: "POST", headers: { "Content-Type": "application/json", "Content-Encoding": "gzip" }, body,
+      });
+      assert.equal(response.status, status);
+      assert.match(response.headers.get("content-type"), /application\/json/);
+    }
+    assert.equal((await mf.dispatchFetch("https://robotactic.example.com/api/health")).status, 200);
     for (let i = 0; i < 5; i++) await mf.dispatchFetch("https://robotactic.example.com/api/auth/login", { method: "POST" });
     const limited = await mf.dispatchFetch("https://robotactic.example.com/api/auth/login", { method: "POST" });
     assert.equal(limited.status, 429);

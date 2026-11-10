@@ -8,11 +8,15 @@
     "node": "^22.23.0 || ^24.22.0 || ^26.12.0"
   },
   "scripts": {
+    "ci:install": "npm ci --include=dev && npm --prefix backend ci --include=dev && npm --prefix frontend ci --include=dev",
+    "ci:check": "npm test && npm run typecheck:config && npm run build && npm run test:worker && npm run deploy:check -- --prebuilt && npm run test:frontend",
     "build": "npm --prefix frontend run build:cloudflare",
-    "deploy:check": "npm --prefix frontend run deploy:check",
+    "deploy:check": "npm --prefix frontend run deploy:check --",
     "deploy": "npm --prefix frontend run deploy:cloudflare --",
     "test": "node --test backend/tests/*.test.js",
+    "test:frontend": "node --test \"frontend/src/**/*.test.js\"",
     "test:worker": "node --test tests/worker.test.mjs",
+    "test:db-role": "node --test tests/runtime-role.test.cjs",
     "typecheck:config": "tsc --project frontend/tsconfig.json"
   },
   "devDependencies": {

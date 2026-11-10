@@ -1,6 +1,7 @@
 # RoboTactic
 
-دليل الإطلاق على Cloudflare Workers مع PostgreSQL/Supabase: [خطوات النشر والإعداد](docs/cloudflare-deployment.md).
+دليل الإطلاق على Cloudflare Workers مع PostgreSQL: [خطوات النشر والإعداد](docs/cloudflare-deployment.md).
+إعداد قاعدة Neon الحالية: [الفحص والتهيئة والصلاحيات](docs/neon-deployment.md).
 
 منصة الموقع الإلكتروني لفعالية **RoboTactic**، وهي فعالية تجمع طلاب المرحلة الثانوية والجامعات في مسابقات روبوتات تطبيقية، وورش عمل، ومعرض للمشاريع الطلابية.
 

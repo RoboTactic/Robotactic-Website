@@ -3,7 +3,7 @@ require("dotenv").config();
 const fs = require("node:fs");
 const path = require("node:path");
 const { Client } = require("pg");
-const { getDatabaseSslOptions } = require("../config/databaseSsl");
+const { getDatabaseConnectionOptions } = require("../config/databaseSsl");
 
 if (!process.env.DATABASE_URL) {
   console.error("DATABASE_URL is required. Set it in backend/.env first.");
@@ -11,8 +11,7 @@ if (!process.env.DATABASE_URL) {
 }
 
 const client = new Client({
-  connectionString: process.env.DATABASE_URL,
-  ...(process.env.DATABASE_SSL === "true" ? { ssl: getDatabaseSslOptions() } : {}),
+  ...getDatabaseConnectionOptions(process.env.DATABASE_URL),
   connectionTimeoutMillis: 5000,
 });
 

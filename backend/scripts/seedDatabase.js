@@ -2,7 +2,7 @@ require("dotenv").config();
 
 const { Client } = require("pg");
 const { randomBytes } = require("node:crypto");
-const { getDatabaseSslOptions } = require("../config/databaseSsl");
+const { getDatabaseConnectionOptions } = require("../config/databaseSsl");
 const { hashPassword } = require("../utils/passwords");
 const seedData = require("../database/seedData");
 const publishDemo = process.argv.includes("--publish");
@@ -16,10 +16,7 @@ if (!databaseUrl) {
 }
 
 const client = new Client({
-  connectionString: databaseUrl,
-  ...(process.env.DATABASE_SSL === "true"
-    ? { ssl: getDatabaseSslOptions() }
-    : {}),
+  ...getDatabaseConnectionOptions(databaseUrl),
   connectionTimeoutMillis: 5000,
 });
 

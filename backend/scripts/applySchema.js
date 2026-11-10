@@ -3,7 +3,7 @@ require("dotenv").config();
 const fs = require("node:fs");
 const path = require("node:path");
 const { Client } = require("pg");
-const { getDatabaseSslOptions } = require("../config/databaseSsl");
+const { getDatabaseConnectionOptions } = require("../config/databaseSsl");
 
 const databaseUrl = process.env.DATABASE_URL;
 const schemaPath = path.join(__dirname, "..", "database", "schema.sql");
@@ -14,10 +14,7 @@ if (!databaseUrl) {
 }
 
 const client = new Client({
-  connectionString: databaseUrl,
-  ...(process.env.DATABASE_SSL === "true"
-    ? { ssl: getDatabaseSslOptions() }
-    : {}),
+  ...getDatabaseConnectionOptions(databaseUrl),
   connectionTimeoutMillis: 5000,
 });
 
@@ -53,12 +50,12 @@ async function applySchema() {
     await client.query("ROLLBACK").catch(() => {});
     if (stage === "connecting to PostgreSQL" && error.code === "SELF_SIGNED_CERT_IN_CHAIN") {
       console.error(
-        "PostgreSQL TLS verification failed. Download the Supabase CA certificate from Database Settings > SSL Configuration and set DATABASE_SSL_CA_PATH in backend/.env.",
+        "PostgreSQL TLS verification failed. Check the provider's CA requirements and DATABASE_SSL_CA_PATH; Neon uses the system trust roots.",
         error.code,
       );
     } else if (stage === "connecting to PostgreSQL" && ["ENOENT", "ENOTFOUND", "EAI_AGAIN"].includes(error.code)) {
       console.error(
-        "Could not resolve the PostgreSQL hostname. Copy the connection string from Supabase > Connect and check its host/project reference and DNS/network access.",
+        "Could not resolve the PostgreSQL hostname. Check the provider's Connect settings and DNS/network access.",
         error.code,
       );
     } else if (stage === "reading database/schema.sql") {

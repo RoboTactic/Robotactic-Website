@@ -15,8 +15,8 @@ export default defineConfig({
       notFoundHandling: "single-page-application",
       runWorkerFirst: ["/api", "/api/*"],
     },
-    // Password verification needs more CPU than the Workers Free allowance.
-    limits: { cpuMs: 1000 },
+    // Custom CPU limits require Workers Paid. Keep password hashing unchanged on Free.
+    ...(settings.WORKERS_PAID_PLAN === "true" ? { limits: { cpuMs: 1000 } } : {}),
     observability: {
       enabled: true,
       redactQueryString: true,
@@ -31,7 +31,8 @@ export default defineConfig({
       CORS_ORIGINS: bindings.text(settings.CORS_ORIGINS || ""),
       SUPABASE_URL: bindings.text(settings.SUPABASE_URL || ""),
       AUTH_TOKEN_SECRET: bindings.secret(),
-      SUPABASE_SECRET_KEY: bindings.secret(),
+      // Preview can run without image uploads; never supply a placeholder secret.
+      ...(settings.ENABLE_IMAGE_UPLOADS === "true" ? { SUPABASE_SECRET_KEY: bindings.secret() } : {}),
       LOGIN_RATE_LIMITER: bindings.rateLimit({ namespace: "1001", simple: { limit: 5, period: 60 } }),
       ADMIN_RATE_LIMITER: bindings.rateLimit({ namespace: "1002", simple: { limit: 60, period: 60 } }),
     },
