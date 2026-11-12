@@ -110,6 +110,97 @@
 .team-committee__members li { color: var(--color-text-secondary); font: 500 13px/22px var(--font-arabic); overflow-wrap: anywhere; }
 .team-page[lang="en"] :is(.team-committee__parent, .team-committee__title, .team-committee__branch h4, .team-committee__lead span, .team-committee__lead strong, .team-committee__members li) { font-family: var(--font-latin); }
 
+/* Department → committees: the trigger sits at the foot of the card (full-width, ≥44px). */
+.team-dept__more {
+  display: flex; align-items: center; gap: 10px; min-block-size: 44px; margin-block-start: 14px; padding: 10px 14px;
+  border: 1px solid rgb(22 166 106 / .4); border-radius: 12px; background: rgb(22 166 106 / .08);
+  color: var(--color-text-brand); font: 600 14px/20px var(--font-arabic); text-align: start; cursor: pointer;
+  transition: background-color 200ms ease-out, border-color 200ms ease-out, color 200ms ease-out;
+}
+.team-dept__more > span:first-child { flex: 1; }
+.team-dept__more-arrow { flex: none; transition: transform 200ms ease-out; }
+.team-page[dir="ltr"] .team-dept__more-arrow { transform: scaleX(-1); }
+.team-dept__more:focus-visible { outline: 2px solid var(--color-brand-accent); outline-offset: 3px; }
+.team-dept__more:active { background: rgb(22 166 106 / .18); }
+.team-page[lang="en"] .team-dept__more { font-family: var(--font-latin); }
+
+/* Members dialog — mobile: bottom sheet; ≥768px: centred panel. */
+:root:has(.team-members[open]) { overflow: hidden; }
+.team-members {
+  inline-size: 100%; max-inline-size: 100%; max-block-size: min(88dvh, 88vh); margin: auto auto 0; padding: 0;
+  border: 1px solid var(--rt-panel-border, rgb(22 166 106 / .24)); border-block-end: 0; border-radius: 24px 24px 0 0;
+  background: var(--color-surface-page); color: var(--color-text-primary); overflow: hidden;
+  box-shadow: 0 -24px 64px -24px rgb(0 0 0 / .55);
+}
+.team-members::backdrop { background: rgb(6 14 22 / .72); backdrop-filter: blur(4px); }
+.team-members[open] { display: flex; animation: team-sheet-in 280ms cubic-bezier(.2,.8,.2,1); }
+.team-members[open]::backdrop { animation: team-fade-in 280ms ease-out; }
+@keyframes team-sheet-in { from { transform: translateY(24px); opacity: 0; } }
+@keyframes team-fade-in { from { opacity: 0; } }
+.team-members__panel {
+  display: flex; flex-direction: column; inline-size: 100%; min-block-size: 0;
+  background: radial-gradient(80% 60% at 50% 0%, rgb(22 166 106 / .14), transparent 70%), var(--rt-panel, var(--color-surface-card));
+}
+.team-members__head {
+  position: relative; display: flex; align-items: center; gap: 14px; padding: 22px 16px 16px;
+  border-block-end: 1px solid rgb(22 166 106 / .16);
+}
+.team-members__head::after {
+  content: ''; position: absolute; inset-inline: 24px; inset-block-start: -1px; block-size: 2px; border-radius: 2px;
+  background: linear-gradient(90deg, transparent, var(--color-brand-accent), transparent); opacity: .7;
+}
+.team-members__titles { display: grid; gap: 2px; flex: 1; min-inline-size: 0; }
+.team-members__title { margin: 0; font: 700 20px/30px var(--font-arabic); color: var(--color-text-primary); }
+.team-members__meta { margin: 0; font: 500 13px/20px var(--font-arabic-base); color: var(--color-text-secondary); }
+.team-members__close {
+  display: inline-grid; place-items: center; flex: none; inline-size: 44px; block-size: 44px; padding: 0;
+  border: 1px solid rgb(22 166 106 / .3); border-radius: 12px; background: var(--color-surface-sunken);
+  color: var(--color-text-primary); cursor: pointer; transition: border-color 200ms ease-out, color 200ms ease-out;
+}
+.team-members__close:focus-visible { outline: 2px solid var(--color-brand-accent); outline-offset: 2px; }
+.team-members__body { flex: 1; min-block-size: 0; padding: 16px 16px calc(24px + env(safe-area-inset-bottom)); overflow-x: hidden; overflow-y: auto; overscroll-behavior: contain;
+  scrollbar-width: thin; scrollbar-color: rgb(22 166 106 / .55) transparent; }
+/* Brand scrollbar (Chromium/Safari); Firefox uses scrollbar-color above. */
+.team-members__body::-webkit-scrollbar { inline-size: 8px; width: 8px; }
+.team-members__body::-webkit-scrollbar-track { background: transparent; margin-block: 12px; }
+.team-members__body::-webkit-scrollbar-thumb { border: 2px solid transparent; border-radius: 999px; background: rgb(22 166 106 / .55) padding-box; }
+.team-members__body::-webkit-scrollbar-thumb:hover { background-color: var(--color-brand-primary); }
+.team-members__grid { display: flex; flex-direction: column; gap: 14px; }
+.team-members__column { display: contents; }
+.team-members__committee {
+  position: relative; padding: 16px; border: 1px solid rgb(22 166 106 / .24); border-radius: 18px;
+  background: var(--rt-card, var(--color-surface-card));
+}
+.team-members__committee-head { display: flex; align-items: center; gap: 10px; margin-block-end: 12px; padding-block-end: 10px; border-block-end: 1px solid rgb(22 166 106 / .16); }
+.team-members__index { font: 600 12px/16px var(--font-latin); letter-spacing: .12em; color: var(--color-text-muted); }
+.team-members__committee-head h3 { flex: 1; min-inline-size: 0; margin: 0; font: 700 17px/26px var(--font-arabic); color: var(--color-text-primary); }
+.team-members__count { flex: none; font: 500 12px/18px var(--font-arabic-base); color: var(--color-text-secondary); }
+.team-members__list { display: grid; gap: 4px; margin: 0; padding: 0; list-style: none; }
+.team-members__person { position: relative; display: grid; padding-block: 8px; padding-inline: 16px 4px; }
+/* A small connection point on the inline-start side, like the circuit ports. */
+.team-members__person::before {
+  content: ''; position: absolute; inset-inline-start: 2px; inset-block-start: 17px; inline-size: 6px; block-size: 6px;
+  border-radius: 50%; border: 1.5px solid var(--color-brand-primary);
+}
+.team-members__person + .team-members__person { border-block-start: 1px dashed rgb(22 166 106 / .14); }
+.team-members__person--supervisor {
+  margin-block-end: 4px; padding-block: 12px; padding-inline: 18px 12px; border-radius: 12px;
+  background: radial-gradient(90% 140% at 50% 0%, rgb(182 242 58 / .08), transparent 70%), rgb(22 166 106 / .08);
+  border: 1px solid rgb(182 242 58 / .28);
+}
+.team-members__person--supervisor::before { inset-inline-start: 6px; inset-block-start: 21px; border: 0; background: var(--color-brand-accent); box-shadow: 0 0 0 3px rgb(182 242 58 / .16); }
+.team-members__person--supervisor + .team-members__person { border-block-start: 0; }
+/* Vice supervisor: the same highlighted row, one step quieter (green instead of lime). */
+.team-members__person--vice { background: rgb(22 166 106 / .06); border-color: rgb(22 166 106 / .32); }
+.team-members__person--vice::before { background: transparent; border: 1.5px solid var(--color-brand-accent); box-shadow: none; }
+.team-members__person--vice .team-members__role { color: var(--color-text-brand); }
+.team-members__role { font: 600 12px/18px var(--font-arabic); color: var(--color-text-accent); }
+.team-members__name { font: 600 16px/26px var(--font-arabic); color: var(--color-text-primary); overflow-wrap: anywhere; }
+.team-members__alt { font: 500 13px/20px var(--font-latin); color: var(--color-text-muted); overflow-wrap: anywhere; }
+.team-members__alt[lang="ar"] { font-family: var(--font-arabic-base); font-size: 14px; }
+.team-members[lang="en"] :is(.team-members__title, .team-members__meta, .team-members__committee-head h3, .team-members__count, .team-members__name) { font-family: var(--font-latin); }
+.team-members[lang="en"] .team-members__role { font-family: var(--font-latin); letter-spacing: .08em; text-transform: uppercase; font-size: 11px; }
+
 /* ── Closing ────────────────────────────────────────────────────────────── */
 .team-section--closing { padding-block: 56px 96px; }
 .team-closing {
@@ -151,6 +242,18 @@
   .team-committee::before { inset-block-start: calc(var(--team-port) / -2); inset-inline-start: calc(50% - var(--team-port) / 2); }
   .team-dept { padding: 24px; }
   .team-closing { padding: 48px 40px; }
+  .team-members {
+    inline-size: min(100% - 48px, 860px); max-block-size: min(84dvh, 84vh); margin: auto;
+    border-block-end: 1px solid var(--rt-panel-border, rgb(22 166 106 / .24)); border-radius: 24px;
+    box-shadow: 0 40px 96px -32px rgb(0 0 0 / .6);
+  }
+  .team-members__head { padding: 26px 28px 20px; }
+  .team-members__title { font-size: 24px; line-height: 36px; }
+  /* Columns, not a grid: each committee flows under the previous one, so short cards leave no gaps. */
+  /* Two balanced columns (see balance() in DepartmentMembers.jsx); the body scrolls vertically. */
+  .team-members__body { padding: 24px 28px 28px; }
+  .team-members__grid { flex-direction: row; align-items: flex-start; gap: 16px; }
+  .team-members__column { display: flex; flex: 1; min-inline-size: 0; flex-direction: column; gap: 16px; }
 }
 @media (min-width: 1100px) {
   .team-departments { grid-template-columns: repeat(8, minmax(0, 1fr)); }
@@ -164,10 +267,15 @@
   :is(.team-person, .team-dept):hover { border-color: rgb(22 166 106 / .7); box-shadow: inset 0 1px 0 rgb(255 255 255 / .05), 0 28px 56px -30px rgb(22 166 106 / .45); }
   :is(.team-person, .team-dept):hover::before { border-color: var(--color-brand-accent); background: var(--color-brand-accent); box-shadow: 0 0 0 4px rgb(182 242 58 / .14), 0 0 12px rgb(182 242 58 / .4); }
   .team-dept:hover .team-dept__icon { color: var(--color-brand-accent); border-color: rgb(182 242 58 / .45); }
+  .team-dept__more:hover { background: rgb(22 166 106 / .16); border-color: rgb(22 166 106 / .7); color: var(--color-text-primary); }
+  .team-page[dir="rtl"] .team-dept__more:hover .team-dept__more-arrow { transform: translateX(-3px); }
+  .team-page[dir="ltr"] .team-dept__more:hover .team-dept__more-arrow { transform: scaleX(-1) translateX(-3px); }
+  .team-members__close:hover { border-color: var(--color-brand-accent); color: var(--color-brand-accent); }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .team-person, .team-dept, .team-person::before, .team-dept::before, .team-dept__icon { transition: none; }
+  .team-person, .team-dept, .team-person::before, .team-dept::before, .team-dept__icon, .team-dept__more, .team-dept__more-arrow { transition: none; }
+  .team-members[open], .team-members[open]::backdrop { animation: none; }
   .team-person { border-color: rgb(182 242 58 / .55); }
   .team-person::before {
     border-color: var(--color-brand-accent); background: var(--color-brand-accent); box-shadow: 0 0 0 4px rgb(182 242 58 / .16), 0 0 14px rgb(182 242 58 / .45);

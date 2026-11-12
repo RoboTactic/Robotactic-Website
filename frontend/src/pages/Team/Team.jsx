@@ -1,9 +1,10 @@
-import { Fragment, useRef } from 'react';
+import { Fragment, useRef, useState } from 'react';
 import SectionHeading from '../../components/SectionHeading/SectionHeading';
 import Icon from '../../components/Icon/Icon';
 import circuitPattern from '../Workshops/assets/circuit-pattern.svg';
 import TeamCircuit from './TeamCircuit';
-import { ROLES, departments, leadershipTiers, websiteCommittee } from '../../data/team';
+import DepartmentMembers from './DepartmentMembers';
+import { ROLES, departments, leadRolesOf, leadershipTiers, websiteCommittee } from '../../data/team';
 import { useLanguage } from '../../services/api/publicContentLanguage';
 import '../InfoPages.css';
 import './Team.css';
@@ -17,6 +18,7 @@ export default function Team() {
   const rootRef = useRef(null);
   const { language, en, dir, t } = useLanguage();
   const other = en ? 'ar' : 'en';
+  const [openDept, setOpenDept] = useState(null);
   return (
     <div ref={rootRef} className="info-page team-page" lang={language} dir={dir}>
       <TeamCircuit rootRef={rootRef} />
@@ -72,9 +74,19 @@ export default function Team() {
                 <h3 id={`team-dept-${dept.key}`} className="team-dept__name">{t(dept.name)}</h3>
                 <p className="team-dept__alt" lang={other}>{en ? dept.name[0] : dept.name[1]}</p>
                 <dl className="team-dept__people">
-                  <div className="team-dept__member team-dept__member--leader"><dt>{t(ROLES.leader)}</dt><dd>{t(dept.leader)}</dd></div>
-                  <div className="team-dept__member"><dt>{t(ROLES.viceLeader)}</dt><dd>{t(dept.viceLeader)}</dd></div>
+                  {[dept.leader, dept.viceLeader].map((name, k) => {
+                    const role = leadRolesOf(dept)[k];
+                    // Leader styling for the leader, and for any co-lead with the same title (e.g. two Program Leaders).
+                    const lead = k === 0 || role === leadRolesOf(dept)[0];
+                    return <div key={name[1]} className={`team-dept__member${lead ? ' team-dept__member--leader' : ''}`}><dt>{t(role)}</dt><dd>{t(name)}</dd></div>;
+                  })}
                 </dl>
+                {dept.committees && (
+                  <button type="button" className="team-dept__more" aria-haspopup="dialog" onClick={() => setOpenDept(dept)}>
+                    <span>{t(['عرض اللجان والأعضاء', 'View committees & members'])}</span>
+                    <Icon name="chevronLeft" size={16} className="team-dept__more-arrow" />
+                  </button>
+                )}
               </article>
             </li>
             {dept.key === websiteCommittee.department && <li className="team-committee-item">
@@ -98,6 +110,8 @@ export default function Team() {
           ))}
         </ul>
       </section>
+
+      <DepartmentMembers dept={openDept} onClose={() => setOpenDept(null)} />
 
       <section className="container team-section team-section--closing" aria-labelledby="team-closing-title">
         <div className="team-closing">
