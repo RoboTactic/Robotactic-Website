@@ -87,13 +87,86 @@ a.project-social:focus-visible { outline: 2px solid var(--color-border-focus); o
 .project-card__details div { display: grid; grid-template-columns: minmax(0, 130px) minmax(0, 1fr); gap: 10px; padding-block: 10px; }
 .project-card__details dt { color: var(--color-text-muted); overflow-wrap: anywhere; }
 .project-card__details dd { min-width: 0; margin: 0; color: var(--color-text-primary); overflow-wrap: anywhere; }
+/* Search-empty: projects exist but none match. Same shell language as the Coming Soon card
+   (lime hairline, circuit node), kept compact so it never reads as a missing page. */
 .projects-empty {
-  display: flex; min-height: 316px; flex-direction: column; align-items: center; justify-content: center;
-  gap: 10px; padding: 40px 24px; border: 1px solid var(--color-border-default);
+  position: relative; isolation: isolate; overflow: hidden;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 14px; padding: 48px 24px 44px; border: 1px solid var(--color-border-default);
   border-radius: var(--radius-lg); background: var(--color-surface-card); text-align: center;
 }
-.projects-empty h3 { margin: 0; font-size: 30px; font-weight: 700; line-height: 44px; }
-.projects-empty p { margin: 0; color: var(--color-text-secondary); font-size: 17px; line-height: 32px; }
+.projects-empty::after { /* lime hairline along the top edge */
+  content: ''; position: absolute; inset-block-start: 0; inset-inline: 18%; block-size: 1px; z-index: -1;
+  background: linear-gradient(90deg, transparent, rgb(182 242 58 / .5), transparent);
+}
+.projects-empty__icon {
+  position: relative; display: grid; place-items: center; inline-size: 56px; block-size: 56px; margin-block-end: 4px;
+  border: 1px solid rgb(182 242 58 / .45); border-radius: 16px; color: var(--color-brand-accent);
+  background: radial-gradient(circle at 50% 30%, rgb(182 242 58 / .12), transparent 70%), var(--color-brand-secondary);
+  box-shadow: 0 0 0 6px rgb(22 166 106 / .06);
+}
+.projects-empty__icon::before,
+.projects-empty__icon::after { /* circuit stubs either side of the node (symmetric in both directions) */
+  content: ''; position: absolute; inset-block-start: 50%; inline-size: 40px; block-size: 1px;
+  background: rgb(22 166 106 / .5);
+}
+.projects-empty__icon::before { inset-inline-end: calc(100% + 6px); }
+.projects-empty__icon::after { inset-inline-start: calc(100% + 6px); }
+.projects-empty__copy { display: flex; flex-direction: column; gap: 6px; }
+.projects-empty h3 { margin: 0; font-size: 24px; font-weight: 700; line-height: 1.5; }
+.projects-empty p { margin: 0; max-inline-size: 44ch; color: var(--color-text-secondary); font-size: 16px; line-height: 1.85; }
+.projects-empty__reset {
+  margin-block-start: 6px; border-radius: 999px; background: rgb(255 255 255 / .03); cursor: pointer;
+  transition: border-color 200ms ease, color 200ms ease, background-color 200ms ease;
+}
+.projects-empty__reset:lang(en) { font-family: var(--font-latin); }
+.projects-empty__reset:focus-visible { outline: 2px solid var(--color-brand-accent); outline-offset: 3px; }
+@media (hover: hover) {
+  .projects-empty__reset:hover { border-color: rgb(182 242 58 / .7); color: var(--color-brand-accent); background: rgb(182 242 58 / .08); }
+}
+
+/* Coming Soon "showroom" artwork (ProjectsComingSoon.jsx). Default styles are the final,
+   static state; motion is limited to prefers-reduced-motion: no-preference. */
+.cs-show__dots { opacity: .1; }
+.cs-show__floor { fill: none; stroke: #16A66A; stroke-width: 1.25; stroke-opacity: .35; stroke-dasharray: 2 6; }
+.cs-show__leads path { stroke: #16A66A; stroke-width: 1.5; stroke-opacity: .45; }
+.cs-show__lead-end { fill: #101D2B; stroke: #16A66A; stroke-width: 1.5; }
+.cs-show__trace { fill: none; stroke: #16A66A; stroke-width: 1.5; stroke-opacity: .55; }
+.cs-show__trace-pulse { fill: none; stroke: #B6F23A; stroke-width: 2.5; stroke-linecap: round; stroke-dasharray: .3 2; stroke-dashoffset: .3; opacity: 0; }
+.cs-show__slot-frame { fill: rgb(16 29 43 / .85); stroke: #16A66A; stroke-width: 1.5; stroke-opacity: .6; stroke-dasharray: 6 5; }
+.cs-show__slot-media { fill: #0B3D2E; opacity: .75; }
+.cs-show__slot-line { fill: #16A66A; opacity: .35; }
+.cs-show__slot-line--short { opacity: .2; }
+.cs-show__plinth { stroke: #16A66A; stroke-width: 1.5; stroke-opacity: .6; }
+.cs-show__frame { fill: #101D2B; stroke: #B6F23A; stroke-width: 2; stroke-opacity: .75; }
+.cs-show__port { fill: #101D2B; stroke: #B6F23A; stroke-width: 1.75; }
+.cs-show__tag { fill: #16A66A; opacity: .55; }
+.cs-show__tag-dot { fill: #B6F23A; }
+.cs-show__print { opacity: .35; }
+.cs-show__print-edge { fill: none; stroke: #16A66A; stroke-width: 1.25; stroke-opacity: .5; }
+.cs-show__scan { fill: #B6F23A; opacity: 0; }
+.cs-show__arm path { stroke: #B6F23A; stroke-width: 3; }
+.cs-show__arm .cs-show__arm-base { fill: #0B3D2E; stroke: #16A66A; stroke-width: 2; }
+.cs-show__arm .cs-show__arm-dim { stroke: #16A66A; stroke-width: 1.25; stroke-dasharray: 3 3; stroke-opacity: .8; }
+.cs-show__joint { fill: #101D2B; stroke: #B6F23A; stroke-width: 2; }
+.cs-show__joint--tip { fill: #B6F23A; }
+.cs-show__caption { fill: #16A66A; opacity: .5; }
+.cs-show__caption--short { opacity: .3; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .cs-show__scan { animation: cs-show-scan 4s linear infinite; }
+  .cs-show__beam { animation: cs-show-beam 4s ease-in-out infinite alternate; }
+  .cs-show__trace-pulse { animation: cs-show-pulse 8s cubic-bezier(.4,0,.2,1) calc(var(--i) * 2s) infinite; }
+  .cs-show__slot-frame { animation: cs-show-slot 8s ease-out calc(var(--i) * 2s + .45s) infinite; }
+  .cs-show__slot-media { animation: cs-show-media 8s ease-out calc(var(--i) * 2s + .45s) infinite; }
+  .cs-show__tag-dot, .cs-show__joint--tip { animation: cs-show-led 1.6s ease-in-out infinite alternate; }
+}
+@keyframes cs-show-scan { from { opacity: 0; transform: translateY(0); } 8%, 92% { opacity: .75; } to { opacity: 0; transform: translateY(125px); } }
+@keyframes cs-show-beam { from { opacity: .65; } to { opacity: 1; } }
+@keyframes cs-show-pulse { from { opacity: 1; stroke-dashoffset: .3; } 7% { opacity: 1; } 9%, to { opacity: 0; stroke-dashoffset: -1; } }
+@keyframes cs-show-slot { 0% { stroke: #B6F23A; stroke-opacity: 1; } 22% { stroke: #B6F23A; stroke-opacity: 1; } 34%, to { stroke: #16A66A; stroke-opacity: .6; } }
+@keyframes cs-show-media { 0% { fill: #16A66A; opacity: .55; } 22% { fill: #16A66A; opacity: .45; } 34%, to { fill: #0B3D2E; opacity: .75; } }
+@keyframes cs-show-led { from { opacity: .45; } to { opacity: 1; } }
 
 @media (max-width: 767px) {
   .projects-hero { min-height: 252px; }
@@ -120,7 +193,7 @@ a.project-social:focus-visible { outline: 2px solid var(--color-border-focus); o
   .project-card__heading p { font-size: 15px; line-height: 28px; }
   .project-card__member { min-height: 44px; }
   .project-card__details div { grid-template-columns: minmax(0, 105px) minmax(0, 1fr); }
-  .projects-empty { min-height: 260px; }
-  .projects-empty h3 { font-size: 22px; line-height: 34px; }
-  .projects-empty p { font-size: 17px; line-height: 32px; }
+  .projects-empty { gap: 12px; padding: 36px 20px 32px; }
+  .projects-empty h3 { font-size: 20px; }
+  .projects-empty p { font-size: 15px; }
 }

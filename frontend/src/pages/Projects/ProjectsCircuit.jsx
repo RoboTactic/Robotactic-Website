@@ -35,7 +35,8 @@ function compose(ctx) {
 
   const cardEls = qa('.projects-grid > .project-card');
   const cards = cardEls.map(rect);
-  const endBox = cards.length ? null : rect(q('.projects-empty'));
+  // No cards: the trail ends under whichever empty state is shown (search-empty or Coming Soon).
+  const endBox = cards.length ? null : rect(q('.projects-empty, .coming-soon'));
   if (cards.length) {
     const rows = [];
     cards.forEach((r, i) => {
