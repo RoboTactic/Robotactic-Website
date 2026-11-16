@@ -5,12 +5,19 @@ async function getSiteSettings(pool) {
 
 async function getCompetitions(pool) {
   const { rows } = await pool.query(`
-    SELECT id, name_ar, name_en, description_ar, description_en, category_code,
-           requirements_ar, requirements_en, audience_type, team_size_min, team_size_max,
-           max_teams, start_at, end_at, registration_status, registration_url, image_url,
-           is_featured, featured_order
-    FROM competitions WHERE status = 'published'
-    ORDER BY is_featured DESC, featured_order ASC NULLS LAST, id ASC
+    SELECT c.id, c.name_ar, c.name_en, c.description_ar, c.description_en, c.category_code,
+           c.requirements_ar, c.requirements_en, c.audience_type, c.team_size_min, c.team_size_max,
+           c.max_teams, c.start_at, c.end_at, c.registration_status, c.registration_url, c.image_url,
+           c.is_featured, c.featured_order, COALESCE(supervisors.items, '[]'::json) AS supervisors
+    FROM competitions c
+    LEFT JOIN LATERAL (
+      SELECT json_agg(json_build_object('id', cs.id, 'name_ar', cs.name_ar, 'name_en', cs.name_en,
+        'title_ar', cs.title_ar, 'title_en', cs.title_en, 'linkedin_url', cs.linkedin_url)
+        ORDER BY cs.display_order ASC NULLS LAST, cs.id ASC) AS items
+      FROM competition_supervisors cs WHERE cs.competition_id = c.id
+    ) supervisors ON TRUE
+    WHERE c.status = 'published'
+    ORDER BY c.is_featured DESC, c.featured_order ASC NULLS LAST, c.id ASC
   `);
   return rows;
 }

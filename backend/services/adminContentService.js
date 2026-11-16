@@ -134,15 +134,46 @@ const validators = {
   },
 };
 
+const supervisorFields = ["name_ar", "name_en", "title_ar", "title_en", "linkedin_url", "display_order"];
+const optionalText = (value, field, max) => {
+  if (value == null || (typeof value === "string" && !value.trim())) return null;
+  const text = validators.string(value, field);
+  if (text.length > max) throw httpError(400, `${field} must be ${max} characters or fewer.`);
+  return text;
+};
+
+function validateSupervisors(value) {
+  if (!Array.isArray(value) || value.length > 20) throw httpError(400, "supervisors must be an array of up to 20 supervisors.");
+  return value.map((supervisor, index) => {
+    const field = `supervisors[${index}]`;
+    if (!supervisor || typeof supervisor !== "object" || Array.isArray(supervisor)) throw httpError(400, `${field} must be an object.`);
+    if (Object.keys(supervisor).some((key) => !supervisorFields.includes(key))) throw httpError(400, `${field} contains an unsupported field.`);
+    const name_ar = optionalText(supervisor.name_ar, `${field}.name_ar`, 120);
+    if (!name_ar) throw httpError(400, `${field}.name_ar is required.`);
+    return {
+      name_ar,
+      name_en: optionalText(supervisor.name_en, `${field}.name_en`, 120),
+      title_ar: optionalText(supervisor.title_ar, `${field}.title_ar`, 120),
+      title_en: optionalText(supervisor.title_en, `${field}.title_en`, 120),
+      linkedin_url: supervisor.linkedin_url == null || supervisor.linkedin_url === "" ? null : validators.url(supervisor.linkedin_url, `${field}.linkedin_url`),
+      display_order: supervisor.display_order == null ? index + 1 : validators.positiveInteger(supervisor.display_order, `${field}.display_order`),
+    };
+  });
+}
+
 function validate(resource, body, partial = false) {
   const definition = resources[resource];
   if (!body || typeof body !== "object" || Array.isArray(body)) throw httpError(400, "A JSON object is required.");
   if (resource === "team-members" && Object.keys(body).some(key=>!Object.hasOwn(definition.fields,key))) throw httpError(400,"Unsupported content field.");
   if (resource === "team-members" && body.display_order !== undefined && (!Number.isSafeInteger(body.display_order) || body.display_order < 1 || body.display_order > 2147483647)) throw httpError(400,"Choose a positive display order up to 2147483647.");
-  const unknown = Object.keys(body).filter((key) => !definition.fields[key] && !(resource === "projects" && key === "members"));
+  const unknown = Object.keys(body).filter((key) => !definition.fields[key] && !(resource === "projects" && key === "members") && !(resource === "competitions" && key === "supervisors"));
   if (unknown.length) throw httpError(400, `Unsupported fields: ${unknown.join(", ")}.`);
   const normalized = {};
   for (const [key, value] of Object.entries(body)) {
+    if (resource === "competitions" && key === "supervisors") {
+      normalized.supervisors = validateSupervisors(value);
+      continue;
+    }
     if (resource === "projects" && key === "members") {
       if (!Array.isArray(value) || value.length > 50) throw httpError(400, "members must be an array of up to 50 project members.");
       normalized.members = value.map((member, index) => {

@@ -6,10 +6,14 @@ import { eventVenue } from '../../data/site';
    Competitions page and the Home preview.
    - competition: one item from data/competitions.js
    - icon: an image URL (string) or a React node (e.g. <Icon name="sensor" />)
-   - registrationLabel / registrationIcon / helperText: optional overrides for the Google Form action */
+   - registrationLabel / registrationIcon / helperText: optional overrides for the Google Form action
+   - showSupervisors: list the track's supervisors (Competitions page; Home stays compact) */
+const initialOf = (name) => Array.from(String(name).trim())[0] || '';
+
 export default function CompetitionCard({
   competition,
   icon,
+  showSupervisors = false,
   registrationLabel,
   registrationIcon,
   helperText,
@@ -35,6 +39,30 @@ export default function CompetitionCard({
       </div>
 
       <p className="competition-card__description">{competition.description || t('سيُعلن وصف المسابقة وتفاصيلها لاحقًا.', 'The competition description and details will be announced later.')}</p>
+
+      {showSupervisors && competition.supervisors?.length > 0 && (
+        <section className="competition-card__supervisors" aria-labelledby={`competition-${competition.id}-supervisors`}>
+          <h3 id={`competition-${competition.id}-supervisors`}>
+            <span className="competition-card__supervisors-mark" aria-hidden="true" />
+            {t('مشرفو المسابقة', 'Competition supervisors')}
+          </h3>
+          <ul>
+            {competition.supervisors.map((supervisor) => (
+              <li key={supervisor.id ?? supervisor.name} className="competition-supervisor">
+                <span className="competition-supervisor__avatar" aria-hidden="true">{initialOf(supervisor.name)}</span>
+                <span className="competition-supervisor__text">
+                  <bdi className="competition-supervisor__name">{supervisor.name}</bdi>
+                  {supervisor.title && <bdi className="competition-supervisor__title">{supervisor.title}</bdi>}
+                </span>
+                {supervisor.linkedinUrl && (
+                  <a className="competition-supervisor__link" href={supervisor.linkedinUrl} target="_blank" rel="noopener noreferrer"
+                    aria-label={`LinkedIn — ${supervisor.name}`}>in</a>
+                )}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       <dl className="competition-card__meta">
         <div><dt>{t('الفئة المستهدفة', 'Audience')}</dt><dd><bdi>{competition.audience}</bdi></dd></div>

@@ -8,9 +8,8 @@ function requireManager(admin) {
 
 async function getStart(pool, admin) {
   requireManager(admin);
-  const settings = await repository.getStart(pool);
-  if (!settings) throw httpError(404, 'Event settings have not been configured.');
-  return settings;
+  // A missing row means no start time yet; the editor shows an empty field to fill in.
+  return (await repository.getStart(pool)) || { event_start_at: null };
 }
 
 async function updateStart(pool, body, admin) {

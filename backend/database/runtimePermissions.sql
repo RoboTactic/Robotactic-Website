@@ -90,6 +90,10 @@ GRANT SELECT ON TABLE public."project_members" TO robotactic_app;
 GRANT INSERT ("project_id", "name", "linkedin_url", "x_url", "display_order") ON TABLE public."project_members" TO robotactic_app;
 GRANT DELETE ON TABLE public."project_members" TO robotactic_app;
 
+GRANT SELECT ON TABLE public."competition_supervisors" TO robotactic_app;
+GRANT INSERT ("competition_id", "name_ar", "name_en", "title_ar", "title_en", "linkedin_url", "display_order") ON TABLE public."competition_supervisors" TO robotactic_app;
+GRANT DELETE ON TABLE public."competition_supervisors" TO robotactic_app;
+
 GRANT SELECT ON TABLE public."site_settings" TO robotactic_app;
 GRANT UPDATE ("event_start_at", "updated_at") ON TABLE public."site_settings" TO robotactic_app;
 
@@ -135,6 +139,7 @@ BEGIN
         {"table":"speakers","commands":["SELECT","INSERT","UPDATE","DELETE"],"insert":["full_name","phone","notes"]},
         {"table":"workshop_speakers","commands":["SELECT","INSERT","UPDATE","DELETE"],"insert":["workshop_id","speaker_id","is_public"]},
         {"table":"project_members","commands":["SELECT","INSERT","DELETE"],"insert":["project_id","name","linkedin_url","x_url","display_order"]},
+        {"table":"competition_supervisors","commands":["SELECT","INSERT","DELETE"],"insert":["competition_id","name_ar","name_en","title_ar","title_en","linkedin_url","display_order"]},
         {"table":"site_settings","commands":["SELECT","UPDATE"],"insert":[]},
         {"table":"about_page","commands":["SELECT","UPDATE"],"insert":[]},
         {"table":"public_section_visibility","commands":["SELECT","INSERT","UPDATE"],"insert":["section_key","is_visible"]},

@@ -73,6 +73,42 @@
 .competition-card__meta div:last-child { border-block-end: 0; }
 .competition-card__meta dt { color: var(--color-text-muted); overflow-wrap: anywhere; }
 .competition-card__meta dd { min-width: 0; margin: 0; color: var(--color-text-primary); overflow-wrap: anywhere; }
+
+/* Supervisors: a quiet "connection point" heading and one row per person. */
+.competition-card__supervisors { display: flex; min-width: 0; flex-direction: column; gap: 10px; }
+.competition-card__supervisors h3 {
+  display: flex; align-items: center; gap: 8px; margin: 0;
+  color: var(--color-text-muted); font-size: 13px; font-weight: 600; line-height: 22px;
+}
+.competition-card__supervisors-mark {
+  position: relative; width: 12px; height: 12px; flex: 0 0 12px;
+  border: 1.5px solid var(--color-brand-primary); border-radius: 50%;
+}
+.competition-card__supervisors-mark::after {
+  content: ''; position: absolute; inset: 2.5px; border-radius: 50%; background: var(--color-text-accent);
+}
+.competition-card__supervisors ul { display: flex; min-width: 0; flex-direction: column; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.competition-supervisor {
+  display: flex; min-width: 0; align-items: center; gap: 12px; padding: 8px 12px;
+  border: 1px solid var(--color-border-subtle); border-radius: var(--radius-md);
+  background: var(--color-surface-sunken);
+}
+.competition-supervisor__avatar {
+  display: inline-flex; width: 36px; height: 36px; flex: 0 0 36px; align-items: center; justify-content: center;
+  border: 1.5px solid var(--color-border-brand); border-radius: 50%;
+  background: var(--color-surface-brand-band); color: var(--color-text-accent);
+  font-size: 15px; font-weight: 700; line-height: 1;
+}
+.competition-supervisor__text { display: flex; min-width: 0; flex: 1 1 auto; flex-direction: column; text-align: start; }
+.competition-supervisor__name { color: var(--color-text-primary); font-size: 14px; font-weight: 600; line-height: 22px; overflow-wrap: anywhere; }
+.competition-supervisor__title { color: var(--color-text-secondary); font-size: 13px; line-height: 20px; overflow-wrap: anywhere; }
+.competition-supervisor__link {
+  display: inline-flex; width: 44px; height: 44px; flex: 0 0 44px; align-items: center; justify-content: center;
+  margin-inline-end: -6px; border-radius: var(--radius-md); color: var(--color-text-brand);
+  font: 700 15px/1 'IBM Plex Sans', sans-serif; text-decoration: none;
+}
+.competition-supervisor__link:hover { background: var(--color-surface-brand-band); color: var(--color-text-accent); }
+.competition-supervisor__link:focus-visible { outline: 2px solid var(--color-border-focus); outline-offset: 2px; }
 .competitions-cta { padding-block: 0 80px; }
 .competitions-cta__band {
   position: relative; display: flex; min-height: 174px; flex-direction: column; align-items: center;

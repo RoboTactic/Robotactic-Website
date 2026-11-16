@@ -15,6 +15,7 @@ Object.assign(tables, {
   speakers: { insert: ["full_name", "phone", "notes"], update: ["full_name", "phone", "notes", "updated_at"], delete: true },
   workshop_speakers: { insert: ["workshop_id", "speaker_id", "is_public"], update: ["is_public", "updated_at"], delete: true },
   project_members: { insert: ["project_id", "name", "linkedin_url", "x_url", "display_order"], update: [], delete: true },
+  competition_supervisors: { insert: ["competition_id", "name_ar", "name_en", "title_ar", "title_en", "linkedin_url", "display_order"], update: [], delete: true },
   site_settings: { insert: [], update: ["event_start_at", "updated_at"], delete: false },
   about_page: { insert: [], update: [...aboutFields, "updated_at"], delete: false },
   public_section_visibility: { insert: ["section_key", "is_visible"], update: ["is_visible", "updated_at"], delete: false },

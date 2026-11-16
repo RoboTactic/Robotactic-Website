@@ -907,6 +907,51 @@ ON CONFLICT (section_key) DO NOTHING;
 
 INSERT INTO public.schema_migrations(name) VALUES ('007_public_section_visibility.sql');
 
+-- Migration: 008_competition_supervisors.sql
+-- Additive migration. Public supervisor names and titles for each competition track.
+-- No contact details are stored here: only what may be shown on the public site.
+CREATE TABLE IF NOT EXISTS competition_supervisors (
+    id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    competition_id INTEGER NOT NULL REFERENCES competitions(id) ON DELETE CASCADE,
+    name_ar TEXT NOT NULL,
+    name_en TEXT,
+    title_ar TEXT,
+    title_en TEXT,
+    linkedin_url TEXT,
+    display_order INTEGER CHECK (display_order IS NULL OR display_order > 0),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS competition_supervisors_competition_id_idx ON competition_supervisors (competition_id);
+
+-- Reads go through the backend only; keep Supabase Data API roles out.
+ALTER TABLE competition_supervisors ENABLE ROW LEVEL SECURITY;
+DO $$
+BEGIN
+    IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'anon') THEN
+        REVOKE ALL ON competition_supervisors FROM anon;
+    END IF;
+    IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'authenticated') THEN
+        REVOKE ALL ON competition_supervisors FROM authenticated;
+    END IF;
+END $$;
+
+INSERT INTO public.schema_migrations(name) VALUES ('008_competition_supervisors.sql');
+
+-- Migration: 009_site_settings_row.sql
+-- The dashboard edits the single site_settings row (id = 1) but never creates it.
+-- Ensure it exists with no start time, so the team can set the date from the dashboard.
+-- The public countdown already treats a missing start time as "not announced".
+ALTER TABLE site_settings ALTER COLUMN event_start_at DROP NOT NULL;
+ALTER TABLE site_settings ALTER COLUMN general_registration_url DROP NOT NULL;
+ALTER TABLE site_settings ALTER COLUMN official_email DROP NOT NULL;
+
+INSERT INTO site_settings (id) VALUES (1)
+ON CONFLICT (id) DO NOTHING;
+
+INSERT INTO public.schema_migrations(name) VALUES ('009_site_settings_row.sql');
+
 -- Runtime login remains disabled until reviewed and a password is set privately.
 -- REVIEWED PROPOSAL ONLY. Run manually as the database administrator AFTER approval.
 -- No password, data changes, administrative role grants, or automatic migration hook.
@@ -1035,6 +1080,10 @@ GRANT SELECT ON TABLE public."project_members" TO robotactic_app;
 GRANT INSERT ("project_id", "name", "linkedin_url", "x_url", "display_order") ON TABLE public."project_members" TO robotactic_app;
 GRANT DELETE ON TABLE public."project_members" TO robotactic_app;
 
+GRANT SELECT ON TABLE public."competition_supervisors" TO robotactic_app;
+GRANT INSERT ("competition_id", "name_ar", "name_en", "title_ar", "title_en", "linkedin_url", "display_order") ON TABLE public."competition_supervisors" TO robotactic_app;
+GRANT DELETE ON TABLE public."competition_supervisors" TO robotactic_app;
+
 GRANT SELECT ON TABLE public."site_settings" TO robotactic_app;
 GRANT UPDATE ("event_start_at", "updated_at") ON TABLE public."site_settings" TO robotactic_app;
 
@@ -1080,6 +1129,7 @@ BEGIN
         {"table":"speakers","commands":["SELECT","INSERT","UPDATE","DELETE"],"insert":["full_name","phone","notes"]},
         {"table":"workshop_speakers","commands":["SELECT","INSERT","UPDATE","DELETE"],"insert":["workshop_id","speaker_id","is_public"]},
         {"table":"project_members","commands":["SELECT","INSERT","DELETE"],"insert":["project_id","name","linkedin_url","x_url","display_order"]},
+        {"table":"competition_supervisors","commands":["SELECT","INSERT","DELETE"],"insert":["competition_id","name_ar","name_en","title_ar","title_en","linkedin_url","display_order"]},
         {"table":"site_settings","commands":["SELECT","UPDATE"],"insert":[]},
         {"table":"about_page","commands":["SELECT","UPDATE"],"insert":[]},
         {"table":"public_section_visibility","commands":["SELECT","INSERT","UPDATE"],"insert":["section_key","is_visible"]},

@@ -29,7 +29,7 @@ export default function LoadingScreen({ compact = false }) {
           <circle className="loading-screen__core" cx="160" cy="92" r="4" />
         </svg>
         <p className="loading-screen__title">{t('لحظات وننطلق', 'Getting ready')}</p>
-        {!compact && <p className="loading-screen__slogan">{t('ابتكار يقوده التفكير', 'Innovation driven by ideas')}</p>}
+        {!compact && <p className="loading-screen__slogan">{t('تحدي يقوده التفكير', 'A Challenge Driven by Thinking')}</p>}
         <div className="loading-screen__rail"><span /></div>
       </div>
     </div>

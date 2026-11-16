@@ -33,7 +33,15 @@ export function presentCompetition(row) {
     date,
     registrationStatus: row.registration_status,
     registrationUrl: row.registration_url,
-    icon: ({ drones: 'drone', controller: 'controller', sensing: 'sensor', combat: 'controller', simulation: 'simulation' })[row.category_code] || 'competition',
+    supervisors: (Array.isArray(row.supervisors) ? row.supervisors : [])
+      .map((supervisor) => ({
+        id: supervisor.id,
+        name: localized(supervisor.name_ar, supervisor.name_en),
+        title: localized(supervisor.title_ar, supervisor.title_en),
+        linkedinUrl: /^https?:\/\//i.test(supervisor.linkedin_url || '') ? supervisor.linkedin_url : '',
+      }))
+      .filter((supervisor) => supervisor.name),
+    icon:({ drones: 'drone', controller: 'controller', sensing: 'sensor', combat: 'controller', simulation: 'simulation' })[row.category_code] || 'competition',
   };
 }
 

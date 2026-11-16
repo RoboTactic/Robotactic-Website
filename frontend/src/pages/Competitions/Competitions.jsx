@@ -44,7 +44,7 @@ export default function Competitions() {
             <ApiState loading={loading} error={error} onRetry={reload} />
             {competitions.map((competition) => (
               <CompetitionCard key={competition.id} competition={competition}
-                icon={<Icon name={competition.icon} />} />
+                icon={<Icon name={competition.icon} />} showSupervisors />
             ))}
           </div>
         )}
