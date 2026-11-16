@@ -65,7 +65,7 @@ export default function CompetitionCard({
       )}
 
       <dl className="competition-card__meta">
-        <div><dt>{t('الفئة المستهدفة', 'Audience')}</dt><dd><bdi>{competition.audience}</bdi></dd></div>
+        
         <div><dt>{t('حجم الفريق', 'Team size')}</dt><dd>{competition.teamSize}</dd></div>
         <div><dt>{t('موعد المسابقة', 'Date')}</dt><dd>{competition.date}</dd></div>
         <div><dt>{t('المكان', 'Venue')}</dt><dd>{t(eventVenue)}</dd></div>
