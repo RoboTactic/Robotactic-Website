@@ -62,7 +62,8 @@ export default {
       // Hyperdrive maintains the remote connection pool; JS sockets remain request-local.
       pool = new pg.Pool({ connectionString: env.HYPERDRIVE.connectionString, max: 5,
         connectionTimeoutMillis: 5000, idleTimeoutMillis: 1000 });
-      pool.on("error", () => console.error(JSON.stringify({ event: "database_connection_error" })));
+      pool.on("error", error => console.error(JSON.stringify({ event: "database_connection_error",
+        code: typeof error?.code === "string" ? error.code.slice(0, 40) : undefined })));
       return await scope.run({ pool, clientIp }, () => handle.fetch(request, env, ctx));
     } catch {
       console.error(JSON.stringify({ event: "api_request_failed" }));
