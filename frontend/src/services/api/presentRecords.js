@@ -14,7 +14,8 @@ export function presentCompetition(row) {
   const category = categoryLabels[row.category_code] || categoryLabels.other;
   const pending = localized('يُحدَّد لاحقًا', 'To be announced');
   const size = row.team_size_min == null && row.team_size_max == null ? pending
-    : row.team_size_min != null && row.team_size_max != null ? `${row.team_size_min}–${row.team_size_max}`
+    : row.team_size_min != null && row.team_size_max != null
+      ? (Number(row.team_size_min) === Number(row.team_size_max) ? String(row.team_size_min) : `${row.team_size_min}–${row.team_size_max}`)
       : String(row.team_size_min ?? row.team_size_max);
   const formatter = new Intl.DateTimeFormat(locale(), { dateStyle: 'medium', timeZone: 'Asia/Riyadh' });
   const date = row.start_at

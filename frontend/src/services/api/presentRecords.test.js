@@ -34,6 +34,11 @@ test('dashboard start and end dates display as a range in Riyadh time in both la
   }
 });
 
+test('a fixed team size (minimum equals maximum) shows a single number', () => {
+  assert.equal(presentCompetition({ team_size_min: 2, team_size_max: 2 }).teamSize, '2');
+  assert.equal(presentCompetition({ team_size_min: '3', team_size_max: 3 }).teamSize, '3');
+});
+
 test('single-day competitions display once and descriptions fall back to the available language', () => {
   document.documentElement.lang = 'en';
   const row = { description_ar: 'وصف المسابقة', start_at: '2026-11-04T09:00:00+03:00', end_at: '2026-11-04T17:00:00+03:00' };
