@@ -53,6 +53,8 @@ const marketingCommittees = [
       ['يارا محمد الغامدي', 'Yara Mohammed Alghamdi'],
       ['دانة خالد الطاسان', 'Danah Khalid Altasan'],
       ['ليان خالد القرني', 'Layan Khalid Alqarni'],
+      ['رغد عوض المرامحي', 'Raghad Awad Almramihi'],
+      ['ريفال خالد النفيسى', 'Refal Khalid Alnafisi'],
     ],
   },
   {
@@ -65,6 +67,20 @@ const marketingCommittees = [
       ['غسق عدنان بخش', 'Ghasaq Bakhsh'],
       ['جوري عبدالله خلاف', 'Joury Abdullah Khallaf'],
       ['تولين محمود تعباني', 'Tuleen Mahmoud Tabaani'],
+    ],
+  },
+];
+
+/* Ambassadors has no committees: its members are listed as one department group. */
+const ambassadorsCommittees = [
+  {
+    key: 'unassigned',
+    unassigned: true,
+    name: ['أعضاء القسم', 'Department Members'],
+    members: [
+      ['جنى زيد المالكي', 'Jana Zaid Almalki'],
+      ['لجين سامي الأحمدي', 'Lujain S Alahmadi'],
+      ['مهند عطيه اللحياني', 'Mohaned Ateya Allhyani'],
     ],
   },
 ];
@@ -404,10 +420,10 @@ export const leadershipTiers = [
 /* `icon` names come from components/Icon/icons.js.
    `leadRoles` (optional) overrides the [leader, viceLeader] titles — Programs has two equal Program Leaders. */
 export const departments = [
-  { key: 'ambassadors', icon: 'globe', name: ['قسم السفراء', 'Ambassadors Department'], leader: ['عبدالعزيز الزهراني', 'Abdulaziz Alzahrani'], viceLeader: ['حلا عسيري', 'Hala Asiri'] },
+  { key: 'ambassadors', icon: 'globe', name: ['قسم السفراء', 'Ambassadors Department'], leader: ['عبدالعزيز الزهراني', 'Abdulaziz Alzahrani'], viceLeader: ['حلا عسيري', 'Hala Asiri'], committees: ambassadorsCommittees },
   { key: 'media-marketing', icon: 'megaphone', name: ['قسم التسويق', 'Media & Marketing'], leader: ['أسماء وهيب', 'Asmaa Waheeb'], viceLeader: ['رزان السلمي', 'Razan Alsulami'], committees: marketingCommittees },
   { key: 'planning', icon: 'route', name: ['قسم التخطيط', 'Planning Department'], leader: ['زينب عبدالحليم', 'Zainab Abdulhalim'], viceLeader: ['جوري الغامدي', 'Juri Alghamdi'], committees: planningCommittees },
-  { key: 'programs', icon: 'calendar', name: ['قسم البرامج', 'Programs Department'], leader: ['عبدالله السلمي', 'Abdullah Alsulami'], viceLeader: ['موضي القرعاوي', 'Moudi Algarawi'], leadRoles: [ROLES.programLeader, ROLES.programLeader], committees: programsCommittees },
+  { key: 'programs', icon: 'calendar', name: ['قسم البرامج', 'Programs Department'], leader: ['موضي القرعاوي', 'Moudi Algarawi'], viceLeader: ['عبدالله السلمي', 'Abdullah Alsulami'], leadRoles: [ROLES.programLeader, ROLES.programLeader], committees: programsCommittees },
   { key: 'human-resources', icon: 'users', name: ['قسم الموارد البشرية', 'Human Resources'], leader: ['رنده بخاري', 'Randa Bukhari'], viceLeader: ['تالا جبريل', 'Tala Jabril'], committees: hrCommittees },
   { key: 'technical', icon: 'chip', name: ['القسم التقني', 'Technical Department'], leader: ['ريماس محمود', 'Rimas Mahmoud'], viceLeader: ['ليان المتعب', 'Layan Al Meteb'], committees: technicalCommittees },
   { key: 'public-relations', icon: 'chat', name: ['قسم العلاقات العامة', 'Public Relations'], leader: ['عبدالرحمن رجب', 'Abdulrahman Rajab'], viceLeader: ['وليد زكي', 'Waleed Zaki'], committees: prCommittees },

@@ -31,8 +31,10 @@ export default function Competitions() {
         <div className="competitions-page__container competitions-hero__content">
           <div className="competitions-overline"><span lang="en">COMPETITIONS</span><i /></div>
           <h1>{t('المسابقات', 'Competitions')}</h1>
-          <p>{t('ثلاثة مسارات تنافسية رسمية تستهدف طلاب وطالبات المرحلتين الثانوية والجامعية، وتختبر مهارات التصميم والبرمجة وحل المشكلات والتفكير الاستراتيجي من خلال تحديات عملية تحاكي مواقف واقعية.',
-            'Three official competition tracks for secondary and university students, testing design, programming, problem-solving and strategic thinking through hands-on challenges modelled on real-world scenarios.')}</p>
+          <p>{t('تجمع مسابقات RoboTactic بين التحديات الهندسية والتقنية التي تختبر قدرات المشاركين في تصميم الروبوتات وبرمجتها والتحكم بها، من خلال منافسات عملية تتطلب الدقة والكفاءة والتفكير الاستراتيجي.',
+            'RoboTactic competitions bring together engineering and technical challenges that test participants’ abilities to design, program, and control robots through hands-on contests requiring precision, efficiency, and strategic thinking.')}</p>
+          <p>{t('وتتنوع المنافسات بين تحديات التحكم بالروبوتات، والملاحة الذاتية وحل المتاهات، وبرمجان الطائرات بدون طيار، بما يتيح للمشاركين توظيف مهاراتهم التقنية والهندسية في بيئة تنافسية تعزز الابتكار والعمل الجماعي والتميز.',
+            'The competitions range from robot-control challenges and autonomous navigation and maze-solving to a dedicated drone hackathon, allowing participants to apply their technical and engineering skills in a competitive environment that fosters innovation, teamwork, and excellence.')}</p>
         </div>
       </header>
 

@@ -13,12 +13,12 @@ test('the structure includes the website committee without adding a department',
   assert.equal(leadershipTiers.flatMap((t) => t.members).length, 5);
   assert.equal(departments.length, 7);
   const members = allMembers();
-  assert.equal(members.length, 176);
-  for (const lang of [0, 1]) assert.equal(new Set(members.map((m) => m.name[lang])).size, 176);
+  assert.equal(members.length, 181);
+  for (const lang of [0, 1]) assert.equal(new Set(members.map((m) => m.name[lang])).size, 181);
 });
 
-test('committee departments: Planning, Human Resources and Public Relations', () => {
-  assert.deepEqual(departments.filter((d) => d.committees).map((d) => d.key), ['media-marketing', 'planning', 'programs', 'human-resources', 'technical', 'public-relations']);
+test('departments with a members dialog', () => {
+  assert.deepEqual(departments.filter((d) => d.committees).map((d) => d.key), ['ambassadors', 'media-marketing', 'planning', 'programs', 'human-resources', 'technical', 'public-relations']);
   for (const d of departments.filter((x) => x.committees)) assert.ok(allPairs(d), d.key);
 });
 
@@ -35,9 +35,9 @@ test('Programs: five committees; the hackathon has a vice supervisor', () => {
 test('Media & Marketing: four committees (Design and Media without a supervisor)', () => {
   const marketing = dept('media-marketing');
   assert.deepEqual(shape(marketing), [
-    ['design', 0, 8], ['marketing', 1, 5], ['media-monitoring', 1, 5], ['media', 0, 5],
+    ['design', 0, 8], ['marketing', 1, 5], ['media-monitoring', 1, 7], ['media', 0, 5],
   ]);
-  assert.equal(committeeHeadcount(marketing), 23);
+  assert.equal(committeeHeadcount(marketing), 25);
   assert.equal(committeeCount(marketing), 4);
 });
 
@@ -98,8 +98,8 @@ test('every name, role and department label is a complete Arabic/English pair', 
 
 test('role assignments follow the official list', () => {
   const programs = departments.find((d) => d.key === 'programs');
-  assert.deepEqual(programs.leader, ['عبدالله السلمي', 'Abdullah Alsulami']);
-  assert.deepEqual(programs.viceLeader, ['موضي القرعاوي', 'Moudi Algarawi']);
+  assert.deepEqual(programs.leader, ['موضي القرعاوي', 'Moudi Algarawi']);
+  assert.deepEqual(programs.viceLeader, ['عبدالله السلمي', 'Abdullah Alsulami']);
   assert.deepEqual(leadRolesOf(programs), [ROLES.programLeader, ROLES.programLeader]);
   assert.deepEqual(leadRolesOf(departments.find((d) => d.key === 'technical')), [ROLES.leader, ROLES.viceLeader]);
   assert.ok(allMembers().every((m) => !/Alj[ou]hani/.test(m.name[1])), 'الجهني is spelled Aljehani');

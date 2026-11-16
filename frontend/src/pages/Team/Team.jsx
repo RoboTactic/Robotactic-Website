@@ -4,7 +4,7 @@ import Icon from '../../components/Icon/Icon';
 import circuitPattern from '../Workshops/assets/circuit-pattern.svg';
 import TeamCircuit from './TeamCircuit';
 import DepartmentMembers from './DepartmentMembers';
-import { ROLES, departments, leadRolesOf, leadershipTiers } from '../../data/team';
+import { ROLES, committeeCount, departments, leadRolesOf, leadershipTiers } from '../../data/team';
 import { useLanguage } from '../../services/api/publicContentLanguage';
 import '../InfoPages.css';
 import './Team.css';
@@ -82,7 +82,7 @@ export default function Team() {
                 </dl>
                 {dept.committees && (
                   <button type="button" className="team-dept__more" aria-haspopup="dialog" onClick={() => setOpenDept(dept)}>
-                    <span>{t(['عرض اللجان والأعضاء', 'View committees & members'])}</span>
+                    <span>{t(committeeCount(dept) ? ['عرض اللجان والأعضاء', 'View committees & members'] : ['عرض الأعضاء', 'View members'])}</span>
                     <Icon name="chevronLeft" size={16} className="team-dept__more-arrow" />
                   </button>
                 )}

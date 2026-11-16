@@ -32,6 +32,7 @@
   max-width: 760px; margin: 8px 0 0; color: var(--color-text-secondary);
   font-size: 17px; font-weight: 500; line-height: 32px;
 }
+.competitions-hero p + p { margin-block-start: 12px; }
 
 .competitions-tracks { padding-block: 32px 72px; }
 .competitions-grid { display: grid; grid-template-columns: 1fr; gap: 16px; align-items: stretch; }

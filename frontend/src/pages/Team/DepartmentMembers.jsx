@@ -60,7 +60,9 @@ export default function DepartmentMembers({ dept, onClose }) {
             <div className="team-members__titles">
               <h2 id={titleId} className="team-members__title">{t(dept.name)}</h2>
               <p className="team-members__meta">
-                {t([`${committeeCount(dept)} لجان · ${committeeHeadcount(dept)} عضوًا`, `${committeeCount(dept)} committees · ${committeeHeadcount(dept)} members`])}
+                {t(committeeCount(dept)
+                  ? [`${committeeCount(dept)} لجان · ${committeeHeadcount(dept)} عضوًا`, `${committeeCount(dept)} committees · ${committeeHeadcount(dept)} members`]
+                  : [`${committeeHeadcount(dept)} أعضاء`, `${committeeHeadcount(dept)} members`])}
               </p>
             </div>
             <button type="button" className="team-members__close" onClick={() => ref.current?.close()} aria-label={t(['إغلاق', 'Close'])}>
