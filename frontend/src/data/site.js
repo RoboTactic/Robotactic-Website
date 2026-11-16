@@ -16,9 +16,34 @@ export const eventVenue = ['مركز الملك فيصل للمؤتمرات', 'K
 export const brand = {
   name: 'RoboTactic',
   wordmark: 'ROBOTACTIC',
-  slogan: ['ابتكار يقوده التفكير', 'Innovation driven by ideas'],
+  slogan: ['التحدي يقوده التفكير', 'A challenge Driven by Thinking'],
   copyright: '© 2026 RoboTactic',
   logoMark: '/logo/robotactic-mark-white.png', // official white mark, Brand Guideline §0.4
+};
+
+/* Contact Us — official public channels (RoboTactic Web Content Collection). The Footer shows the
+   channels as icons; tagline and intro are kept for a future contact section.
+   `icon` names come from components/Icon/icons.js. */
+export const contact = {
+  title: ['تواصل معنا', 'Contact Us'],
+  tagline: ['تواصل يصنع فرصًا، وأفكار تستحق أن تصل.', 'Connections Create Opportunities, and Ideas Deserve to Be Heard.'],
+  intro: [
+    [
+      'نرحب بتواصلكم واستفساراتكم حول RoboTactic، ونسعد باستقبال أفكاركم ومقترحاتكم التي تسهم في إثراء تجربة الحدث وتعزيز فرص التعاون والمشاركة.',
+      'We welcome your inquiries about RoboTactic and look forward to receiving your ideas and suggestions that help enrich the event experience and strengthen opportunities for collaboration and participation.',
+    ],
+    [
+      'يسعدنا تواصلكم عبر قنواتنا الرسمية، كما ندعوكم لمتابعتها للاطلاع على آخر المستجدات والإعلانات المتعلقة بالحدث.',
+      'We invite you to get in touch through our official channels and follow them for the latest event news and announcements.',
+    ],
+  ],
+  channels: [
+    { key: 'email', icon: 'mail', label: ['البريد الإلكتروني', 'Email'], value: 'robotactic.ksa@gmail.com', href: 'mailto:robotactic.ksa@gmail.com' },
+    { key: 'linkedin', icon: 'linkedin', label: ['LinkedIn', 'LinkedIn'], href: 'https://www.linkedin.com/company/robotactic-sa/' },
+    { key: 'x', icon: 'x', label: ['X', 'X'], href: 'https://x.com/RoboTactic_SA' },
+    { key: 'whatsapp', icon: 'whatsapp', label: ['قناة واتساب', 'WhatsApp Channel'], href: 'https://whatsapp.com/channel/0029Vb8eYZ947XeGs7abwJ3B' },
+    { key: 'tiktok', icon: 'tiktok', label: ['TikTok', 'TikTok'], href: 'https://www.tiktok.com/@robotactic_sa' },
+  ],
 };
 
 /* "سجّل الآن" never opens a form directly — each competition has its own

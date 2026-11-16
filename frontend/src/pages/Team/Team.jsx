@@ -6,12 +6,8 @@ import TeamCircuit from './TeamCircuit';
 import DepartmentMembers from './DepartmentMembers';
 import { ROLES, departments, leadRolesOf, leadershipTiers } from '../../data/team';
 import { useLanguage } from '../../services/api/publicContentLanguage';
-import { websiteCredit } from './websiteCredit';
 import '../InfoPages.css';
 import './Team.css';
-
-// The Website Committee's credit, read once from the team data (see websiteCredit.js).
-const credit = websiteCredit();
 
 /*
   Team — the organizing structure as one circuit network: a single leadership trunk
@@ -100,40 +96,16 @@ export default function Team() {
 
       <section className="container team-section team-section--closing" aria-labelledby="team-closing-title">
         <div className="team-closing">
-          <p className="team-closing__slogan">{t(['ابتكار يقوده التفكير', 'Innovation driven by ideas'])}</p>
+          <p className="team-closing__slogan">{t(['التحدي يقوده التفكير', 'A challenge Driven by Thinking'])}</p>
           <h2 id="team-closing-title" className="t-h2">{t(['نبنيها معًا', 'Built together'])}</h2>
           <p className="t-body-lg">{t([
-            'الابتكار عمل جماعي؛ كل قسم يضيف حلقة إلى الشبكة، ومعًا نصنع تجربة RoboTactic.',
-            'Innovation is a team effort. Every department adds a link to the network, and together we build RoboTactic.',
+            'التحدي عمل جماعي؛ كل قسم يضيف حلقة إلى الشبكة، ومعًا نصنع تجربة RoboTactic.',
+            'The challenge is a team effort. Every department adds a link to the network, and together we build RoboTactic.',
           ])}</p>
         </div>
       </section>
 
-      {credit && (
-        <section className="container team-credit-section" aria-labelledby="team-credit-title">
-          <div className="team-credit">
-            <div className="team-credit__head">
-              <span className="team-dept__icon team-credit__icon" aria-hidden="true"><Icon name="project" size={24} /></span>
-              <p className="team-credit__eyebrow">{t(['تنفيذ وتطوير الموقع', 'Website Design & Development'])}</p>
-              <h2 id="team-credit-title" className="team-credit__title">{t(credit.name)}</h2>
-            </div>
-            {/* Two equal lead groups; each lead's members are nested under them. */}
-            <ul className="team-credit__groups">
-              {credit.groups.map((g) => (
-                <li key={g.key} className="team-credit__group">
-                  <div className="team-credit__lead">
-                    <span className="team-credit__role">{t(g.title)}</span>
-                    <span className="team-credit__name">{t(g.lead)}</span>
-                  </div>
-                  <ul className="team-credit__members">
-                    {g.members.map((m) => <li key={m[1]} className="team-credit__member">{t(m)}</li>)}
-                  </ul>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </section>
-      )}
+
     </div>
   );
 }

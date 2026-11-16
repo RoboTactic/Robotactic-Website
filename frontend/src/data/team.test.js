@@ -13,8 +13,8 @@ test('the structure includes the website committee without adding a department',
   assert.equal(leadershipTiers.flatMap((t) => t.members).length, 5);
   assert.equal(departments.length, 7);
   const members = allMembers();
-  assert.equal(members.length, 186);
-  for (const lang of [0, 1]) assert.equal(new Set(members.map((m) => m.name[lang])).size, 186);
+  assert.equal(members.length, 176);
+  for (const lang of [0, 1]) assert.equal(new Set(members.map((m) => m.name[lang])).size, 176);
 });
 
 test('committee departments: Planning, Human Resources and Public Relations', () => {
@@ -22,31 +22,31 @@ test('committee departments: Planning, Human Resources and Public Relations', ()
   for (const d of departments.filter((x) => x.committees)) assert.ok(allPairs(d), d.key);
 });
 
-test('Programs: five committees plus unassigned members; the hackathon has a vice supervisor', () => {
+test('Programs: five committees; the hackathon has a vice supervisor', () => {
   const programs = dept('programs');
   assert.deepEqual(shape(programs), [
-    ['in-person-workshops', 1, 8], ['hackathon', 1, 9], ['entertainment', 1, 6], ['speakers', 1, 5], ['remote-workshops', 1, 6], ['unassigned', 0, 2],
+    ['in-person-workshops', 1, 8], ['hackathon', 1, 9], ['entertainment', 1, 6], ['speakers', 1, 5], ['remote-workshops', 1, 6],
   ]);
   assert.deepEqual(leadRoles(programs.committees[1]), [ROLES.supervisor, ROLES.viceSupervisor]);
-  assert.equal(committeeHeadcount(programs), 36);
+  assert.equal(committeeHeadcount(programs), 34);
   assert.equal(committeeCount(programs), 5);
 });
 
-test('Media & Marketing: four committees (Design and Media without a supervisor) plus unassigned members', () => {
+test('Media & Marketing: four committees (Design and Media without a supervisor)', () => {
   const marketing = dept('media-marketing');
   assert.deepEqual(shape(marketing), [
-    ['design', 0, 8], ['marketing', 1, 5], ['media-monitoring', 1, 5], ['media', 0, 5], ['unassigned', 0, 2],
+    ['design', 0, 8], ['marketing', 1, 5], ['media-monitoring', 1, 5], ['media', 0, 5],
   ]);
-  assert.equal(committeeHeadcount(marketing), 25);
+  assert.equal(committeeHeadcount(marketing), 23);
   assert.equal(committeeCount(marketing), 4);
 });
 
-test('Technical: four committees, the Website Committee among them, plus unassigned members', () => {
+test('Technical: four committees, the Website Committee among them', () => {
   const technical = dept('technical');
   assert.deepEqual(shape(technical), [
-    ['engineering', 1, 9], ['advanced-competition', 1, 9], ['beginner-competition', 1, 9], ['website', 0, 5], ['unassigned', 0, 5],
+    ['engineering', 1, 9], ['advanced-competition', 1, 9], ['beginner-competition', 1, 10], ['website', 0, 5],
   ]);
-  assert.equal(committeeHeadcount(technical), 37);
+  assert.equal(committeeHeadcount(technical), 33);
   assert.equal(committeeCount(technical), 4);
 });
 
@@ -68,10 +68,10 @@ test('Human Resources: five committees, each with one supervisor', () => {
   assert.equal(committeeCount(hr), 5);
 });
 
-test('Public Relations: three committees plus unassigned members', () => {
+test('Public Relations: three committees', () => {
   const pr = dept('public-relations');
-  assert.deepEqual(shape(pr), [['sponsorships', 1, 9], ['guests', 1, 5], ['permits', 1, 4], ['unassigned', 0, 2]]);
-  assert.equal(committeeHeadcount(pr), 20);
+  assert.deepEqual(shape(pr), [['sponsorships', 1, 9], ['guests', 1, 5], ['permits', 1, 4]]);
+  assert.equal(committeeHeadcount(pr), 18);
   assert.equal(committeeCount(pr), 3);
 });
 

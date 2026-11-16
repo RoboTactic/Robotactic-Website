@@ -1,9 +1,9 @@
 import { departments } from '../../data/team.js';
 
-/* The Team page's Website Committee section, read from the team data (the single source of truth for
+/* The footer's Website Committee dialog, read from the team data (the single source of truth for
    names and structure): the committee's name and its two groups, each with its lead and the members
    who report to that lead (Front-end first, then Back-end). Returns null when the committee or its
-   groups are missing, so the page simply leaves the section out. */
+   groups are missing. */
 const CREDIT_GROUPS = ['frontend', 'backend'];
 
 /* The section's title for each lead, as given by the event team. Same English title for both; the

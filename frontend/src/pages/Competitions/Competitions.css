@@ -97,7 +97,6 @@
   display: inline-flex; width: 36px; height: 36px; flex: 0 0 36px; align-items: center; justify-content: center;
   border: 1.5px solid var(--color-border-brand); border-radius: 50%;
   background: var(--color-surface-brand-band); color: var(--color-text-accent);
-  font-size: 15px; font-weight: 700; line-height: 1;
 }
 .competition-supervisor__text { display: flex; min-width: 0; flex: 1 1 auto; flex-direction: column; text-align: start; }
 .competition-supervisor__name { color: var(--color-text-primary); font-size: 14px; font-weight: 600; line-height: 22px; overflow-wrap: anywhere; }

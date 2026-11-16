@@ -5,7 +5,7 @@ import { PLACEHOLDER_FORM_URL } from './competitions';
 /* Text fields are [Arabic, English] pairs, resolved with useLanguage().t. */
 export const hero = {
   eyebrow: ['ملتقى روبوتاكتيك · 2026', 'RoboTactic Forum · 2026'],
-  title: ['ابتكار يقوده التفكير', 'Innovation driven by ideas'],
+  title: ['التحدي يقوده التفكير', 'A challenge Driven by Thinking'],
   description: [
     'ملتقى تقني يجمع بين الابتكار والتقنية والتفكير الاستراتيجي، ويضم مسابقات الروبوتات ومعرض المشاريع لطلاب وطالبات المرحلتين الثانوية والجامعية.',
     'A technology forum exploring innovation and strategic thinking through robotics competitions and a student project showcase for secondary-school and university students.',

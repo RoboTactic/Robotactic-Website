@@ -1,33 +1,60 @@
-import { Link } from 'react-router-dom';
-import Logo from '../Logo/Logo';
-import LanguageSwitcher from '../LanguageSwitcher/LanguageSwitcher';
-import { brand, navLinks } from '../../data/site';
+import { useState } from 'react';
+import Icon from '../Icon/Icon';
+import { brand, contact } from '../../data/site';
 import { useLanguage } from '../../services/api/publicContentLanguage';
 import './Footer.css';
-import { useSectionVisibility } from '../../services/api/SectionVisibility';
+import WebsiteCredits from './WebsiteCredits';
 
 export default function Footer() {
+  const [creditsOpen, setCreditsOpen] = useState(false);
   const { t } = useLanguage();
-  const { isPathVisible } = useSectionVisibility();
-  // Home is reached through the logo, so the footer lists the other six pages (as in Figma)
-  const links = navLinks.filter(l => l.path !== '/' && isPathVisible(l.path));
   return (
     <footer className="footer">
       <div className="container footer__inner">
         <div className="footer__brand">
-          <Link to="/" aria-label={t('RoboTactic — الرئيسية', 'RoboTactic — Home')}><Logo layout="horizontal" markHeight={44} /></Link>
           <p className="footer__slogan t-caption">{t(brand.slogan)}</p>
         </div>
-        <nav className="footer__links" aria-label={t('روابط الموقع', 'Site links')}>
-          {links.map(({ label, labelEn, path }) => (
-            <Link key={path} to={path} className="footer__link t-caption">{t(label, labelEn)}</Link>
-          ))}
-        </nav>
+        <section className="footer__contact" aria-labelledby="footer-contact-title">
+          <h2 id="footer-contact-title" className="footer__contact-title">{t(contact.title)}</h2>
+          <p className="footer__contact-tagline">{t(contact.tagline)}</p>
+          {contact.intro.map((p) => <p key={p[1]} className="footer__contact-intro">{t(p)}</p>)}
+        </section>
+        {/* Contact channels: icon-only links; each name is the link's accessible label. */}
+        <ul className="footer__social" aria-label={t('قنوات التواصل', 'Contact channels')}>
+          {contact.channels.map((c) => {
+            const external = !c.href.startsWith('mailto:');
+            const name = c.value ? `${t(c.label)}: ${c.value}` : t(c.label);
+            return (
+              <li key={c.key}>
+                <a
+                  className="footer__social-link"
+                  href={c.href}
+                  {...(external && { target: '_blank', rel: 'noopener noreferrer' })}
+                  aria-label={external ? `${name} — ${t('يفتح في نافذة جديدة', 'opens in a new tab')}` : name}
+                  title={t(c.label)}
+                >
+                  <Icon name={c.icon} size={20} />
+                </a>
+              </li>
+            );
+          })}
+        </ul>
         <div className="footer__bottom">
           <p className="footer__copyright t-label" lang="en">{brand.copyright}</p>
-          <LanguageSwitcher />
+          <button
+            type="button"
+            className="footer__credits t-caption"
+            aria-haspopup="dialog"
+            aria-controls="website-credits-dialog"
+            onClick={() => setCreditsOpen(true)}
+          >
+            <span className="footer__credits-chip" aria-hidden="true"><Icon name="chip" size={24} /></span>
+            <span className="footer__credits-label">{t('لجنة الموقع', 'Website Committee')}</span>
+            <span className="footer__credits-trace" aria-hidden="true" />
+          </button>
         </div>
       </div>
+      <WebsiteCredits open={creditsOpen} onClose={() => setCreditsOpen(false)} />
     </footer>
   );
 }

@@ -67,15 +67,6 @@ const marketingCommittees = [
       ['تولين محمود تعباني', 'Tuleen Mahmoud Tabaani'],
     ],
   },
-  {
-    key: 'unassigned',
-    unassigned: true,
-    name: ['أعضاء القسم', 'Department Members'],
-    members: [
-      ['رغد عوض المرامحي', 'Raghad Awad Almramihi'],
-      ['ريفال خالد النفيسى', 'Refal Khalid Alnafisi'],
-    ],
-  },
 ];
 
 /* Technical Department committees (in its members dialog). The Website Committee keeps its two
@@ -124,6 +115,7 @@ const technicalCommittees = [
       ['رهف عبد العزيز المغربي', 'Rahaf Abdulaziz Almghrabi'],
       ['لارا خالد التميمي', 'Lara Khalid Altamimi'],
       ['محمد ايمن السيد', 'Muhammed Ayman Alsayed'],
+      ['ليان عبدالملك الزهراني', 'Layan Abdulmalik Alzhrani'],
     ],
   },
   {
@@ -132,18 +124,6 @@ const technicalCommittees = [
     groups: [
       { key: 'backend', name: ['الباك إند', 'Back-end'], lead: ['عبد الله السيروان', 'Abdullah Alseyrawan'], members: [['صالح باحكيم', 'Saleh Bahakim']] },
       { key: 'frontend', name: ['الفرونت إند', 'Front-end'], lead: ['ليان الحربي', 'Layan Alharbi'], members: [['معتز السيد', 'Motaz Alsayed'], ['شيماء وهيب', 'Shaima Waheeb']] },
-    ],
-  },
-  {
-    key: 'unassigned',
-    unassigned: true,
-    name: ['أعضاء القسم', 'Department Members'],
-    members: [
-      ['ليان عبدالملك الزهراني', 'Layan Abdulmalik Alzhrani'],
-      ['ايلاف احمد العمرو', 'Elaf Ahmed Alamro'],
-      ['نواف حمد الحربي', 'Nawaf Hamad Alharbi'],
-      ['فواز دخيل الدخيل', 'Fawaz Dakhil Aldakhil'],
-      ['يارا سعيد العمر', 'Yara Saeed Alomar'],
     ],
   },
 ];
@@ -214,15 +194,6 @@ const programsCommittees = [
       ['دانه موسى المزروعي', 'Danah Moosa Almazroui'],
     ],
   },
-  {
-    key: 'unassigned',
-    unassigned: true,
-    name: ['أعضاء القسم', 'Department Members'],
-    members: [
-      ['طيف سعيد الجحدلي', 'Taif Saeed Aljahdali'],
-      ['وريف عادل السفري', 'Wareef Adel Alsefri'],
-    ],
-  },
 ];
 
 /* Human Resources committees — opened from the department card on the Team page.
@@ -281,7 +252,7 @@ const hrCommittees = [
   },
 ];
 
-/* Public Relations committees. The last group has no supervisor: members not assigned to a committee. */
+/* Public Relations committees. */
 const prCommittees = [
   {
     key: 'sponsorships',
@@ -317,15 +288,6 @@ const prCommittees = [
       ['شادي محمد برناوي', 'Shadi Mohammed Brnawi'],
       ['غلا عادل الجحدلي', 'Ghala Adel Aljahdali'],
       ['أحمد علي أحمد الزبيدي', 'Ahmed Ali Ahmed Alzubaidi'],
-    ],
-  },
-  {
-    key: 'unassigned',
-    unassigned: true,
-    name: ['أعضاء القسم', 'Department Members'],
-    members: [
-      ['نعمه هادي مجرشي', 'Nimah Hadi Majrashi'],
-      ['وعد محمد الجدعاني', 'Waad Mohammed Aljedaani'],
     ],
   },
 ];

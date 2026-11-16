@@ -1,0 +1,120 @@
+:root:has(.website-credits-dialog[open]) { overflow: hidden; }
+.website-credits-dialog {
+  inline-size: min(calc(100% - 24px), 880px); max-inline-size: calc(100% - 24px);
+  max-block-size: 90vh; max-block-size: 90dvh; margin: auto; padding: 0;
+  border: 0; border-radius: 20px; background: var(--color-surface-page); color: var(--color-text-primary);
+  overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin;
+  box-shadow: 0 24px 80px rgb(0 0 0 / .5);
+}
+.website-credits-dialog::backdrop { background: rgb(6 14 22 / .72); backdrop-filter: blur(4px); }
+.website-credits-dialog__close {
+  position: absolute; z-index: 1; inset-block-start: 12px; inset-inline-end: 12px;
+  display: inline-grid; place-items: center; inline-size: 44px; block-size: 44px; padding: 0;
+  border: 1px solid var(--color-border-subtle); border-radius: 12px;
+  background: var(--color-surface-sunken); color: var(--color-text-primary); cursor: pointer;
+}
+.website-credits-dialog__close:focus-visible { outline: 2px solid var(--color-brand-accent); outline-offset: 2px; }
+@media (hover: hover) {
+  .website-credits-dialog__close:hover { color: var(--color-brand-accent); border-color: var(--color-brand-accent); }
+}
+
+.website-credits {
+  --credit-line: rgb(22 166 106 / .5);
+  position: relative; display: grid; gap: 20px; padding: 64px 12px 16px; text-align: start; overflow: hidden;
+  border: 1px solid rgb(22 166 106 / .3); border-radius: 20px;
+  background: linear-gradient(180deg, rgb(22 166 106 / .09), rgb(22 166 106 / .02) 70%), var(--rt-panel, var(--color-surface-card));
+  box-shadow: var(--rt-shadow, none);
+}
+/* A thin lit edge along the top: the same hairline the refined footer uses. */
+.website-credits::before {
+  content: ''; position: absolute; inset-block-start: 0; inset-inline: 24px; block-size: 1px;
+  background: var(--rt-hairline, rgb(22 166 106 / .5)); opacity: .7; pointer-events: none;
+}
+.website-credits__head { display: grid; justify-items: center; gap: 4px; text-align: center; }
+.website-credits__icon {
+  display: inline-grid; place-items: center; inline-size: 44px; block-size: 44px;
+  margin-block-end: 10px; border: 1px solid var(--color-brand-primary); border-radius: 12px;
+  background: var(--color-surface-sunken); color: var(--color-brand-primary);
+}
+.website-credits__eyebrow { font: 700 14px/22px var(--font-arabic); color: var(--color-text-brand); }
+/* English: uppercase and tracked; tighter tracking on narrow phones keeps it on one line at 320px. */
+.website-credits-dialog[lang="en"] .website-credits__eyebrow { font: 600 12px/18px var(--font-latin); letter-spacing: .06em; text-transform: uppercase; }
+.website-credits__title { font: 700 24px/36px var(--font-arabic); color: var(--color-text-primary); }
+
+/* Mobile: a short trace with a ring at its centre leads from the head into the stacked groups. */
+.website-credits__groups { position: relative; display: grid; gap: 14px; padding-block-start: 27px; }
+.website-credits__groups::before {
+  content: ''; position: absolute; inset-block-start: 0; inset-inline: 0; margin-inline: auto; inline-size: 96px; block-size: 9px;
+  background:
+    radial-gradient(circle, var(--color-surface-page) 3px, var(--color-brand-primary) 3px 4.5px, transparent 5px) center / 9px 9px no-repeat,
+    linear-gradient(90deg, transparent, rgb(22 166 106 / .6), transparent) center / 100% 1px no-repeat;
+}
+.website-credits__group {
+  position: relative; display: flex; flex-direction: column; padding: 14px 12px;
+  border: 1px solid rgb(22 166 106 / .24); border-radius: 16px; background: var(--rt-card, var(--color-surface-card));
+}
+.website-credits__lead {
+  position: relative; display: grid; gap: 2px; padding: 12px 14px; border-radius: 12px;
+  border: 1px solid rgb(182 242 58 / .28); background: linear-gradient(180deg, rgb(22 166 106 / .16), rgb(22 166 106 / .05));
+}
+/* The port where the members' trunk leaves the lead. */
+.website-credits__lead::after {
+  content: ''; position: absolute; inset-block-end: -5px; inset-inline-start: 14px; inline-size: 9px; block-size: 9px;
+  border: 1.5px solid var(--color-brand-primary); border-radius: 50%; background: var(--color-surface-page);
+}
+.website-credits__role { display: inline-flex; align-items: center; gap: 8px; font: 700 13px/20px var(--font-arabic); color: var(--color-text-accent); }
+.website-credits__role::before { content: ''; flex: none; inline-size: 7px; block-size: 7px; border-radius: 50%; background: var(--color-brand-accent); box-shadow: 0 0 0 3px rgb(182 242 58 / .15); }
+.website-credits-dialog[lang="en"] .website-credits__role { font: 600 11px/18px var(--font-latin); letter-spacing: .1em; text-transform: uppercase; }
+/* 18px on the narrowest phones keeps the longest lead name on one line at 320px; 19px from 380px. */
+.website-credits__name { font: 700 18px/30px var(--font-arabic); color: var(--color-text-primary); overflow-wrap: anywhere; }
+
+/* Members: nested cards on a trunk from the lead's port, with a branch to each. --reach is the
+   distance from a card's top up to the element above it (the list's 12px margin, or the 8px gap),
+   so the trunk segments meet; the last one stops at its branch. */
+.website-credits__members { display: grid; gap: 8px; margin-block-start: 12px; }
+.website-credits__member {
+  --reach: 9px;
+  position: relative; margin-inline-start: 40px; padding: 9px 14px;
+  border: 1px solid rgb(22 166 106 / .16); border-radius: 12px; background: rgb(255 255 255 / .02);
+  font: 600 16px/26px var(--font-arabic); color: var(--color-text-secondary); overflow-wrap: anywhere;
+}
+.website-credits__member:first-child { --reach: 13px; }
+.website-credits__member::before {
+  content: ''; position: absolute; inset-inline-start: -22px; inset-block-start: calc(-1 * var(--reach));
+  block-size: calc(100% + var(--reach) + 1px); border-inline-start: 1px solid var(--credit-line);
+}
+.website-credits__member:last-child::before { block-size: calc(50% + var(--reach)); }
+.website-credits__member::after {
+  content: ''; position: absolute; inset-inline-start: -22px; inset-block-start: 50%; inline-size: 21px; border-block-start: 1px solid var(--credit-line);
+}
+
+@media (min-width: 380px) {
+  .website-credits { padding: 64px 16px 20px; }
+  .website-credits__group { padding: 16px; }
+  .website-credits__name { font-size: 19px; }
+}
+@media (min-width: 600px) {
+  .website-credits-dialog[lang="en"] .website-credits__eyebrow { letter-spacing: .12em; }
+}
+@media (min-width: 768px) {
+  .website-credits { gap: 12px; padding: 64px 32px 28px; }
+  .website-credits__title { font-size: 28px; line-height: 40px; }
+  /* Two balanced columns, the same height; one bus from the head feeds both leads equally. */
+  .website-credits__groups { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; inline-size: min(100%, 880px); margin-inline: auto; padding-block-start: 50px; }
+  .website-credits__groups::before {
+    inline-size: 9px; block-size: 26px;
+    background:
+      radial-gradient(circle, var(--color-surface-page) 3px, var(--color-brand-primary) 3px 4.5px, transparent 5px) top center / 9px 9px no-repeat,
+      linear-gradient(var(--credit-line), var(--credit-line)) center 9px / 1px calc(100% - 9px) no-repeat;
+  }
+  /* The bus runs between the two column centres (a quarter in from each side, less half the gap). */
+  .website-credits__groups::after { content: ''; position: absolute; inset-block-start: 26px; inset-inline: calc(25% - 6px); border-block-start: 1px solid var(--credit-line); }
+  .website-credits__group { padding: 20px; }
+  .website-credits__group::before { content: ''; position: absolute; inset-block-start: -25px; inset-inline: 0; margin-inline: auto; inline-size: 1px; block-size: 24px; background: var(--credit-line); }
+  .website-credits__group::after {
+    content: ''; position: absolute; inset-block-start: -6px; inset-inline: 0; margin-inline: auto; inline-size: 9px; block-size: 9px;
+    border: 1.5px solid var(--color-brand-primary); border-radius: 50%; background: var(--color-surface-page);
+  }
+  .website-credits__name { font-size: 20px; line-height: 32px; }
+}
+

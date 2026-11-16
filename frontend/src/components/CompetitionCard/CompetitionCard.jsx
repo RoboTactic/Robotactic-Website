@@ -1,4 +1,5 @@
 import EventRegistrationAction from '../EventUI/EventRegistrationAction';
+import Icon from '../Icon/Icon';
 import { useLanguage } from '../../services/api/publicContentLanguage';
 import { eventVenue } from '../../data/site';
 
@@ -8,7 +9,6 @@ import { eventVenue } from '../../data/site';
    - icon: an image URL (string) or a React node (e.g. <Icon name="sensor" />)
    - registrationLabel / registrationIcon / helperText: optional overrides for the Google Form action
    - showSupervisors: list the track's supervisors (Competitions page; Home stays compact) */
-const initialOf = (name) => Array.from(String(name).trim())[0] || '';
 
 export default function CompetitionCard({
   competition,
@@ -49,7 +49,7 @@ export default function CompetitionCard({
           <ul>
             {competition.supervisors.map((supervisor) => (
               <li key={supervisor.id ?? supervisor.name} className="competition-supervisor">
-                <span className="competition-supervisor__avatar" aria-hidden="true">{initialOf(supervisor.name)}</span>
+                <span className="competition-supervisor__avatar" aria-hidden="true"><Icon name="user" size={18} /></span>
                 <span className="competition-supervisor__text">
                   <bdi className="competition-supervisor__name">{supervisor.name}</bdi>
                   {supervisor.title && <bdi className="competition-supervisor__title">{supervisor.title}</bdi>}

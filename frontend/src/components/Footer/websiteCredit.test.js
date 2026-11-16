@@ -6,7 +6,7 @@ import { departments } from '../../data/team.js';
 const website = departments.find((d) => d.key === 'technical').committees.find((c) => c.key === 'website');
 const group = (key) => website.groups.find((g) => g.key === key);
 
-test('the Website Committee section shows two lead groups, each with the members who report to that lead', () => {
+test('the Website Committee credit shows two lead groups, each with the members who report to that lead', () => {
   const credit = websiteCredit();
   assert.deepEqual(credit.name, website.name);
   assert.deepEqual(credit.groups.map((g) => g.key), ['frontend', 'backend']);
