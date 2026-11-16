@@ -81,35 +81,6 @@
 .team-dept__name { margin-block-start: 2px; }
 .team-dept__alt + .team-dept__people { margin-block-start: 10px; }
 
-/* Website committee: one subordinate node, with two clearly labelled branches.
-   Mobile: last node in the list (after every department), on the rail like a card. */
-.team-committee-item { inline-size: 100%; justify-self: center; order: 1; margin-block-start: 6px; }
-.team-committee {
-  position: relative; padding: 16px; border: 1px solid rgb(22 166 106 / .24); border-radius: 18px;
-  background: var(--rt-card, var(--color-surface-card));
-  box-shadow: var(--rt-shadow, none);
-}
-.team-committee::before { /* mobile: port on the inline-start edge, like the cards; ≥768px: top centre */
-  content: ''; position: absolute; inset-block-start: calc(30px - var(--team-port) / 2); inset-inline-start: calc(var(--team-port) / -2);
-  inline-size: var(--team-port); block-size: var(--team-port); border-radius: 50%;
-  border: 1.5px solid var(--color-brand-primary); background: var(--color-surface-page);
-}
-.team-committee.is-active::before, .team-committee.is-done::before {
-  border-color: var(--color-brand-accent); background: var(--color-brand-accent); box-shadow: 0 0 0 4px rgb(182 242 58 / .14), 0 0 12px rgb(182 242 58 / .4);
-}
-.team-committee__head { display: grid; gap: 2px; margin-block-end: 12px; padding-block-end: 10px; border-block-end: 1px solid rgb(22 166 106 / .16); }
-.team-committee__parent { font: 500 12px/20px var(--font-arabic-base); color: var(--color-text-secondary); }
-.team-committee__title { font: 700 18px/28px var(--font-arabic); color: var(--color-text-primary); }
-.team-committee__branches { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
-.team-committee__branch + .team-committee__branch { padding-inline-start: 12px; border-inline-start: 1px solid rgb(22 166 106 / .16); }
-.team-committee__branch h4 { margin: 0 0 6px; font: 600 13px/20px var(--font-arabic); color: var(--color-text-brand); overflow-wrap: anywhere; }
-.team-committee__lead { display: grid; gap: 2px; margin: 0; }
-.team-committee__lead span { color: var(--color-text-secondary); font: 500 12px/20px var(--font-arabic-base); }
-.team-committee__lead strong { color: var(--color-text-primary); font: 600 14px/22px var(--font-arabic); overflow-wrap: anywhere; }
-.team-committee__members { display: grid; gap: 4px; margin: 8px 0 0; padding: 0; padding-inline-start: 8px; border-inline-start: 1px solid var(--color-border-brand); list-style: none; }
-.team-committee__members li { color: var(--color-text-secondary); font: 500 13px/22px var(--font-arabic); overflow-wrap: anywhere; }
-.team-page[lang="en"] :is(.team-committee__parent, .team-committee__title, .team-committee__branch h4, .team-committee__lead span, .team-committee__lead strong, .team-committee__members li) { font-family: var(--font-latin); }
-
 /* Department → committees: the trigger sits at the foot of the card (full-width, ≥44px). */
 .team-dept__more {
   display: flex; align-items: center; gap: 10px; min-block-size: 44px; margin-block-start: 14px; padding: 10px 14px;
@@ -190,6 +161,9 @@
 }
 .team-members__person--supervisor::before { inset-inline-start: 6px; inset-block-start: 21px; border: 0; background: var(--color-brand-accent); box-shadow: 0 0 0 3px rgb(182 242 58 / .16); }
 .team-members__person--supervisor + .team-members__person { border-block-start: 0; }
+/* A committee with internal groups (the Website Committee) starts each group with its leader's
+   highlighted row; one that follows a member row keeps its own solid border and a little space. */
+.team-members__person:not(.team-members__person--supervisor) + .team-members__person--supervisor { margin-block-start: 8px; border-block-start: 1px solid rgb(182 242 58 / .28); }
 /* Vice supervisor: the same highlighted row, one step quieter (green instead of lime). */
 .team-members__person--vice { background: rgb(22 166 106 / .06); border-color: rgb(22 166 106 / .32); }
 .team-members__person--vice::before { background: transparent; border: 1.5px solid var(--color-brand-accent); box-shadow: none; }
@@ -212,6 +186,112 @@
 .team-page[lang="en"] .team-closing__slogan { font: 600 12px/16px var(--font-latin); letter-spacing: .12em; text-transform: uppercase; }
 .team-closing h2 { color: var(--color-text-primary); }
 .team-closing .t-body-lg { max-inline-size: 620px; color: var(--color-text-secondary); }
+
+/* ── Website Committee (after the closing, before the footer) ─────────────
+   A small org chart: a centred head (icon, eyebrow, title), then two equal lead groups.
+   Each group is a card: the lead on top, highlighted like the members dialog's supervisors,
+   and the members who report to them beneath, on a trunk with a branch to each.
+   Mobile: the groups stack. ≥768px: two balanced columns fed by one bus from the head,
+   like the department rows above. */
+.team-credit-section { position: relative; z-index: 2; padding-block: 0 56px; }
+.team-credit {
+  --credit-line: rgb(22 166 106 / .5);
+  position: relative; display: grid; gap: 20px; padding: 28px 12px 16px; overflow: hidden;
+  border: 1px solid rgb(22 166 106 / .3); border-radius: 20px;
+  background: linear-gradient(180deg, rgb(22 166 106 / .09), rgb(22 166 106 / .02) 70%), var(--rt-panel, var(--color-surface-card));
+  box-shadow: var(--rt-shadow, none);
+}
+/* A thin lit edge along the top: the same hairline the refined footer uses. */
+.team-credit::before {
+  content: ''; position: absolute; inset-block-start: 0; inset-inline: 24px; block-size: 1px;
+  background: var(--rt-hairline, rgb(22 166 106 / .5)); opacity: .7; pointer-events: none;
+}
+.team-credit__head { display: grid; justify-items: center; gap: 4px; text-align: center; }
+.team-credit__icon { margin-block-end: 10px; }
+.team-credit__eyebrow { font: 700 14px/22px var(--font-arabic); color: var(--color-text-brand); }
+/* English: uppercase and tracked; tighter tracking on narrow phones keeps it on one line at 320px. */
+.team-page[lang="en"] .team-credit__eyebrow { font: 600 12px/18px var(--font-latin); letter-spacing: .06em; text-transform: uppercase; }
+.team-credit__title { font: 700 24px/36px var(--font-arabic); color: var(--color-text-primary); }
+
+/* Mobile: a short trace with a ring at its centre leads from the head into the stacked groups. */
+.team-credit__groups { position: relative; display: grid; gap: 14px; padding-block-start: 27px; }
+.team-credit__groups::before {
+  content: ''; position: absolute; inset-block-start: 0; inset-inline: 0; margin-inline: auto; inline-size: 96px; block-size: 9px;
+  background:
+    radial-gradient(circle, var(--color-surface-page) 3px, var(--color-brand-primary) 3px 4.5px, transparent 5px) center / 9px 9px no-repeat,
+    linear-gradient(90deg, transparent, rgb(22 166 106 / .6), transparent) center / 100% 1px no-repeat;
+}
+.team-credit__group {
+  position: relative; display: flex; flex-direction: column; padding: 14px 12px;
+  border: 1px solid rgb(22 166 106 / .24); border-radius: 16px; background: var(--rt-card, var(--color-surface-card));
+}
+.team-credit__lead {
+  position: relative; display: grid; gap: 2px; padding: 12px 14px; border-radius: 12px;
+  border: 1px solid rgb(182 242 58 / .28); background: linear-gradient(180deg, rgb(22 166 106 / .16), rgb(22 166 106 / .05));
+}
+/* The port where the members' trunk leaves the lead. */
+.team-credit__lead::after {
+  content: ''; position: absolute; inset-block-end: -5px; inset-inline-start: 14px; inline-size: 9px; block-size: 9px;
+  border: 1.5px solid var(--color-brand-primary); border-radius: 50%; background: var(--color-surface-page);
+}
+.team-credit__role { display: inline-flex; align-items: center; gap: 8px; font: 700 13px/20px var(--font-arabic); color: var(--color-text-accent); }
+.team-credit__role::before { content: ''; flex: none; inline-size: 7px; block-size: 7px; border-radius: 50%; background: var(--color-brand-accent); box-shadow: 0 0 0 3px rgb(182 242 58 / .15); }
+.team-page[lang="en"] .team-credit__role { font: 600 11px/18px var(--font-latin); letter-spacing: .1em; text-transform: uppercase; }
+/* 18px on the narrowest phones keeps the longest lead name on one line at 320px; 19px from 380px. */
+.team-credit__name { font: 700 18px/30px var(--font-arabic); color: var(--color-text-primary); overflow-wrap: anywhere; }
+
+/* Members: nested cards on a trunk from the lead's port, with a branch to each. --reach is the
+   distance from a card's top up to the element above it (the list's 12px margin, or the 8px gap),
+   so the trunk segments meet; the last one stops at its branch. */
+.team-credit__members { display: grid; gap: 8px; margin-block-start: 12px; }
+.team-credit__member {
+  --reach: 9px;
+  position: relative; margin-inline-start: 40px; padding: 9px 14px;
+  border: 1px solid rgb(22 166 106 / .16); border-radius: 12px; background: rgb(255 255 255 / .02);
+  font: 600 16px/26px var(--font-arabic); color: var(--color-text-secondary); overflow-wrap: anywhere;
+}
+.team-credit__member:first-child { --reach: 13px; }
+.team-credit__member::before {
+  content: ''; position: absolute; inset-inline-start: -22px; inset-block-start: calc(-1 * var(--reach));
+  block-size: calc(100% + var(--reach) + 1px); border-inline-start: 1px solid var(--credit-line);
+}
+.team-credit__member:last-child::before { block-size: calc(50% + var(--reach)); }
+.team-credit__member::after {
+  content: ''; position: absolute; inset-inline-start: -22px; inset-block-start: 50%; inline-size: 21px; border-block-start: 1px solid var(--credit-line);
+}
+
+@media (min-width: 380px) {
+  .team-credit { padding: 28px 16px 20px; }
+  .team-credit__group { padding: 16px; }
+  .team-credit__name { font-size: 19px; }
+}
+@media (min-width: 600px) {
+  .team-page[lang="en"] .team-credit__eyebrow { letter-spacing: .12em; }
+}
+/* ≥768px the closing section keeps only 8px below its panel and the circuit's end ring sits 34px
+   under it, so the section brings its own space above. */
+@media (min-width: 768px) {
+  .team-credit-section { padding-block: 64px 80px; }
+  .team-credit { gap: 12px; padding: 32px 32px 28px; }
+  .team-credit__title { font-size: 28px; line-height: 40px; }
+  /* Two balanced columns, the same height; one bus from the head feeds both leads equally. */
+  .team-credit__groups { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; inline-size: min(100%, 880px); margin-inline: auto; padding-block-start: 50px; }
+  .team-credit__groups::before {
+    inline-size: 9px; block-size: 26px;
+    background:
+      radial-gradient(circle, var(--color-surface-page) 3px, var(--color-brand-primary) 3px 4.5px, transparent 5px) top center / 9px 9px no-repeat,
+      linear-gradient(var(--credit-line), var(--credit-line)) center 9px / 1px calc(100% - 9px) no-repeat;
+  }
+  /* The bus runs between the two column centres (a quarter in from each side, less half the gap). */
+  .team-credit__groups::after { content: ''; position: absolute; inset-block-start: 26px; inset-inline: calc(25% - 6px); border-block-start: 1px solid var(--credit-line); }
+  .team-credit__group { padding: 20px; }
+  .team-credit__group::before { content: ''; position: absolute; inset-block-start: -25px; inset-inline: 0; margin-inline: auto; inline-size: 1px; block-size: 24px; background: var(--credit-line); }
+  .team-credit__group::after {
+    content: ''; position: absolute; inset-block-start: -6px; inset-inline: 0; margin-inline: auto; inline-size: 9px; block-size: 9px;
+    border: 1.5px solid var(--color-brand-primary); border-radius: 50%; background: var(--color-surface-page);
+  }
+  .team-credit__name { font-size: 20px; line-height: 32px; }
+}
 
 /* ── ≥768px: centred trunk, buses above each row ───────────────────────── */
 @media (min-width: 768px) {
@@ -238,8 +318,6 @@
   .team-departments { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 56px 24px; }
   .team-departments > li { grid-column: span 2; }
   .team-departments > .team-department-item--last { grid-column: 2 / span 2; }
-  .team-departments > .team-committee-item { grid-column: 2 / span 2; order: 0; margin-block-start: 0; }
-  .team-committee::before { inset-block-start: calc(var(--team-port) / -2); inset-inline-start: calc(50% - var(--team-port) / 2); }
   .team-dept { padding: 24px; }
   .team-closing { padding: 48px 40px; }
   .team-members {
@@ -259,7 +337,6 @@
   .team-departments { grid-template-columns: repeat(8, minmax(0, 1fr)); }
   .team-departments > .team-department-item--last { grid-column: span 2; }
   .team-departments > li:nth-child(5) { grid-column: 2 / span 2; }
-  .team-departments > .team-committee-item { grid-column: 4 / span 2; order: 1; }
 }
 
 /* ── Response (pointer only; content never depends on it) ──────────────── */
