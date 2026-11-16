@@ -7,8 +7,8 @@ export const hero = {
   eyebrow: ['ملتقى روبوتاكتيك · 2026', 'RoboTactic Forum · 2026'],
   title: ['التحدي يقوده التفكير', 'A challenge Driven by Thinking'],
   description: [
-    'ملتقى تقني يجمع بين الابتكار والتقنية والتفكير الاستراتيجي، ويضم مسابقات الروبوتات ومعرض المشاريع لطلاب وطالبات المرحلتين الثانوية والجامعية.',
-    'A technology forum exploring innovation and strategic thinking through robotics competitions and a student project showcase for secondary-school and university students.',
+    'حدث تقني تنافسي يجمع المواهب المبدعة والكفاءات الواعدة، ويفتح آفاقًا للابتكار والتطبيق العملي، في بيئة تتكامل فيها المهارات الهندسية والتقنية مع روح التحدي والتميز.',
+    'A competitive technology event that brings together creative talents and emerging capabilities, offering opportunities for innovation and practical application in an environment where engineering and technical skills meet the spirit of challenge and excellence.',
   ],
   primaryAction: { label: ['استكشف المسابقات', 'Explore competitions'], path: '/competitions' },
   secondaryAction: { label: ['من نحن', 'About Us'], path: '/about' },
