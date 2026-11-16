@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import Icon from '../../components/Icon/Icon';
-import { ROLES, committeeCount, committeeHeadcount, committeeLeadsOf, committeeSize } from '../../data/team';
+import { ROLES, committeeCount, committeeHeadcount, committeeRowsOf, committeeSize } from '../../data/team';
 
 /* Arabic number agreement: 2 → عضوان, 3–10 → أعضاء, otherwise عضوًا. */
 const peopleCount = (n) => [
@@ -79,19 +79,19 @@ export default function DepartmentMembers({ dept, onClose }) {
                   <span className="team-members__count">{t(peopleCount(committeeSize(c)))}</span>
                 </div>
                 <ul className="team-members__list">
-                  {committeeLeadsOf(c).map(({ role, name }) => (
+                  {committeeRowsOf(c).map(({ role, name, group, lead }) => (lead ? (
                     <li key={name[1]} className={`team-members__person team-members__person--supervisor${role === ROLES.viceSupervisor ? ' team-members__person--vice' : ''}`}>
-                      <span className="team-members__role">{t(role)}</span>
+                      {/* A group leader's title names the group, e.g. «القائد · الباك إند». */}
+                      <span className="team-members__role">{t(role)}{group && ` · ${t(group)}`}</span>
                       <span className="team-members__name">{t(name)}</span>
                       <span className="team-members__alt" lang={other}>{alt(name)}</span>
                     </li>
-                  ))}
-                  {c.members.map((m) => (
-                    <li key={m[1]} className="team-members__person">
-                      <span className="team-members__name">{t(m)}</span>
-                      <span className="team-members__alt" lang={other}>{alt(m)}</span>
+                  ) : (
+                    <li key={name[1]} className="team-members__person">
+                      <span className="team-members__name">{t(name)}</span>
+                      <span className="team-members__alt" lang={other}>{alt(name)}</span>
                     </li>
-                  ))}
+                  )))}
                 </ul>
               </section>
             ))}

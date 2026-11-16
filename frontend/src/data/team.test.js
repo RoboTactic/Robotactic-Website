@@ -1,13 +1,13 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { ROLES, allMembers, committeeCount, committeeHeadcount, committeeLeadsOf, committeeSize, departments, leadRolesOf, leadershipTiers, supervisorsOf, websiteCommittee } from './team.js';
+import { ROLES, allMembers, committeeCount, committeeHeadcount, committeeLeadsOf, committeeMembersOf, committeeRowsOf, committeeSize, departments, leadRolesOf, leadershipTiers, supervisorsOf } from './team.js';
 import { ICONS } from '../components/Icon/icons.js';
 
 const pair = (value) => Array.isArray(value) && value.length === 2 && value.every((s) => typeof s === 'string' && s.trim());
 const dept = (key) => departments.find((d) => d.key === key);
 const shape = (d) => d.committees.map((c) => [c.key, supervisorsOf(c).length, committeeSize(c)]);
 const leadRoles = (c) => committeeLeadsOf(c).map((l) => l.role);
-const allPairs = (d) => d.committees.every((c) => [c.name, ...committeeLeadsOf(c).map((l) => l.name), ...c.members].every(pair));
+const allPairs = (d) => d.committees.every((c) => [c.name, ...committeeLeadsOf(c).map((l) => l.name), ...committeeMembersOf(c), ...(c.groups ?? []).map((g) => g.name)].every(pair));
 
 test('the structure includes the website committee without adding a department', () => {
   assert.equal(leadershipTiers.flatMap((t) => t.members).length, 5);
@@ -41,14 +41,13 @@ test('Media & Marketing: four committees (Design and Media without a supervisor)
   assert.equal(committeeCount(marketing), 4);
 });
 
-test('Technical: three committees plus unassigned members; the Website Committee stays separate', () => {
+test('Technical: four committees, the Website Committee among them, plus unassigned members', () => {
   const technical = dept('technical');
   assert.deepEqual(shape(technical), [
-    ['engineering', 1, 9], ['advanced-competition', 1, 9], ['beginner-competition', 1, 9], ['unassigned', 0, 5],
+    ['engineering', 1, 9], ['advanced-competition', 1, 9], ['beginner-competition', 1, 9], ['website', 0, 5], ['unassigned', 0, 5],
   ]);
-  assert.equal(committeeHeadcount(technical), 32);
-  assert.equal(committeeCount(technical), 3);
-  assert.ok(!technical.committees.some((c) => c.key === 'website'));
+  assert.equal(committeeHeadcount(technical), 37);
+  assert.equal(committeeCount(technical), 4);
 });
 
 test('Planning: five committees, one without a supervisor and one with two', () => {
@@ -76,15 +75,19 @@ test('Public Relations: three committees plus unassigned members', () => {
   assert.equal(committeeCount(pr), 3);
 });
 
-test('the website committee belongs to the technical department, which stays sixth; Ambassadors comes first', () => {
+test('the website committee is a Technical committee, listed once; Technical stays sixth and Ambassadors first', () => {
   assert.equal(departments[0].key, 'ambassadors');
   assert.equal(departments[3].key, 'programs');
   assert.equal(departments[5].key, 'technical');
-  assert.equal(websiteCommittee.department, 'technical');
-  // Names live in team.js; this test protects the committee structure.
-  assert.deepEqual(websiteCommittee.branches.map(branch => [branch.key, branch.members.length]), [
-    ['backend', 1],
-    ['frontend', 2],
+  const holders = departments.filter((d) => (d.committees ?? []).some((c) => c.key === 'website'));
+  assert.deepEqual(holders.map((d) => d.key), ['technical']);
+  assert.equal(dept('technical').committees.filter((c) => c.key === 'website').length, 1);
+  // Names live in team.js; this test protects the committee structure: two groups, each with its leader.
+  const website = dept('technical').committees.find((c) => c.key === 'website');
+  assert.deepEqual(website.groups.map((g) => [g.key, g.members.length]), [['backend', 1], ['frontend', 2]]);
+  assert.deepEqual(committeeRowsOf(website).map((r) => [r.lead ? 'lead' : 'member', r.role, r.group]), [
+    ['lead', ROLES.leader, website.groups[0].name], ['member', ROLES.member, website.groups[0].name],
+    ['lead', ROLES.leader, website.groups[1].name], ['member', ROLES.member, website.groups[1].name], ['member', ROLES.member, website.groups[1].name],
   ]);
 });
 

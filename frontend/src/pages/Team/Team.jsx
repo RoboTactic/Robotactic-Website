@@ -1,13 +1,17 @@
-import { Fragment, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import SectionHeading from '../../components/SectionHeading/SectionHeading';
 import Icon from '../../components/Icon/Icon';
 import circuitPattern from '../Workshops/assets/circuit-pattern.svg';
 import TeamCircuit from './TeamCircuit';
 import DepartmentMembers from './DepartmentMembers';
-import { ROLES, departments, leadRolesOf, leadershipTiers, websiteCommittee } from '../../data/team';
+import { ROLES, departments, leadRolesOf, leadershipTiers } from '../../data/team';
 import { useLanguage } from '../../services/api/publicContentLanguage';
+import { websiteCredit } from './websiteCredit';
 import '../InfoPages.css';
 import './Team.css';
+
+// The Website Committee's credit, read once from the team data (see websiteCredit.js).
+const credit = websiteCredit();
 
 /*
   Team — the organizing structure as one circuit network: a single leadership trunk
@@ -64,9 +68,8 @@ export default function Team() {
         </div>
         <ul className="team-departments">
           {departments.map((dept, i) => (
-            <Fragment key={dept.key}>
-            <li className={dept.key === 'public-relations' ? 'team-department-item--last' : undefined}>
-              <article className={`team-dept${dept.key === websiteCommittee.department ? ' team-dept--technical' : ''}`} aria-labelledby={`team-dept-${dept.key}`}>
+            <li key={dept.key} className={dept.key === 'public-relations' ? 'team-department-item--last' : undefined}>
+              <article className="team-dept" aria-labelledby={`team-dept-${dept.key}`}>
                 <div className="team-dept__head">
                   <span className="team-dept__icon"><Icon name={dept.icon} size={22} /></span>
                   <span className="team-dept__index" lang="en" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
@@ -89,24 +92,6 @@ export default function Team() {
                 )}
               </article>
             </li>
-            {dept.key === websiteCommittee.department && <li className="team-committee-item">
-              <section className="team-committee" aria-labelledby="team-committee-title" aria-describedby="team-committee-parent">
-                <div className="team-committee__head">
-                  <h3 id="team-committee-title" className="team-committee__title">{t(websiteCommittee.name)}</h3>
-                  <p id="team-committee-parent" className="team-committee__parent">{t(['تابعة للقسم التقني', 'Part of the Technical Department'])}</p>
-                </div>
-                <div className="team-committee__branches">
-                  {websiteCommittee.branches.map(branch => <section className="team-committee__branch" key={branch.key} aria-labelledby={`team-branch-${branch.key}`}>
-                    <h4 id={`team-branch-${branch.key}`}>{t(branch.name)}</h4>
-                    <p className="team-committee__lead"><span>{t(ROLES.leader)}</span><strong>{t(branch.lead)}</strong></p>
-                    <ul className="team-committee__members" aria-label={t(['أعضاء الفريق', 'Team members'])}>
-                      {branch.members.map(member => <li key={member[1]}>{t(member)}</li>)}
-                    </ul>
-                  </section>)}
-                </div>
-              </section>
-            </li>}
-            </Fragment>
           ))}
         </ul>
       </section>
@@ -123,6 +108,32 @@ export default function Team() {
           ])}</p>
         </div>
       </section>
+
+      {credit && (
+        <section className="container team-credit-section" aria-labelledby="team-credit-title">
+          <div className="team-credit">
+            <div className="team-credit__head">
+              <span className="team-dept__icon team-credit__icon" aria-hidden="true"><Icon name="project" size={24} /></span>
+              <p className="team-credit__eyebrow">{t(['تنفيذ وتطوير الموقع', 'Website Design & Development'])}</p>
+              <h2 id="team-credit-title" className="team-credit__title">{t(credit.name)}</h2>
+            </div>
+            {/* Two equal lead groups; each lead's members are nested under them. */}
+            <ul className="team-credit__groups">
+              {credit.groups.map((g) => (
+                <li key={g.key} className="team-credit__group">
+                  <div className="team-credit__lead">
+                    <span className="team-credit__role">{t(g.title)}</span>
+                    <span className="team-credit__name">{t(g.lead)}</span>
+                  </div>
+                  <ul className="team-credit__members">
+                    {g.members.map((m) => <li key={m[1]} className="team-credit__member">{t(m)}</li>)}
+                  </ul>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      )}
     </div>
   );
 }

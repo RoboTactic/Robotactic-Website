@@ -78,8 +78,8 @@ const marketingCommittees = [
   },
 ];
 
-/* Technical Department committees (in its members dialog). The Website Committee is also part of
-   this department but keeps its own card on the page — see `websiteCommittee` below. */
+/* Technical Department committees (in its members dialog). The Website Committee keeps its two
+   internal groups, each with its own leader (see committeeRowsOf below). */
 const technicalCommittees = [
   {
     key: 'engineering',
@@ -124,6 +124,14 @@ const technicalCommittees = [
       ['رهف عبد العزيز المغربي', 'Rahaf Abdulaziz Almghrabi'],
       ['لارا خالد التميمي', 'Lara Khalid Altamimi'],
       ['محمد ايمن السيد', 'Muhammed Ayman Alsayed'],
+    ],
+  },
+  {
+    key: 'website',
+    name: ['لجنة الموقع', 'Website Committee'],
+    groups: [
+      { key: 'backend', name: ['الباك إند', 'Back-end'], lead: ['عبد الله السيروان', 'Abdullah Alseyrawan'], members: [['صالح باحكيم', 'Saleh Bahakim']] },
+      { key: 'frontend', name: ['الفرونت إند', 'Front-end'], lead: ['ليان الحربي', 'Layan Alharbi'], members: [['معتز السيد', 'Motaz Alsayed'], ['شيماء وهيب', 'Shaima Waheeb']] },
     ],
   },
   {
@@ -389,12 +397,26 @@ const planningCommittees = [
 
 /* People in a department's committees (supervisors + members), and the number of real committees. */
 export const supervisorsOf = (c) => c.supervisors ?? [];
-/* Supervisors, then vice supervisors, each with its role — the highlighted rows at the top of a committee. */
+/* Supervisors, then vice supervisors, each with its role — the highlighted rows at the top of a committee.
+   A committee with internal groups (the Website Committee) has one leader per group instead. */
 export const committeeLeadsOf = (c) => [
   ...supervisorsOf(c).map((name) => ({ role: ROLES.supervisor, name })),
   ...(c.viceSupervisors ?? []).map((name) => ({ role: ROLES.viceSupervisor, name })),
+  ...(c.groups ?? []).map((g) => ({ role: ROLES.leader, name: g.lead, group: g.name })),
 ];
-export const committeeSize = (c) => committeeLeadsOf(c).length + c.members.length;
+export const committeeMembersOf = (c) => c.members ?? (c.groups ?? []).flatMap((g) => g.members);
+/* Everyone in a committee in display order, each with its role (`lead` marks the highlighted rows).
+   Grouped committees list each group's leader followed by that group's members. */
+export const committeeRowsOf = (c) => (c.groups
+  ? c.groups.flatMap((g) => [
+    { role: ROLES.leader, name: g.lead, group: g.name, lead: true },
+    ...g.members.map((name) => ({ role: ROLES.member, name, group: g.name })),
+  ])
+  : [
+    ...committeeLeadsOf(c).map((l) => ({ ...l, lead: true })),
+    ...c.members.map((name) => ({ role: ROLES.committeeMember, name })),
+  ]);
+export const committeeSize = (c) => committeeRowsOf(c).length;
 export const committeeHeadcount = (dept) => (dept.committees ?? []).reduce((n, c) => n + committeeSize(c), 0);
 export const committeeCount = (dept) => (dept.committees ?? []).filter((c) => !c.unassigned).length;
 
@@ -429,16 +451,6 @@ export const departments = [
   { key: 'public-relations', icon: 'chat', name: ['قسم العلاقات العامة', 'Public Relations'], leader: ['عبدالرحمن رجب', 'Abdulrahman Rajab'], viceLeader: ['وليد زكي', 'Waleed Zaki'], committees: prCommittees },
 ];
 
-/* Website committee: a branch of the Technical Department, not a separate department. */
-export const websiteCommittee = {
-  department: 'technical',
-  name: ['لجنة الموقع', 'Website Committee'],
-  branches: [
-    { key: 'backend', name: ['الباك إند', 'Back-end'], lead: ['عبد الله السيروان', 'Abdullah Alseyrawan'], members: [['صالح باحكيم', 'Saleh Bahakim']] },
-    { key: 'frontend', name: ['الفرونت إند', 'Front-end'], lead: ['ليان الحربي', 'Layan Alharbi'], members: [['معتز السيد', 'Motaz Alsayed'], ['شيماء وهيب', 'Shaima Waheeb']] },
-  ],
-};
-
 /* The two titles shown on a department card. */
 export const leadRolesOf = (d) => d.leadRoles ?? [ROLES.leader, ROLES.viceLeader];
 
@@ -448,13 +460,8 @@ export const allMembers = () => [
   ...departments.flatMap((d) => [
     { role: leadRolesOf(d)[0], name: d.leader, department: d.key },
     { role: leadRolesOf(d)[1], name: d.viceLeader, department: d.key },
-    ...(d.committees ?? []).flatMap((c) => [
-      ...committeeLeadsOf(c).map((lead) => ({ ...lead, department: d.key, committee: c.name })),
-      ...c.members.map((name) => ({ role: ROLES.committeeMember, name, department: d.key, committee: c.name })),
-    ]),
-  ]),
-  ...websiteCommittee.branches.flatMap((branch) => [
-    { role: ROLES.leader, name: branch.lead, department: websiteCommittee.department, committee: websiteCommittee.name, branch: branch.key },
-    ...branch.members.map((name) => ({ role: ROLES.member, name, department: websiteCommittee.department, committee: websiteCommittee.name, branch: branch.key })),
+    ...(d.committees ?? []).flatMap((c) => committeeRowsOf(c).map(({ role, name, group }) => ({
+      role, name, department: d.key, committee: c.name, ...(group && { group }),
+    }))),
   ]),
 ];
