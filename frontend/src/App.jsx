@@ -16,7 +16,7 @@ import { PublicSectionState, useSectionVisibility } from './services/api/Section
 
 /* Browser titles for the public routes; the 404 page sets its own, and the Dashboard is left alone. */
 const pageTitles = {
-  '/': ['RoboTactic 2026 — ابتكار يقوده التفكير', 'RoboTactic 2026 — Innovation driven by ideas'],
+  '/': ['RoboTactic 2027 — ابتكار يقوده التفكير', 'RoboTactic 2027 — Innovation driven by ideas'],
   '/about': ['من نحن | RoboTactic', 'About Us | RoboTactic'],
   '/competitions': ['المسابقات | RoboTactic', 'Competitions | RoboTactic'],
   '/workshops': ['ورش العمل | RoboTactic', 'Workshops | RoboTactic'],
@@ -24,7 +24,7 @@ const pageTitles = {
   '/team': ['الفريق | RoboTactic', 'Team | RoboTactic'],
   '/timeline': ['الجدول الزمني | RoboTactic', 'Timeline | RoboTactic'],
 };
-const metaDescription = ['RoboTactic 2026 — ابتكار يقوده التفكير', 'RoboTactic 2026 — Innovation driven by ideas'];
+const metaDescription = ['RoboTactic 2027 — ابتكار يقوده التفكير', 'RoboTactic 2027 — Innovation driven by ideas'];
 
 // Start each page at the top when navigating between routes
 function ScrollToTop() {
