@@ -1,18 +1,16 @@
 /* Figma `Section — Footer`: mobile 375 = centred stack (32px padding, 18px rhythm);
-   desktop 1440 = brand | channel icons row, contact text under the brand, then a bottom bar 24px below. */
+   desktop 1440 = contact text | channel icons row, then a bottom bar 24px below. */
 .footer { background: var(--color-surface-footer); border-block-start: 1px solid var(--color-border-subtle); }
 .footer__inner {
   display: grid; justify-items: center; gap: 18px; text-align: center;
   padding-block: 32px;
 }
-.footer__brand { display: flex; flex-direction: column; align-items: center; gap: 18px; }
-.footer__slogan { color: var(--color-text-muted); }
 /* Contact Us (Web Content Collection): heading, tagline, intro, then the channel icons. */
 .footer__contact { display: grid; justify-items: center; gap: 6px; max-inline-size: 72ch; }
 .footer__contact-title { margin: 0; color: var(--color-text-primary); font-size: 16px; font-weight: 600; line-height: 24px; }
 .footer__contact-tagline { margin: 0; color: var(--color-text-accent); font-size: 14px; line-height: 22px; }
 .footer__contact-intro { margin: 0; color: var(--color-text-muted); font-size: 13px; line-height: 21px; }
-/* Contact channels: a row of soft icon buttons under the slogan (44px touch targets). */
+/* Contact channels: a row of soft icon buttons (44px touch targets). */
 .footer__social { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 0; padding: 0; list-style: none; }
 .footer__social-link {
   display: inline-grid; place-items: center; inline-size: 44px; block-size: 44px;
@@ -76,11 +74,10 @@
 
 @media (min-width: 1024px) {
   .footer__inner {
-    grid-template-columns: auto 1fr; grid-template-areas: 'brand social' 'contact contact' 'bottom bottom';
+    grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: 'contact social' 'bottom bottom';
     justify-items: stretch; align-items: center; gap: 0 48px; text-align: start; padding-block: 48px 40px;
   }
-  .footer__brand { grid-area: brand; align-items: flex-start; gap: 6px; }
-  .footer__contact { grid-area: contact; justify-self: start; justify-items: start; margin-block-start: 28px; }
-  .footer__social { grid-area: social; justify-content: flex-end; }
+  .footer__contact { grid-area: contact; justify-self: start; justify-items: start; }
+  .footer__social { grid-area: social; justify-content: flex-end; align-self: start; }
   .footer__bottom { grid-area: bottom; flex-direction: row; justify-content: space-between; margin-block-start: 32px; padding-block-start: 24px; border-block-start: 1px solid var(--color-border-subtle); }
 }

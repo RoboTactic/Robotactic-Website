@@ -11,9 +11,6 @@ export default function Footer() {
   return (
     <footer className="footer">
       <div className="container footer__inner">
-        <div className="footer__brand">
-          <p className="footer__slogan t-caption">{t(brand.slogan)}</p>
-        </div>
         <section className="footer__contact" aria-labelledby="footer-contact-title">
           <h2 id="footer-contact-title" className="footer__contact-title">{t(contact.title)}</h2>
           <p className="footer__contact-tagline">{t(contact.tagline)}</p>
