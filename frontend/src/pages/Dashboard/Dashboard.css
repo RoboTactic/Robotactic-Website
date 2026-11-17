@@ -440,3 +440,49 @@
   .dash-supervisors__wide { grid-column: 1 / -1; }
   .dash-supervisors__add { justify-self: start; min-inline-size: 200px; }
 }
+
+/* ── Team management («الفريق») — mobile first ─────────────────────────── */
+.dash-team-toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-block-end: 16px; }
+.dash-team-toolbar .dash-result-count { margin: 0; }
+.dash-team-departments { margin: 0; padding: 0; list-style: none; }
+.dash-team-department h2 { margin: 0; font-size: 18px; line-height: 1.5; overflow-wrap: anywhere; }
+.dash-team-link { color: var(--color-text-primary); text-decoration: none; }
+.dash-team-link:hover { color: var(--color-text-accent); text-decoration: underline; text-underline-offset: 4px; }
+.dash-team-index { flex: none; font: 600 12px/1 var(--font-latin); letter-spacing: .08em; color: var(--color-text-secondary); }
+.dash-card-actions.dash-team-card-actions { display: flex; flex-direction: column; gap: 8px; }
+.dash-team-tools { display: flex; flex-wrap: wrap; gap: 8px; }
+.dash-team-tools > .dash-action { flex: 1 1 auto; min-inline-size: 44px; }
+.dash-team-tools > .dash-team-tools__move { flex: 0 0 44px; padding-inline: 0; font-size: 18px; line-height: 1; }
+.dash-team-stack { display: grid; gap: 20px; max-inline-size: 960px; }
+.dash-team-panel { gap: 16px; }
+.dash-team-panel__head { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.dash-team-panel__head h2 { margin: 0; font-size: 18px; }
+.dash-team-panel__head .dash-secondary { margin-block: 4px 0; }
+.dash-team-list { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.dash-team-person { display: flex; flex-direction: column; gap: 12px; padding: 12px 14px; border: 1px solid var(--color-border-subtle); border-radius: 14px; background: var(--color-surface-sunken); }
+/* Highlighted rows (leaders, supervisors): an accent edge plus the role text, never colour alone. */
+.dash-team-person--lead { border-color: rgb(182 242 58 / .3); border-inline-start: 3px solid var(--color-brand-accent); background: linear-gradient(90deg, rgb(182 242 58 / .05), transparent 70%), var(--color-surface-sunken); }
+.dashboard[dir="rtl"] .dash-team-person--lead { background: linear-gradient(270deg, rgb(182 242 58 / .05), transparent 70%), var(--color-surface-sunken); }
+.dash-team-person__text { display: grid; gap: 2px; min-inline-size: 0; }
+.dash-team-person__role { font-size: 12px; font-weight: 700; color: var(--color-text-accent); }
+.dash-team-person__name { font-size: 16px; font-weight: 700; color: var(--color-text-primary); overflow-wrap: anywhere; }
+/* Sits under the primary name (fit-content), even when its own direction differs. */
+.dash-team-person__alt { justify-self: start; inline-size: fit-content; max-inline-size: 100%; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 13px; color: var(--color-text-secondary); overflow-wrap: anywhere; }
+.dash-team-inline { margin-block-start: 8px; padding: 16px; border: 1px dashed var(--color-border-brand); border-radius: 14px; }
+.dash-team-form .dash-field > label, .dash-team-form .dash-checkbox-label { color: var(--color-text-secondary); font-size: 14px; }
+.dash-team-form .dash-form-grid { margin-block-end: 16px; }
+.dash-team-summary { display: flex; align-items: flex-start; gap: 12px; }
+.dash-team-summary .dash-meta { flex: 1; min-inline-size: 0; }
+.dash-team-icons { margin: 0; padding: 0; border: 0; min-inline-size: 0; }
+.dash-team-icons legend { margin-block-end: 8px; padding: 0; color: var(--color-text-secondary); font-size: 14px; }
+.dash-team-icons__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(48px, 1fr)); gap: 8px; }
+.dash-team-form .dash-team-icons__option { position: relative; display: grid; place-items: center; min-block-size: 48px; border: 1px solid var(--color-border-default); border-radius: 12px; background: var(--color-surface-raised); color: var(--color-text-secondary); cursor: pointer; }
+.dashboard .dash-team-icons__option input { position: absolute; inset: 0; inline-size: 100%; block-size: 100%; min-block-size: 0; margin: 0; padding: 0; border: 0; opacity: 0; cursor: pointer; }
+.dash-team-form .dash-team-icons__option:has(input:checked) { border-color: var(--color-brand-accent); color: var(--color-brand-accent); background: rgb(182 242 58 / .08); box-shadow: inset 0 0 0 1px var(--color-brand-accent); }
+.dash-team-icons__option:has(input:focus-visible) { outline: 2px solid var(--color-border-focus); outline-offset: 2px; }
+.dash-team-committee .dash-status { padding-block: 2px; }
+@media (min-width: 700px) {
+  .dash-team-person { flex-direction: row; align-items: center; justify-content: space-between; }
+  .dash-team-person .dash-team-tools { flex-wrap: nowrap; flex-shrink: 0; }
+  .dash-team-tools > .dash-action { flex: 0 0 auto; }
+}

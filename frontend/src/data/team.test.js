@@ -1,110 +1,65 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { ROLES, allMembers, committeeCount, committeeHeadcount, committeeLeadsOf, committeeMembersOf, committeeRowsOf, committeeSize, departments, leadRolesOf, leadershipTiers, supervisorsOf } from './team.js';
-import { ICONS } from '../components/Icon/icons.js';
+import { ROLES, committeeCount, committeeHeadcount, committeeSize, isPrimaryLeader, isViceRole, leadershipTiers, presentTeam } from './team.js';
 
 const pair = (value) => Array.isArray(value) && value.length === 2 && value.every((s) => typeof s === 'string' && s.trim());
-const dept = (key) => departments.find((d) => d.key === key);
-const shape = (d) => d.committees.map((c) => [c.key, supervisorsOf(c).length, committeeSize(c)]);
-const leadRoles = (c) => committeeLeadsOf(c).map((l) => l.role);
-const allPairs = (d) => d.committees.every((c) => [c.name, ...committeeLeadsOf(c).map((l) => l.name), ...committeeMembersOf(c), ...(c.groups ?? []).map((g) => g.name)].every(pair));
 
-test('the structure includes the website committee without adding a department', () => {
+// Shape of GET /api/public/team (fictional names).
+const tree = [{
+  id: 4, icon: 'calendar', name_ar: 'قسم البرامج', name_en: 'Programs Department',
+  leaders: [
+    { id: 1, role_ar: 'قائد', role_en: 'Program Leader', name_ar: 'أ', name_en: 'A' },
+    { id: 2, role_ar: 'قائد', role_en: 'Program Leader', name_ar: 'ب', name_en: 'B' },
+  ],
+  committees: [
+    { id: 10, name_ar: 'لجنة البرمجان', name_en: 'Hackathon', is_general: false, members: [
+      { id: 100, name_ar: 'ج', name_en: 'C', role_ar: 'المشرف', role_en: 'Supervisor', is_lead: true },
+      { id: 101, name_ar: 'د', name_en: 'D', role_ar: 'نائب المشرف', role_en: 'Vice Supervisor', is_lead: true },
+      { id: 102, name_ar: 'هـ', name_en: 'E', role_ar: null, role_en: null, is_lead: false },
+    ] },
+    { id: 11, name_ar: 'أعضاء القسم', name_en: 'Department Members', is_general: true, members: [
+      { id: 103, name_ar: 'و', name_en: '', role_ar: null, role_en: null, is_lead: false },
+    ] },
+  ],
+}, { id: 5, icon: 'retired-icon', name_ar: 'قسم', name_en: 'Dept', leaders: [], committees: [] }];
+
+test('executive leadership: five people in three tiers with the official titles', () => {
   assert.equal(leadershipTiers.flatMap((t) => t.members).length, 5);
-  assert.equal(departments.length, 7);
-  const members = allMembers();
-  assert.equal(members.length, 181);
-  for (const lang of [0, 1]) assert.equal(new Set(members.map((m) => m.name[lang])).size, 181);
-});
-
-test('departments with a members dialog', () => {
-  assert.deepEqual(departments.filter((d) => d.committees).map((d) => d.key), ['ambassadors', 'media-marketing', 'planning', 'programs', 'human-resources', 'technical', 'public-relations']);
-  for (const d of departments.filter((x) => x.committees)) assert.ok(allPairs(d), d.key);
-});
-
-test('Programs: five committees; the hackathon has a vice supervisor', () => {
-  const programs = dept('programs');
-  assert.deepEqual(shape(programs), [
-    ['in-person-workshops', 1, 8], ['hackathon', 1, 9], ['entertainment', 1, 6], ['speakers', 1, 5], ['remote-workshops', 1, 6],
-  ]);
-  assert.deepEqual(leadRoles(programs.committees[1]), [ROLES.supervisor, ROLES.viceSupervisor]);
-  assert.equal(committeeHeadcount(programs), 34);
-  assert.equal(committeeCount(programs), 5);
-});
-
-test('Media & Marketing: four committees (Design and Media without a supervisor)', () => {
-  const marketing = dept('media-marketing');
-  assert.deepEqual(shape(marketing), [
-    ['design', 0, 8], ['marketing', 1, 5], ['media-monitoring', 1, 7], ['media', 0, 5],
-  ]);
-  assert.equal(committeeHeadcount(marketing), 25);
-  assert.equal(committeeCount(marketing), 4);
-});
-
-test('Technical: four committees, the Website Committee among them', () => {
-  const technical = dept('technical');
-  assert.deepEqual(shape(technical), [
-    ['engineering', 1, 9], ['advanced-competition', 1, 9], ['beginner-competition', 1, 10], ['website', 0, 5],
-  ]);
-  assert.equal(committeeHeadcount(technical), 33);
-  assert.equal(committeeCount(technical), 4);
-});
-
-test('Planning: five committees, one without a supervisor and one with two', () => {
-  const planning = dept('planning');
-  assert.deepEqual(shape(planning), [
-    ['main-competitions', 1, 5], ['student-separation', 1, 6], ['defense-exhibition', 0, 5], ['innovation-exhibition', 2, 7], ['closing-ceremony', 1, 5],
-  ]);
-  assert.equal(committeeHeadcount(planning), 28);
-  assert.equal(committeeCount(planning), 5);
-});
-
-test('Human Resources: five committees, each with one supervisor', () => {
-  const hr = dept('human-resources');
-  assert.deepEqual(shape(hr), [
-    ['recruitment', 1, 4], ['training', 1, 4], ['scheduling', 1, 3], ['screening', 1, 5], ['recognition', 1, 5],
-  ]);
-  assert.equal(committeeHeadcount(hr), 21);
-  assert.equal(committeeCount(hr), 5);
-});
-
-test('Public Relations: three committees', () => {
-  const pr = dept('public-relations');
-  assert.deepEqual(shape(pr), [['sponsorships', 1, 9], ['guests', 1, 5], ['permits', 1, 4]]);
-  assert.equal(committeeHeadcount(pr), 18);
-  assert.equal(committeeCount(pr), 3);
-});
-
-test('the website committee is a Technical committee, listed once; Technical stays sixth and Ambassadors first', () => {
-  assert.equal(departments[0].key, 'ambassadors');
-  assert.equal(departments[3].key, 'programs');
-  assert.equal(departments[5].key, 'technical');
-  const holders = departments.filter((d) => (d.committees ?? []).some((c) => c.key === 'website'));
-  assert.deepEqual(holders.map((d) => d.key), ['technical']);
-  assert.equal(dept('technical').committees.filter((c) => c.key === 'website').length, 1);
-  // Names live in team.js; this test protects the committee structure: two groups, each with its leader.
-  const website = dept('technical').committees.find((c) => c.key === 'website');
-  assert.deepEqual(website.groups.map((g) => [g.key, g.members.length]), [['backend', 1], ['frontend', 2]]);
-  assert.deepEqual(committeeRowsOf(website).map((r) => [r.lead ? 'lead' : 'member', r.role, r.group]), [
-    ['lead', ROLES.leader, website.groups[0].name], ['member', ROLES.member, website.groups[0].name],
-    ['lead', ROLES.leader, website.groups[1].name], ['member', ROLES.member, website.groups[1].name], ['member', ROLES.member, website.groups[1].name],
-  ]);
-});
-
-test('every name, role and department label is a complete Arabic/English pair', () => {
-  for (const m of allMembers()) { assert.ok(pair(m.name), m.name); assert.ok(pair(m.role), m.role); }
-  for (const d of departments) { assert.ok(pair(d.name), d.key); assert.ok(ICONS[d.icon], `${d.key}: missing icon ${d.icon}`); }
-});
-
-test('role assignments follow the official list', () => {
-  const programs = departments.find((d) => d.key === 'programs');
-  assert.deepEqual(programs.leader, ['موضي القرعاوي', 'Moudi Algarawi']);
-  assert.deepEqual(programs.viceLeader, ['عبدالله السلمي', 'Abdullah Alsulami']);
-  assert.deepEqual(leadRolesOf(programs), [ROLES.programLeader, ROLES.programLeader]);
-  assert.deepEqual(leadRolesOf(departments.find((d) => d.key === 'technical')), [ROLES.leader, ROLES.viceLeader]);
-  assert.ok(allMembers().every((m) => !/Alj[ou]hani/.test(m.name[1])), 'الجهني is spelled Aljehani');
-  assert.deepEqual(departments.find((d) => d.key === 'media-marketing').name, ['قسم التسويق', 'Media & Marketing']);
   assert.deepEqual(leadershipTiers[0].members.map((m) => m.role), [ROLES.director]);
   assert.deepEqual(leadershipTiers[1].members.map((m) => m.role), [ROLES.coDirector, ROLES.coDirector]);
   assert.deepEqual(leadershipTiers[2].members.map((m) => m.role), [ROLES.generalManager, ROLES.viceGeneralManager]);
+  for (const m of leadershipTiers.flatMap((t) => t.members)) { assert.ok(pair(m.name)); assert.ok(pair(m.role)); }
+  assert.ok(leadershipTiers.flatMap((t) => t.members).every((m) => !/Alj[ou]hani/.test(m.name[1])), 'الجهني is spelled Aljehani');
+});
+
+test('presentTeam turns the API tree into bilingual department cards and committee rows', () => {
+  const [programs, empty] = presentTeam(tree);
+  assert.equal(programs.key, 'department-4');
+  assert.deepEqual(programs.name, ['قسم البرامج', 'Programs Department']);
+  assert.deepEqual(programs.leaders.map((l) => l.role), [['قائد', 'Program Leader'], ['قائد', 'Program Leader']]);
+  // Two co-leads with the same title are both styled as leaders.
+  assert.deepEqual(programs.leaders.map((_l, i) => isPrimaryLeader(programs, i)), [true, true]);
+  const [hackathon, general] = programs.committees;
+  assert.deepEqual(hackathon.rows.map((r) => [r.lead, r.vice, r.role]), [
+    [true, false, ['المشرف', 'Supervisor']], [true, true, ['نائب المشرف', 'Vice Supervisor']], [false, false, null],
+  ]);
+  assert.equal(general.unassigned, true);
+  // A missing translation falls back to the other language instead of rendering blank.
+  assert.deepEqual(general.rows[0].name, ['و', 'و']);
+  assert.equal(committeeSize(hackathon), 3);
+  assert.equal(committeeHeadcount(programs), 4);
+  assert.equal(committeeCount(programs), 1);
+  assert.equal(empty.icon, 'users');
+  assert.deepEqual(empty.committees, []);
+});
+
+test('presentTeam tolerates a missing or malformed response', () => {
+  for (const value of [null, undefined, {}, 'x']) assert.deepEqual(presentTeam(value), []);
+});
+
+test('deputy titles are recognised in either language', () => {
+  assert.equal(isViceRole(['نائب القائد', 'Vice-Leader']), true);
+  assert.equal(isViceRole(['', 'Vice Supervisor']), true);
+  assert.equal(isViceRole(['المشرف', 'Supervisor']), false);
+  assert.equal(isViceRole(null), false);
 });

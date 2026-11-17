@@ -5,6 +5,7 @@ export const LIVE_CACHE_TTL = 15_000;
 const EMPTY = Object.freeze({ data: undefined, error: null, pending: false, revision: 0 });
 const superseded = () => new DOMException('Request superseded.', 'AbortError');
 export const sectionForResource = resource => resource === 'timeline-events' ? 'timeline'
+  : resource === 'team' ? 'team'
   : publicSections.find(section => section.resource === resource)?.key;
 
 // Published responses only, in memory. Never persist content or visibility in browser storage.

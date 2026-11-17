@@ -1,402 +1,16 @@
-/* RoboTactic organizing structure — the single place to update when the team changes.
-   Every text is an [Arabic, English] pair (resolved with useLanguage().t). The Arabic list is
-   the source of truth for role assignments. No photos, bios or contact details by design. */
+/* RoboTactic organizing structure.
+   Executive leadership is fixed here. Departments, their leaders, committees and committee members
+   are managed from the dashboard («الفريق») and arrive from GET /api/public/team; presentTeam()
+   turns that response into the shape the Team page renders. Every text is an [Arabic, English] pair
+   (resolved with useLanguage().t). No photos, bios or contact details by design. */
+import { ICONS } from '../components/Icon/icons.js';
 
 export const ROLES = {
   director: ['الرئيس', 'Director'],
   coDirector: ['نائب الرئيس', 'Co-Director'],
   generalManager: ['المدير العام', 'General Manager'],
   viceGeneralManager: ['نائب المدير العام', 'Vice General Manager'],
-  leader: ['القائد', 'Leader'],
-  viceLeader: ['نائب القائد', 'Vice-Leader'],
-  programLeader: ['قائد', 'Program Leader'],
-  member: ['عضو الفريق', 'Team member'],
-  supervisor: ['المشرف', 'Supervisor'],
-  viceSupervisor: ['نائب المشرف', 'Vice Supervisor'],
-  committeeMember: ['عضو', 'Member'],
 };
-
-/* Media & Marketing committees. Design and Media have no supervisor. */
-const marketingCommittees = [
-  {
-    key: 'design',
-    name: ['لجنة التصميم', 'Design'],
-    supervisors: [],
-    members: [
-      ['هديل مسلم الطويرقي', 'Hadeel Muslim Al Twairqi'],
-      ['خلود خالد الكريدمي', 'Khulud Khalid Alkraydmi'],
-      ['تهاني ماجد الغامدي', 'Tahani Majed Alghamdi'],
-      ['بيان عبدالله العتيبي', 'Bayan Abdullah Alotaibi'],
-      ['جنى غازي العتيبي', 'Jana Ghazi Alotaibi'],
-      ['يارا علي القرني', 'Yara Ali Alqarni'],
-      ['مها ماجد صدام', 'Maha Majed Saddam'],
-      ['رنيم هشام بامفلح', 'Raneem Hisham Bamufleh'],
-    ],
-  },
-  {
-    key: 'marketing',
-    name: ['لجنة التسويق', 'Marketing'],
-    supervisors: [['ليندا صالح المنهالي', 'Linda Saleh Alminhali']],
-    members: [
-      ['حنان عبدالحي محمد', 'Hanan Abdulhai Mohammed'],
-      ['طيف حافظ الجهوري', 'Taif Hafiz Aljahwari'],
-      ['نوره ياسر القحطاني', 'Noura Yaseer Alqatani'],
-      ['بيان عطيه المالكي', 'Bayan Atiah Almalki'],
-    ],
-  },
-  {
-    key: 'media-monitoring',
-    name: ['لجنة الرصد الإعلامي', 'Media Monitoring'],
-    supervisors: [['ضياء صالح دبيس', 'Deyya Saleh Dobais']],
-    members: [
-      ['احمد انوار الحق رشيد', 'Ahmed Anwarulahq Rasheed'],
-      ['يارا محمد الغامدي', 'Yara Mohammed Alghamdi'],
-      ['دانة خالد الطاسان', 'Danah Khalid Altasan'],
-      ['ليان خالد القرني', 'Layan Khalid Alqarni'],
-      ['رغد عوض المرامحي', 'Raghad Awad Almramihi'],
-      ['ريفال خالد النفيسى', 'Refal Khalid Alnafisi'],
-    ],
-  },
-  {
-    key: 'media',
-    name: ['لجنة الإعلام', 'Media'],
-    supervisors: [],
-    members: [
-      ['ايناس سالم العتيبي', 'Enas Salem Alotaibi'],
-      ['الهام عاضه الحارثي', 'Elham Aaddh Alharthi'],
-      ['غسق عدنان بخش', 'Ghasaq Bakhsh'],
-      ['جوري عبدالله خلاف', 'Joury Abdullah Khallaf'],
-      ['تولين محمود تعباني', 'Tuleen Mahmoud Tabaani'],
-    ],
-  },
-];
-
-/* Ambassadors has no committees: its members are listed as one department group. */
-const ambassadorsCommittees = [
-  {
-    key: 'unassigned',
-    unassigned: true,
-    name: ['أعضاء القسم', 'Department Members'],
-    members: [
-      ['جنى زيد المالكي', 'Jana Zaid Almalki'],
-      ['لجين سامي الأحمدي', 'Lujain S Alahmadi'],
-      ['مهند عطيه اللحياني', 'Mohaned Ateya Allhyani'],
-    ],
-  },
-];
-
-/* Technical Department committees (in its members dialog). The Website Committee keeps its two
-   internal groups, each with its own leader (see committeeRowsOf below). */
-const technicalCommittees = [
-  {
-    key: 'engineering',
-    name: ['اللجنة الهندسية', 'Engineering Committee'],
-    supervisors: [['المهدي محمد صيرفي', 'Almahdi Mohammed Sairafi']],
-    members: [
-      ['وسام محمد حلواني', 'Wesam Mohammed Halawani'],
-      ['معتز عمرو الحجازي', 'Motaz Amro Alhejazi'],
-      ['ليان عايض القرني', 'Layan Ayed Alqarni'],
-      ['فاطمه سراج الزهراني', 'Fatima Siraj Alzahrani'],
-      ['جنى فيصل النشيري', 'Jana Faisal Alnushayri'],
-      ['جوري باسم مصلي', 'Jory Basim Musalli'],
-      ['راشد ياسر الدوسري', 'Rashed Yasser Al Dosari'],
-      ['ريوف حاتم الجعيد', 'Reoof Hatem Aljuaid'],
-    ],
-  },
-  {
-    key: 'advanced-competition',
-    name: ['لجنة مسابقة المتقدمين', 'Advanced Competition'],
-    supervisors: [['رنا ماهر المصباحي', 'Rana Maher Almisbahi']],
-    members: [
-      ['براءة ايمن احمد', 'Braah Aymen Ahmed'],
-      ['ريتال جابر الجعيد', 'Retal Jaber Aljuaid'],
-      ['عبدالاله علي بن حمد', 'Abdulelah Ali Binhimd'],
-      ['عبدالرحمن صالح الحربي', 'Abdulrahman Saleh Alharbi'],
-      ['دانة احمد الجدعاني', 'Danah Ahmed Algdaani'],
-      ['هاشم اسامه سيت', 'Hashim Osama Sait'],
-      ['محمد علي سلت', 'Mohammed Ali Salat'],
-      ['ضي فهد الغامدي', 'Daee Fahad Alghamdi'],
-    ],
-  },
-  {
-    key: 'beginner-competition',
-    name: ['لجنة مسابقة المبتدئين', 'Beginner Competition'],
-    supervisors: [['كرم عصام مغربل', 'Karam Essam Mugharbel']],
-    members: [
-      ['فارس بكر فلاته', 'Faris Bakr Fallatah'],
-      ['سلاف عادل الأحمدي', 'Solaf Adel Alahmadi'],
-      ['صالح احمد اللهيب', 'Saleh Ahmed Allhieb'],
-      ['نواف وائل خضري', 'Nawaf Wael Khudary'],
-      ['ليان علي الشهري', 'Layan Ali Alshehri'],
-      ['رهف عبد العزيز المغربي', 'Rahaf Abdulaziz Almghrabi'],
-      ['لارا خالد التميمي', 'Lara Khalid Altamimi'],
-      ['محمد ايمن السيد', 'Muhammed Ayman Alsayed'],
-      ['ليان عبدالملك الزهراني', 'Layan Abdulmalik Alzhrani'],
-    ],
-  },
-  {
-    key: 'website',
-    name: ['لجنة الموقع', 'Website Committee'],
-    groups: [
-      { key: 'backend', name: ['الباك إند', 'Back-end'], lead: ['عبد الله السيروان', 'Abdullah Alseyrawan'], members: [['صالح باحكيم', 'Saleh Bahakim']] },
-      { key: 'frontend', name: ['الفرونت إند', 'Front-end'], lead: ['ليان الحربي', 'Layan Alharbi'], members: [['معتز السيد', 'Motaz Alsayed'], ['شيماء وهيب', 'Shaima Waheeb']] },
-    ],
-  },
-];
-
-/* Programs committees. `viceSupervisors` is optional. */
-const programsCommittees = [
-  {
-    key: 'in-person-workshops',
-    name: ['لجنة الورش الحضورية', 'In-Person Workshops'],
-    supervisors: [['بدر فهد الجعيد', 'Badr Fahad Aljuaid']],
-    members: [
-      ['رغد عبدالكريم بن جحلان', 'Raghad Abdulkarim Bin Jahlan'],
-      ['شهد منصور هزازي', 'Shahad Mansour Hazzazi'],
-      ['جوري خالد الصبحي', 'Jury Khaled Alsubhi'],
-      ['غلا فيصل زميم', 'Ghala Faisal Zameem'],
-      ['ميرال سامر جاوي', 'Meral Samer Jawi'],
-      ['شذى عمر باعربي', 'Shatha Omar Baarabi'],
-      ['لارا خالد الحميدي', 'Lara Khaled Alhamidi'],
-    ],
-  },
-  {
-    key: 'hackathon',
-    name: ['لجنة البرمجان', 'Hackathon'],
-    supervisors: [['الهنوف فهد ابوعلي', 'Alhanouf Fahad AbuAli']],
-    viceSupervisors: [['اصايل عبدالله اللحياني', 'Asayl Abdullah Allhyani']],
-    members: [
-      ['داليا خضر فروان', 'Dalia Khader Farwan'],
-      ['شهد عبدالله الحربي', 'Shahad Abdullah Alharbi'],
-      ['دانه عبدالله القحطاني', 'Dana Abdullah Alqahtani'],
-      ['سيرين عبدالرحمن القرني', 'Seren Abdulrhman Alqarni'],
-      ['اسماء عبدالرحمن العطاس', 'Asma Abdulrahman Alattas'],
-      ['علي حسن الفار', 'Ali Hassan Alfar'],
-      ['جنى زامل الشمراني', 'Jana Zamil Alshamrani'],
-    ],
-  },
-  {
-    key: 'entertainment',
-    name: ['لجنة الترفيه', 'Entertainment'],
-    supervisors: [['جود محمد العتيبي', 'Joud Mohammad Altaibi']],
-    members: [
-      ['رينا محمد ديان', 'Rina Mohammed Deyan'],
-      ['جوري خالد العمودي', 'Jori Khalid Alamoudi'],
-      ['غلا عبدالعزيز المطيري', 'Ghala Abdulaziz Al Mutairi'],
-      ['عبدالله خليف الحربي', 'Abdullah Khulaif Alharbi'],
-      ['جنا ناصر الظاهري', 'Jana Naser Aldhahery'],
-    ],
-  },
-  {
-    key: 'speakers',
-    name: ['لجنة المتحدثين', 'Speakers'],
-    supervisors: [['دانه اديب الدوسري', 'Danah Adeeb Aldawsari']],
-    members: [
-      ['تالا أحمد الغامدي', 'Tala Ahmed Alghamdi'],
-      ['رنا ياسر طاهر', 'Rana Yaser Taher'],
-      ['جنى علي الغامدي', 'Jana Ali Alghamdi'],
-      ['ريتاج عبدالله العدواني', 'Retaj Abdullah Aladwani'],
-    ],
-  },
-  {
-    key: 'remote-workshops',
-    name: ['لجنة الورش عن بعد', 'Remote Workshops'],
-    supervisors: [['مياس طلال الحربي', 'Mayas Talal Alharbi']],
-    members: [
-      ['ميان عبدالله المزين', 'Mayan Abdullah Almuzayn'],
-      ['عائشة عيدروس شهاب', 'Aishah Aidarus Shihab'],
-      ['جمانة خالد النفيعي', 'Jumana Khaled Alnefaie'],
-      ['ديما عبدالهادي الجهني', 'Deema Abdulhadi Aljehani'],
-      ['دانه موسى المزروعي', 'Danah Moosa Almazroui'],
-    ],
-  },
-];
-
-/* Human Resources committees — opened from the department card on the Team page.
-   Each committee: its supervisors (usually one), then its members. Names are [Arabic, English]. */
-const hrCommittees = [
-  {
-    key: 'recruitment',
-    name: ['لجنة الاستقطاب والتطوع', 'Recruitment & Volunteering'],
-    supervisors: [['وسن محمد القحطاني', 'Wasan Mohammed Alqahtani']],
-    members: [
-      ['حلا سعد المطيري', 'Hala Saad Almutairi'],
-      ['ريم موسى الامير', 'Reem Mousa Alamir'],
-      ['ساره فايز الجهني', 'Sara Fayez Aljehani'],
-    ],
-  },
-  {
-    key: 'training',
-    name: ['لجنة التدريب والتطوير', 'Training & Development'],
-    supervisors: [['ليان احمد الغامدي', 'Layan Ahmed Alghamdi']],
-    members: [
-      ['رميز فهد عشري', 'Rameez Fahad Ashri'],
-      ['رغد رشدي صقر', 'Raghad Rushdi Saqer'],
-      ['نواف عمر الغامدي', 'Nawaf Omar Alghamdi'],
-    ],
-  },
-  {
-    key: 'scheduling',
-    name: ['لجنة الجدولة والمناوبات والحضور', 'Scheduling, Shifts & Attendance'],
-    supervisors: [['ليان محمد صيقل', 'Layan Mohammed Saigal']],
-    members: [
-      ['ليان فايق حناوي', 'Layan Faiq Hennawi'],
-      ['ميار اسامه منصوري', 'Mayar Osama Mansouri'],
-    ],
-  },
-  {
-    key: 'screening',
-    name: ['لجنة الفرز والمقابلات والتوزيع', 'Screening, Interviews & Placement'],
-    supervisors: [['الاء علي آل عيد', 'Alaa Ali Al Eid']],
-    members: [
-      ['رانية عادل الزهراني', 'Raniah Adel Alzahrani'],
-      ['مها سامر سلطان', 'Maha Samer Sultan'],
-      ['رجاوي خالد الجلسي', 'Rajawi Khaled Aljalsi'],
-      ['رزان احمد الطيب', 'Razan Ahmad Altayyeb'],
-    ],
-  },
-  {
-    key: 'recognition',
-    name: ['لجنة التحفيز والتكريم', 'Motivation & Recognition'],
-    supervisors: [['فهد بندر العوفي', 'Fahad Bandar AlOufi']],
-    members: [
-      ['ريفان عبدالعزيز الحذيفي', 'Refan Abdulaziz Alhuzaifi'],
-      ['ريلام محمد كردي', 'Relam Mohammed Kurdi'],
-      ['ريم علي الروقي', 'Reem Ali Alruqi'],
-      ['نواف فهد ناصر الجعيد', 'Nawaf Fahad Nasser Aljuaid'],
-    ],
-  },
-];
-
-/* Public Relations committees. */
-const prCommittees = [
-  {
-    key: 'sponsorships',
-    name: ['لجنة الرعايات', 'Sponsorships'],
-    supervisors: [['شهد عبداللطيف الصبحي', 'Shahad Abdullatif Alsubhi']],
-    members: [
-      ['مها حسين اليامي', 'Maha Hussain Alyami'],
-      ['عمر محمد الغامدي', 'Omar Mohammed Alghamdi'],
-      ['مهنا خالد السلمي', 'Muhanna Khaled Alsulami'],
-      ['جمانه احمد عويضه', 'Jomana Ahmad Owaida'],
-      ['احلام محمد حدادي', 'Ahlam Mohammed Haddadi'],
-      ['فارس صديق نورالهي', 'Faris Saddiq Noor Elahi'],
-      ['رهام صالح عثمان', 'Reham Saleh Othman'],
-      ['لورا خالد الحريري', 'Laura Khaled Alhariri'],
-    ],
-  },
-  {
-    key: 'guests',
-    name: ['لجنة الضيوف والدعوات', 'Guests & Invitations'],
-    supervisors: [['ليان عمر البقمي', 'Layan Omar Albuqami']],
-    members: [
-      ['لين حامد الشطيري', 'Leen Hamed Alshatiri'],
-      ['سعود عبدالله ال الحارث', 'Saud Abdullah Al Alhareth'],
-      ['رحمت الله عبدالقهار مولاداد الرحماني', 'Rahmatullah AbdulQahar Mouladad Rahmani'],
-      ['شروق حسن حكمي', 'Shroog Hasan Hakami'],
-    ],
-  },
-  {
-    key: 'permits',
-    name: ['لجنة التصاريح', 'Permits'],
-    supervisors: [['محمد احمد جستنيه', 'Mohammed Ahmad Justanieah']],
-    members: [
-      ['شادي محمد برناوي', 'Shadi Mohammed Brnawi'],
-      ['غلا عادل الجحدلي', 'Ghala Adel Aljahdali'],
-      ['أحمد علي أحمد الزبيدي', 'Ahmed Ali Ahmed Alzubaidi'],
-    ],
-  },
-];
-
-/* Planning committees. A committee may have no supervisor or more than one. */
-const planningCommittees = [
-  {
-    key: 'main-competitions',
-    name: ['لجنة المسابقات الرئيسية', 'Main Competitions'],
-    supervisors: [['حمزه عادل ابوعسكر', 'Hamzah Adel AbuAskar']],
-    members: [
-      ['تولين فواز مريعاني', 'Toleen Fawaz Mereani'],
-      ['شادن حسين البارقي', 'Shaden Hussain Albargi'],
-      ['يوسف رائد باعشن', 'Yousef Raed Baeshen'],
-      ['لبنى محمد هديش', 'Lubna Mohmmed Hedeesh'],
-    ],
-  },
-  {
-    key: 'student-separation',
-    name: ['لجنة الفصل بين الطلاب والطالبات', 'Male & Female Student Sections'],
-    supervisors: [['تميم محمد المزروعي', 'Tamim Mohammed Almazrui']],
-    members: [
-      ['أميره مناحي البقمي', 'Amirah Manahi Albuqami'],
-      ['ليان ابراهيم بهكلي', 'Layan Ibrahim Bahkali'],
-      ['سعد فهد الغامدي', 'Saad Fahd Alghamdi'],
-      ['وسن إبراهيم الحربي', 'Wasan Ibrahim Alharbi'],
-      ['رغد نايف العساف', 'Raghad Naif Alassaf'],
-    ],
-  },
-  {
-    key: 'defense-exhibition',
-    name: ['لجنة معرض المشاريع الدفاعية', 'Defense Projects Exhibition'],
-    supervisors: [],
-    members: [
-      ['عبدالعزيز سعيد القحطاني', 'Abdulaziz Saeed Alqahtani'],
-      ['منار عتقى الجهني', 'Manar Etga Aljehani'],
-      ['حنان علي الجهني', 'Hanan Ali Aljehani'],
-      ['شهد مديس المالكي', 'Shahad Mudays Almalki'],
-      ['نهى محمد الصابوني', 'Nuha Mohammed Sabouni'],
-    ],
-  },
-  {
-    key: 'innovation-exhibition',
-    name: ['لجنة معرض الابتكارات والاختراعات', 'Innovations & Inventions Exhibition'],
-    supervisors: [
-      ['بدر علي القحطاني', 'Bader Ali Alqahtani'],
-      ['ريان مختار العريشي', 'Rayan Mukhtar Alarishi'],
-    ],
-    members: [
-      ['لينا سعيد الغامدي', 'Leena Saeed Alghamdi'],
-      ['ذكرى الغامدي', 'Thikra Alghamdi'],
-      ['رغد خالد الزهراني', 'Raghad Khaled Alzahrani'],
-      ['جمانة ابراهيم النهدي', 'Jumanah Ibrahim Alnahdi'],
-      ['جود سليمان ميمني', 'Jood Sulaiman Maimani'],
-    ],
-  },
-  {
-    key: 'closing-ceremony',
-    name: ['لجنة الحفل الختامي', 'Closing Ceremony'],
-    supervisors: [['تولين محمود العطوي', 'Tulin Mahmoud Alatawe']],
-    members: [
-      ['ريماس محمد مصلوف', 'Remas Muhmmad Mslwf'],
-      ['سارة القحطاني', 'Sara Alqahtani'],
-      ['لين لواء بخاري', 'Leen Lewaa Bukhari'],
-      ['انمار بندر باصمد', 'Anmar Bandar Basamad'],
-    ],
-  },
-];
-
-/* People in a department's committees (supervisors + members), and the number of real committees. */
-export const supervisorsOf = (c) => c.supervisors ?? [];
-/* Supervisors, then vice supervisors, each with its role — the highlighted rows at the top of a committee.
-   A committee with internal groups (the Website Committee) has one leader per group instead. */
-export const committeeLeadsOf = (c) => [
-  ...supervisorsOf(c).map((name) => ({ role: ROLES.supervisor, name })),
-  ...(c.viceSupervisors ?? []).map((name) => ({ role: ROLES.viceSupervisor, name })),
-  ...(c.groups ?? []).map((g) => ({ role: ROLES.leader, name: g.lead, group: g.name })),
-];
-export const committeeMembersOf = (c) => c.members ?? (c.groups ?? []).flatMap((g) => g.members);
-/* Everyone in a committee in display order, each with its role (`lead` marks the highlighted rows).
-   Grouped committees list each group's leader followed by that group's members. */
-export const committeeRowsOf = (c) => (c.groups
-  ? c.groups.flatMap((g) => [
-    { role: ROLES.leader, name: g.lead, group: g.name, lead: true },
-    ...g.members.map((name) => ({ role: ROLES.member, name, group: g.name })),
-  ])
-  : [
-    ...committeeLeadsOf(c).map((l) => ({ ...l, lead: true })),
-    ...c.members.map((name) => ({ role: ROLES.committeeMember, name })),
-  ]);
-export const committeeSize = (c) => committeeRowsOf(c).length;
-export const committeeHeadcount = (dept) => (dept.committees ?? []).reduce((n, c) => n + committeeSize(c), 0);
-export const committeeCount = (dept) => (dept.committees ?? []).filter((c) => !c.unassigned).length;
 
 /* Executive leadership, top tier first. */
 export const leadershipTiers = [
@@ -417,29 +31,32 @@ export const leadershipTiers = [
   },
 ];
 
-/* `icon` names come from components/Icon/icons.js.
-   `leadRoles` (optional) overrides the [leader, viceLeader] titles — Programs has two equal Program Leaders. */
-export const departments = [
-  { key: 'ambassadors', icon: 'globe', name: ['قسم السفراء', 'Ambassadors Department'], leader: ['عبدالعزيز الزهراني', 'Abdulaziz Alzahrani'], viceLeader: ['حلا عسيري', 'Hala Asiri'], committees: ambassadorsCommittees },
-  { key: 'media-marketing', icon: 'megaphone', name: ['قسم التسويق', 'Media & Marketing'], leader: ['أسماء وهيب', 'Asmaa Waheeb'], viceLeader: ['رزان السلمي', 'Razan Alsulami'], committees: marketingCommittees },
-  { key: 'planning', icon: 'route', name: ['قسم التخطيط', 'Planning Department'], leader: ['زينب عبدالحليم', 'Zainab Abdulhalim'], viceLeader: ['جوري الغامدي', 'Juri Alghamdi'], committees: planningCommittees },
-  { key: 'programs', icon: 'calendar', name: ['قسم البرامج', 'Programs Department'], leader: ['موضي القرعاوي', 'Moudi Algarawi'], viceLeader: ['عبدالله السلمي', 'Abdullah Alsulami'], leadRoles: [ROLES.programLeader, ROLES.programLeader], committees: programsCommittees },
-  { key: 'human-resources', icon: 'users', name: ['قسم الموارد البشرية', 'Human Resources'], leader: ['رنده بخاري', 'Randa Bukhari'], viceLeader: ['تالا جبريل', 'Tala Jabril'], committees: hrCommittees },
-  { key: 'technical', icon: 'chip', name: ['القسم التقني', 'Technical Department'], leader: ['ريماس محمود', 'Rimas Mahmoud'], viceLeader: ['ليان المتعب', 'Layan Al Meteb'], committees: technicalCommittees },
-  { key: 'public-relations', icon: 'chat', name: ['قسم العلاقات العامة', 'Public Relations'], leader: ['عبدالرحمن رجب', 'Abdulrahman Rajab'], viceLeader: ['وليد زكي', 'Waleed Zaki'], committees: prCommittees },
-];
+const pairOf = (record, key) => [record?.[`${key}_ar`] || record?.[`${key}_en`] || '', record?.[`${key}_en`] || record?.[`${key}_ar`] || ''];
+/* A deputy title («نائب …», "Vice …") gets the quieter highlight in the members dialog. */
+export const isViceRole = (role) => /^نائب/.test(role?.[0] ?? '') || /^vice\b/i.test(role?.[1] ?? '');
 
-/* The two titles shown on a department card. */
-export const leadRolesOf = (d) => d.leadRoles ?? [ROLES.leader, ROLES.viceLeader];
+/* API tree → view model. Unknown icons fall back to the generic team icon. */
+export function presentTeam(tree) {
+  return (Array.isArray(tree) ? tree : []).map((d) => ({
+    key: `department-${d.id}`,
+    icon: ICONS[d.icon] ? d.icon : 'users',
+    name: pairOf(d, 'name'),
+    leaders: (d.leaders ?? []).map((l) => ({ key: `leader-${l.id}`, role: pairOf(l, 'role'), name: pairOf(l, 'name') })),
+    committees: (d.committees ?? []).map((c) => ({
+      key: `committee-${c.id}`,
+      name: pairOf(c, 'name'),
+      unassigned: Boolean(c.is_general),
+      rows: (c.members ?? []).map((m) => {
+        const role = m.is_lead ? pairOf(m, 'role') : null;
+        return { key: `member-${m.id}`, name: pairOf(m, 'name'), role, lead: Boolean(m.is_lead), vice: Boolean(m.is_lead) && isViceRole(role) };
+      }),
+    })),
+  }));
+}
 
-/* Every person once, with their role — used by tests and anything that needs a flat list. */
-export const allMembers = () => [
-  ...leadershipTiers.flatMap((tier) => tier.members),
-  ...departments.flatMap((d) => [
-    { role: leadRolesOf(d)[0], name: d.leader, department: d.key },
-    { role: leadRolesOf(d)[1], name: d.viceLeader, department: d.key },
-    ...(d.committees ?? []).flatMap((c) => committeeRowsOf(c).map(({ role, name, group }) => ({
-      role, name, department: d.key, committee: c.name, ...(group && { group }),
-    }))),
-  ]),
-];
+export const committeeSize = (c) => c.rows.length;
+export const committeeHeadcount = (dept) => dept.committees.reduce((n, c) => n + committeeSize(c), 0);
+/* Real committees only: the department's general members group is not counted. */
+export const committeeCount = (dept) => dept.committees.filter((c) => !c.unassigned).length;
+/* Leader styling for the first leader and for any co-lead with the same title (e.g. two Program Leaders). */
+export const isPrimaryLeader = (dept, index) => index === 0 || dept.leaders[index].role[1] === dept.leaders[0]?.role[1];

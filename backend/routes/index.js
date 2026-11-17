@@ -18,6 +18,7 @@ const { createAboutController } = require("../controllers/aboutController");
 const { createSectionVisibilityController } = require("../controllers/sectionVisibilityController");
 const { requirePublicSection } = require("../middleware/requirePublicSection");
 const { createEventSettingsController } = require("../controllers/eventSettingsController");
+const { createTeamStructureController } = require("../controllers/teamStructureController");
 
 const CONTENT_SCOPES = {
   competitions: "competitions", teams: "teams", workshops: "workshops",
@@ -32,6 +33,7 @@ function createApiRoutes({ pool, authTokenSecret, corsOrigins, isProduction, sto
   const aboutController = createAboutController(pool);
   const visibilityController = createSectionVisibilityController(pool);
   const eventSettingsController = createEventSettingsController(pool);
+  const teamController = createTeamStructureController(pool);
   const publicController = createPublicContentController(pool);
   const contentController = createAdminContentController(pool);
   const userController = createAdminUserController(pool);
@@ -47,6 +49,7 @@ function createApiRoutes({ pool, authTokenSecret, corsOrigins, isProduction, sto
 
   publicRouter.get("/section-visibility", visibilityController.get);
   publicRouter.get("/about", requirePublicSection(pool, "about"), aboutController.publicGet);
+  publicRouter.get("/team", requirePublicSection(pool, "team"), teamController.publicGet);
   publicRouter.get("/team-members", requirePublicSection(pool, "team"), publicController.teamMembers);
   publicRouter.get("/site-settings", publicController.siteSettings);
   publicRouter.get("/competitions", requirePublicSection(pool, "competitions"), publicController.competitions);
@@ -86,6 +89,19 @@ function createApiRoutes({ pool, authTokenSecret, corsOrigins, isProduction, sto
 
   adminRouter.get("/about", authorize("about"), aboutController.get);
   adminRouter.patch("/about", authorize("about"), aboutController.update);
+
+  // Organizing team: departments, their leaders, committees and committee members (Super Admin).
+  const teamRouter = express.Router();
+  teamRouter.use(authorize("team"));
+  teamRouter.get("/", teamController.get);
+  teamRouter.post("/departments", teamController.createDepartment);
+  teamRouter.post("/departments/:parentId/leaders", teamController.createChild("leaders"));
+  teamRouter.post("/departments/:parentId/committees", teamController.createChild("committees"));
+  teamRouter.post("/committees/:parentId/members", teamController.createChild("members"));
+  teamRouter.patch("/:kind/:id", teamController.update);
+  teamRouter.delete("/:kind/:id", teamController.remove);
+  teamRouter.post("/:kind/:id/move", teamController.move);
+  adminRouter.use("/team", teamRouter);
 
   for (const [resource, scope] of Object.entries(CONTENT_SCOPES)) {
     const resourceRouter = express.Router();

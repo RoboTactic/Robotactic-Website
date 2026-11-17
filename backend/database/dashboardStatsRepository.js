@@ -7,6 +7,7 @@ const TABLES = Object.freeze({
   speakers: "speakers",
   users: "admin_users",
   about: "about_page",
+  team: "team_committee_members",
 });
 
 async function counts(pool, resources) {

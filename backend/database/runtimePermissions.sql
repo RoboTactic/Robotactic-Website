@@ -100,6 +100,26 @@ GRANT UPDATE ("event_start_at", "updated_at") ON TABLE public."site_settings" TO
 GRANT SELECT ON TABLE public."about_page" TO robotactic_app;
 GRANT UPDATE ("title_ar", "title_en", "subtitle_ar", "subtitle_en", "body_ar", "body_en", "values_ar", "values_en", "image_url", "image_alt_ar", "image_alt_en", "status", "updated_at") ON TABLE public."about_page" TO robotactic_app;
 
+GRANT SELECT ON TABLE public."team_departments" TO robotactic_app;
+GRANT INSERT ("icon", "name_ar", "name_en", "display_order") ON TABLE public."team_departments" TO robotactic_app;
+GRANT UPDATE ("icon", "name_ar", "name_en", "display_order", "updated_at") ON TABLE public."team_departments" TO robotactic_app;
+GRANT DELETE ON TABLE public."team_departments" TO robotactic_app;
+
+GRANT SELECT ON TABLE public."team_department_leaders" TO robotactic_app;
+GRANT INSERT ("department_id", "role_ar", "role_en", "name_ar", "name_en", "display_order") ON TABLE public."team_department_leaders" TO robotactic_app;
+GRANT UPDATE ("role_ar", "role_en", "name_ar", "name_en", "display_order", "updated_at") ON TABLE public."team_department_leaders" TO robotactic_app;
+GRANT DELETE ON TABLE public."team_department_leaders" TO robotactic_app;
+
+GRANT SELECT ON TABLE public."team_committees" TO robotactic_app;
+GRANT INSERT ("department_id", "name_ar", "name_en", "is_general", "display_order") ON TABLE public."team_committees" TO robotactic_app;
+GRANT UPDATE ("name_ar", "name_en", "is_general", "display_order", "updated_at") ON TABLE public."team_committees" TO robotactic_app;
+GRANT DELETE ON TABLE public."team_committees" TO robotactic_app;
+
+GRANT SELECT ON TABLE public."team_committee_members" TO robotactic_app;
+GRANT INSERT ("committee_id", "name_ar", "name_en", "role_ar", "role_en", "is_lead", "display_order") ON TABLE public."team_committee_members" TO robotactic_app;
+GRANT UPDATE ("name_ar", "name_en", "role_ar", "role_en", "is_lead", "display_order", "updated_at") ON TABLE public."team_committee_members" TO robotactic_app;
+GRANT DELETE ON TABLE public."team_committee_members" TO robotactic_app;
+
 GRANT SELECT ON TABLE public."public_section_visibility" TO robotactic_app;
 GRANT INSERT ("section_key", "is_visible") ON TABLE public."public_section_visibility" TO robotactic_app;
 GRANT UPDATE ("is_visible", "updated_at") ON TABLE public."public_section_visibility" TO robotactic_app;
@@ -142,6 +162,10 @@ BEGIN
         {"table":"competition_supervisors","commands":["SELECT","INSERT","DELETE"],"insert":["competition_id","name_ar","name_en","title_ar","title_en","linkedin_url","display_order"]},
         {"table":"site_settings","commands":["SELECT","UPDATE"],"insert":[]},
         {"table":"about_page","commands":["SELECT","UPDATE"],"insert":[]},
+        {"table":"team_departments","commands":["SELECT","INSERT","UPDATE","DELETE"],"insert":["icon","name_ar","name_en","display_order"]},
+        {"table":"team_department_leaders","commands":["SELECT","INSERT","UPDATE","DELETE"],"insert":["department_id","role_ar","role_en","name_ar","name_en","display_order"]},
+        {"table":"team_committees","commands":["SELECT","INSERT","UPDATE","DELETE"],"insert":["department_id","name_ar","name_en","is_general","display_order"]},
+        {"table":"team_committee_members","commands":["SELECT","INSERT","UPDATE","DELETE"],"insert":["committee_id","name_ar","name_en","role_ar","role_en","is_lead","display_order"]},
         {"table":"public_section_visibility","commands":["SELECT","INSERT","UPDATE"],"insert":["section_key","is_visible"]},
         {"table":"project_categories","commands":["SELECT"],"insert":[]},
         {"table":"timeline_events","commands":["SELECT"],"insert":[]},

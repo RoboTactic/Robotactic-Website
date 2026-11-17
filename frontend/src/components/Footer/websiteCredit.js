@@ -1,9 +1,14 @@
-import { departments } from '../../data/team.js';
+/* The footer's Website Committee dialog: the people who built this site, grouped under their two leads
+   (Front-end first, then Back-end). This is the site's authorship credit, so it stays fixed here; the
+   Team page's committees are managed from the dashboard instead. Names are [Arabic, English]. */
+export const WEBSITE_COMMITTEE = {
+  name: ['لجنة الموقع', 'Website Committee'],
+  groups: [
+    { key: 'backend', name: ['الباك إند', 'Back-end'], lead: ['عبد الله السيروان', 'Abdullah Alseyrawan'], members: [['صالح باحكيم', 'Saleh Bahakim']] },
+    { key: 'frontend', name: ['الفرونت إند', 'Front-end'], lead: ['ليان الحربي', 'Layan Alharbi'], members: [['معتز السيد', 'Motaz Alsayed'], ['شيماء وهيب', 'Shaima Waheeb']] },
+  ],
+};
 
-/* The footer's Website Committee dialog, read from the team data (the single source of truth for
-   names and structure): the committee's name and its two groups, each with its lead and the members
-   who report to that lead (Front-end first, then Back-end). Returns null when the committee or its
-   groups are missing. */
 const CREDIT_GROUPS = ['frontend', 'backend'];
 
 /* The section's title for each lead, as given by the event team. Same English title for both; the
@@ -13,8 +18,8 @@ const LEAD_TITLES = {
   backend: ['قائد لجنة الموقع', 'Website Lead'],
 };
 
-export function websiteCredit(list = departments) {
-  const committee = list.find((d) => d.key === 'technical')?.committees?.find((c) => c.key === 'website');
+/* Returns null when the committee or its groups are missing. */
+export function websiteCredit(committee = WEBSITE_COMMITTEE) {
   const groups = CREDIT_GROUPS
     .map((key) => committee?.groups?.find((g) => g.key === key))
     .filter((g) => g?.lead)

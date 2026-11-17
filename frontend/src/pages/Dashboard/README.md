@@ -42,7 +42,18 @@ Calendar checks cover both languages at these five widths: green panel surfaces,
 
 ## About and Team management
 
-Super Admin can edit About content shown on `/about` and the Home page. The public Team page uses the static list in `src/data/team.js`; its former member-management section is no longer offered in the dashboard. Section visibility controls remain available. See [setup and verification](../../../../docs/about-team-management.md).
+Super Admin can edit About content shown on `/about` and the Home page. See [setup and verification](../../../../docs/about-team-management.md).
+
+### Team (`/dashboard/team`)
+
+Super Admin manages the organizing team's departments here; the public `/team` page reads the same data from `GET /api/public/team`. Executive leadership (Director, Co-Directors, General Management) stays fixed in `src/data/team.js`, and the footer's website credit stays fixed in `components/Footer/websiteCredit.js`.
+
+- **Departments:** add, rename, choose an icon, reorder (↑/↓) and delete (deleting removes its leaders, committees and members).
+- **Department leaders:** each has a role and a name in Arabic and English. Role presets (القائد، نائب القائد، قائد) or any custom title.
+- **Committees:** add, rename, reorder and delete. «أعضاء القسم بلا لجنة» marks a group of department members that is shown but not counted as a committee.
+- **Committee members:** the add form stays open for entering several people in a row. A member is either a plain member or highlighted with a role (المشرف، نائب المشرف، القائد، or a custom title). Highlighted rows appear with their role on the public page; keep them at the top with ↑.
+
+Apply `npm run db:migrate` from `backend` first (migration 010 creates the tables and seeds the structure previously kept in `team.js`; it never overwrites existing rows). On a database that uses the restricted `robotactic_app` role, re-apply the reviewed `backend/database/runtimePermissions.sql` so the role gets access to the four new `team_*` tables. Every operation requires Super Admin on the server; names are validated (1–200 characters, roles 1–100) before any query runs.
 
 ## Dashboard layout polish
 

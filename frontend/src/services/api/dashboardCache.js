@@ -82,8 +82,9 @@ export function createDashboardCache({ now = Date.now, ttl = DASHBOARD_CACHE_TTL
     });
     removed.forEach(key => entries.delete(key));
     let savedPath;
-    if (data && (method !== 'DELETE' || (resource === 'speakers' && parts.length > 3))) {
-      savedPath = resource === 'about' ? '/admin/about' : data.id != null ? `/admin/${resource}/${encodeURIComponent(data.id)}` : undefined;
+    // Every team write (deletes included) answers with the complete, updated structure.
+    if (data && (method !== 'DELETE' || resource === 'team' || (resource === 'speakers' && parts.length > 3))) {
+      savedPath = resource === 'about' ? '/admin/about' : resource === 'team' ? '/admin/team' : data.id != null ? `/admin/${resource}/${encodeURIComponent(data.id)}` : undefined;
       if (savedPath) store(savedPath, data);
     }
     removed.filter(key => key !== savedPath).forEach(key => emit(key, 'invalidate'));

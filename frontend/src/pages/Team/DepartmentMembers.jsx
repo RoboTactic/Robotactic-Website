@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import Icon from '../../components/Icon/Icon';
-import { ROLES, committeeCount, committeeHeadcount, committeeRowsOf, committeeSize } from '../../data/team';
+import { committeeCount, committeeHeadcount, committeeSize } from '../../data/team';
 
 /* Arabic number agreement: 2 → عضوان, 3–10 → أعضاء, otherwise عضوًا. */
 const peopleCount = (n) => [
@@ -72,7 +72,7 @@ export default function DepartmentMembers({ dept, onClose }) {
 
           <div className="team-members__body">
             <div className="team-members__grid">
-            {balance(dept.committees).map((column, col) => <div key={col} className="team-members__column">
+            {balance(dept.committees.filter((c) => c.rows.length > 0)).map((column, col) => <div key={col} className="team-members__column">
             {column.map(({ c, i }) => (
               <section key={c.key} className="team-members__committee" style={{ order: i }} aria-labelledby={`team-committee-${c.key}`}>
                 <div className="team-members__committee-head">
@@ -81,15 +81,15 @@ export default function DepartmentMembers({ dept, onClose }) {
                   <span className="team-members__count">{t(peopleCount(committeeSize(c)))}</span>
                 </div>
                 <ul className="team-members__list">
-                  {committeeRowsOf(c).map(({ role, name, group, lead }) => (lead ? (
-                    <li key={name[1]} className={`team-members__person team-members__person--supervisor${role === ROLES.viceSupervisor ? ' team-members__person--vice' : ''}`}>
-                      {/* A group leader's title names the group, e.g. «القائد · الباك إند». */}
-                      <span className="team-members__role">{t(role)}{group && ` · ${t(group)}`}</span>
+                  {c.rows.map(({ key, role, name, lead, vice }) => (lead ? (
+                    <li key={key} className={`team-members__person team-members__person--supervisor${vice ? ' team-members__person--vice' : ''}`}>
+                      {/* A group leader's title can name the group, e.g. «القائد · الباك إند». */}
+                      <span className="team-members__role">{t(role)}</span>
                       <span className="team-members__name">{t(name)}</span>
                       <span className="team-members__alt" lang={other}>{alt(name)}</span>
                     </li>
                   ) : (
-                    <li key={name[1]} className="team-members__person">
+                    <li key={key} className="team-members__person">
                       <span className="team-members__name">{t(name)}</span>
                       <span className="team-members__alt" lang={other}>{alt(name)}</span>
                     </li>
