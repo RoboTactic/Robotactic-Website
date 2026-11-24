@@ -21,8 +21,8 @@ export const brand = {
   logoMark: '/logo/robotactic-mark-white.png', // official white mark, Brand Guideline §0.4
 };
 
-/* Contact Us — official public channels (RoboTactic Web Content Collection). The Footer shows the
-   channels as icons; tagline and intro are kept for a future contact section.
+/* Contact Us — official public channels (RoboTactic Web Content Collection).
+   Used by the Contact & FAQ page.
    `icon` names come from components/Icon/icons.js. */
 export const contact = {
   title: ['تواصل معنا', 'Contact Us'],

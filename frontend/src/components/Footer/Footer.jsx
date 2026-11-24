@@ -1,6 +1,7 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import Icon from '../Icon/Icon';
-import { brand, contact } from '../../data/site';
+import { brand } from '../../data/site';
 import { useLanguage } from '../../services/api/publicContentLanguage';
 import './Footer.css';
 import WebsiteCredits from './WebsiteCredits';
@@ -11,31 +12,9 @@ export default function Footer() {
   return (
     <footer className="footer">
       <div className="container footer__inner">
-        <section className="footer__contact" aria-labelledby="footer-contact-title">
-          <h2 id="footer-contact-title" className="footer__contact-title">{t(contact.title)}</h2>
-          <p className="footer__contact-tagline">{t(contact.tagline)}</p>
-          {contact.intro.map((p) => <p key={p[1]} className="footer__contact-intro">{t(p)}</p>)}
-        </section>
-        {/* Contact channels: icon-only links; each name is the link's accessible label. */}
-        <ul className="footer__social" aria-label={t('قنوات التواصل', 'Contact channels')}>
-          {contact.channels.map((c) => {
-            const external = !c.href.startsWith('mailto:');
-            const name = c.value ? `${t(c.label)}: ${c.value}` : t(c.label);
-            return (
-              <li key={c.key}>
-                <a
-                  className="footer__social-link"
-                  href={c.href}
-                  {...(external && { target: '_blank', rel: 'noopener noreferrer' })}
-                  aria-label={external ? `${name} — ${t('يفتح في نافذة جديدة', 'opens in a new tab')}` : name}
-                  title={t(c.label)}
-                >
-                  <Icon name={c.icon} size={20} />
-                </a>
-              </li>
-            );
-          })}
-        </ul>
+        <Link className="footer__contact-link" to="/contact">
+          {t('التواصل والأسئلة الشائعة', 'Contact & FAQ')}
+        </Link>
         <div className="footer__bottom">
           <p className="footer__copyright t-label" lang="en">{brand.copyright}</p>
           <button

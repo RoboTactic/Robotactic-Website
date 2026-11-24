@@ -4,6 +4,7 @@ import Navbar from './components/Navbar/Navbar';
 import Footer from './components/Footer/Footer';
 import Home from './pages/Home/Home';
 import About from './pages/About/About';
+import Contact from './pages/Contact/Contact';
 import Competitions from './pages/Competitions/Competitions';
 import Workshops from './pages/Workshops/Workshops';
 import Projects from './pages/Projects/Projects';
@@ -16,6 +17,7 @@ import { PublicSectionState, useSectionVisibility } from './services/api/Section
 
 /* Browser titles for the public routes; the 404 page sets its own, and the Dashboard is left alone. */
 const pageTitles = {
+  '/contact': ['التواصل والأسئلة الشائعة | RoboTactic', 'Contact & FAQ | RoboTactic'],
   '/': ['RoboTactic 2027 — ابتكار يقوده التفكير', 'RoboTactic 2027 — Innovation driven by ideas'],
   '/about': ['من نحن | RoboTactic', 'About Us | RoboTactic'],
   '/competitions': ['المسابقات | RoboTactic', 'Competitions | RoboTactic'],
@@ -64,6 +66,7 @@ export default function App() {
       <main>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/contact" element={<Contact />} />
           <Route path="/about" element={<PublicPage><About /></PublicPage>} />
           <Route path="/competitions" element={<PublicPage><Competitions /></PublicPage>} />
           <Route path="/workshops" element={<PublicPage><Workshops /></PublicPage>} />
