@@ -17,7 +17,7 @@ export const brand = {
   name: 'RoboTactic',
   wordmark: 'ROBOTACTIC',
   slogan: ['التحدي يقوده التفكير', 'A challenge Driven by Thinking'],
-  copyright: '© 2026 RoboTactic',
+  copyright: '© 2027 RoboTactic',
   logoMark: '/logo/robotactic-mark-white.png', // official white mark, Brand Guideline §0.4
 };
 
